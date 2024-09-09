@@ -21,18 +21,18 @@ import {
 } from '@mui/material';
 import { MouseEvent, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Fragment } from 'react/jsx-runtime';
 import UserAvatar from '../../assets/avatar-1.jpg';
-import { navLinks } from '../common/constants/nav-links';
-import { profileMenuItems } from '../common/constants/profile-menu-items';
+import { navLinks } from '../constants/nav-links';
+import { profileMenuItems } from '../constants/profile-menu-items';
 
 export interface ISideNavAppBarLayout {
   children: React.ReactNode;
+  appBarHeader: string;
 }
 
 const drawerWidth = 240;
 
-function SideNavAppBarLayout({ children }: ISideNavAppBarLayout) {
+function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
   const theme = useTheme();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
@@ -41,13 +41,17 @@ function SideNavAppBarLayout({ children }: ISideNavAppBarLayout) {
 
   const location = useLocation();
 
-  const isLinkActive = (link: string): boolean => {
-    return location.pathname.startsWith(link);
-  };
-
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [isClosing, setIsClosing] = useState(false);
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+
+  const isMenuOpen = Boolean(menuAnchorEl);
+
+  const isLinkActive = (link: string): boolean => {
+    return location.pathname.startsWith(link);
+  };
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -63,10 +67,6 @@ function SideNavAppBarLayout({ children }: ISideNavAppBarLayout) {
       setMobileOpen(!mobileOpen);
     }
   };
-
-  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
-
-  const isMenuOpen = Boolean(menuAnchorEl);
 
   const handleProfileClick = (event: MouseEvent<HTMLButtonElement>) => {
     setMenuAnchorEl(event.currentTarget);
@@ -111,7 +111,7 @@ function SideNavAppBarLayout({ children }: ISideNavAppBarLayout) {
               component="div"
               sx={{ flexGrow: 1 }}
             >
-              Permanent drawer
+              {appBarHeader}
             </Typography>
 
             <Box sx={{ flexGrow: 0 }}>
@@ -137,15 +137,18 @@ function SideNavAppBarLayout({ children }: ISideNavAppBarLayout) {
                   horizontal: 'left',
                 }}
               >
-                {profileMenuItems.map((item) => (
-                  <Fragment key={item.label}>
-                    {item.hasDivider ? <Divider /> : null}
+                {profileMenuItems.map((item) => {
+                  const components = [
                     <MenuItem onClick={handleMenuClose}>
                       <ListItemIcon>{item.icon}</ListItemIcon>
                       <ListItemText>{item.label}</ListItemText>
-                    </MenuItem>
-                  </Fragment>
-                ))}
+                    </MenuItem>,
+                  ];
+                  if (item.hasDivider) {
+                    components.unshift(<Divider />);
+                  }
+                  return components;
+                })}
               </Menu>
             </Box>
           </Toolbar>

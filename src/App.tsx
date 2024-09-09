@@ -1,7 +1,7 @@
 import { CssBaseline } from '@mui/material';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
-import SideNavAppBarLayout from './layouts/side-nav-app-bar-layout/SideNavAppBarLayout';
+import { LayoutProvider } from './layouts/LayoutProvider';
 
 function App() {
   const navigate = useNavigate();
@@ -17,9 +17,9 @@ function App() {
     <>
       <CssBaseline />
 
-      <SideNavAppBarLayout>
+      <LayoutProvider>
         <Outlet />
-      </SideNavAppBarLayout>
+      </LayoutProvider>
     </>
   );
 }

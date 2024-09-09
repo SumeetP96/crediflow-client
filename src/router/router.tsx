@@ -9,46 +9,47 @@ import Reports from '../pages/reports/Reports';
 import TransactionTypes from '../pages/transaction-types/TransactionTypes';
 import Transactions from '../pages/transactions/Transactions';
 import Users from '../pages/users/Users';
+import { Routes } from './routes';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
+    path: Routes.APP,
     element: <App />,
     children: [
       {
-        path: '/dashboard',
+        path: Routes.DASHBOARD,
         element: <Dashboard />,
       },
       {
-        path: '/users',
+        path: Routes.USERS,
         element: <Users />,
       },
       {
-        path: '/customers',
+        path: Routes.CUSTOMERS,
         element: <Customers />,
       },
       {
-        path: '/agents',
+        path: Routes.AGENTS,
         element: <Agents />,
       },
       {
-        path: '/invoice-categories',
+        path: Routes.INVOICE_CATEGORIES,
         element: <InvoiceCategories />,
       },
       {
-        path: '/invoices',
+        path: Routes.INVOICES,
         element: <Invoices />,
       },
       {
-        path: '/transaction-types',
+        path: Routes.TRANSACTION_TYPES,
         element: <TransactionTypes />,
       },
       {
-        path: '/transactions',
+        path: Routes.TRANSACTIONS,
         element: <Transactions />,
       },
       {
-        path: '/reports',
+        path: Routes.REPORTS,
         element: <Reports />,
       },
     ],
