@@ -109,6 +109,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
               variant="h6"
               noWrap
               component="div"
+              fontWeight={400}
               sx={{ flexGrow: 1 }}
             >
               {appBarHeader}
@@ -173,7 +174,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap>
+            <Typography variant="h6" fontWeight={400} noWrap>
               <NavLink
                 to="/"
                 style={{
