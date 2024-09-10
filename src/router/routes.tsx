@@ -1,21 +1,22 @@
-export enum Routes {
+export enum AppRoutes {
   APP = '/',
 
   DASHBOARD = '/dashboard',
 
-  USERS = '/users',
-
-  CUSTOMERS = '/customers',
-
-  AGENTS = '/agents',
-
-  INVOICE_CATEGORIES = '/invoice-categories',
+  // Masters
+  MASTERS = '/masters',
+  MASTERS_HOME = '/masters/home',
+  USERS = '/masters/users',
+  CUSTOMERS = '/masters/customers',
+  AGENTS = '/masters/agents',
+  INVOICE_CATEGORIES = '/masters/invoice-categories',
+  TRANSACTION_TYPES = '/masters/transaction-types',
 
   INVOICES = '/invoices',
 
-  TRANSACTION_TYPES = '/transaction-types',
-
   TRANSACTIONS = '/transactions',
 
+  // Reports
   REPORTS = '/reports',
+  REPORTS_HOME = '/reports/home',
 }

@@ -1,63 +1,85 @@
 import {
-  AccountBalance,
-  Dashboard,
-  DataUsage,
-  Groups,
-  People,
-  Receipt,
+  AccountCircleTwoTone,
+  DataUsageTwoTone,
+  DescriptionTwoTone,
+  FolderOpenTwoTone,
+  PaidTwoTone,
+  PeopleAltTwoTone,
+  ReceiptLongTwoTone,
+  SpaceDashboardTwoTone,
 } from '@mui/icons-material';
 import { ReactNode } from 'react';
+import { AppRoutes } from '../../router/routes';
 
-interface INavLinks {
-  label: string;
-  to: string;
+export interface INavLink {
+  id: string;
   icon: ReactNode;
+  label: string;
+  to?: string;
+  children?: INavLink[];
 }
 
-export const navLinks: INavLinks[] = [
+export const navLinks: INavLink[] = [
   {
-    icon: <Dashboard />,
+    id: 'dashboard',
+    icon: <SpaceDashboardTwoTone />,
     label: 'Dashboard',
-    to: '/dashboard',
+    to: AppRoutes.DASHBOARD,
   },
   {
-    icon: <People />,
-    label: 'Users',
-    to: '/users',
+    id: 'masters',
+    icon: <FolderOpenTwoTone />,
+    label: 'Masters',
+    to: AppRoutes.MASTERS_HOME,
+    children: [
+      {
+        id: 'users',
+        icon: <AccountCircleTwoTone />,
+        label: 'Users',
+        to: AppRoutes.USERS,
+      },
+      {
+        id: 'customers',
+        icon: <PeopleAltTwoTone />,
+        label: 'Customers',
+        to: AppRoutes.CUSTOMERS,
+      },
+      {
+        id: 'agents',
+        icon: <PeopleAltTwoTone />,
+        label: 'Agents',
+        to: AppRoutes.AGENTS,
+      },
+      {
+        id: 'invoice-categories',
+        icon: <DescriptionTwoTone />,
+        label: 'Invoice Categories',
+        to: AppRoutes.INVOICE_CATEGORIES,
+      },
+      {
+        id: 'transaction-types',
+        icon: <DescriptionTwoTone />,
+        label: 'Transaction Types',
+        to: AppRoutes.TRANSACTION_TYPES,
+      },
+    ],
   },
   {
-    icon: <Groups />,
-    label: 'Customers',
-    to: '/customers',
-  },
-  {
-    icon: <Groups />,
-    label: 'Agents',
-    to: '/agents',
-  },
-  {
-    icon: <Receipt />,
-    label: 'Invoice Categories',
-    to: '/invoice-categories',
-  },
-  {
-    icon: <Receipt />,
+    id: 'invoices',
+    icon: <ReceiptLongTwoTone />,
     label: 'Invoices',
-    to: '/invoices',
+    to: AppRoutes.INVOICES,
   },
   {
-    icon: <AccountBalance />,
-    label: 'Transaction Types',
-    to: '/transaction-types',
-  },
-  {
-    icon: <AccountBalance />,
+    id: 'transactions',
+    icon: <PaidTwoTone />,
     label: 'Transactions',
-    to: '/transactions',
+    to: AppRoutes.TRANSACTIONS,
   },
   {
-    icon: <DataUsage />,
+    id: 'reports',
+    icon: <DataUsageTwoTone />,
     label: 'Reports',
-    to: '/reports',
+    to: AppRoutes.REPORTS_HOME,
   },
 ];

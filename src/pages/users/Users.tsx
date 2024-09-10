@@ -1,5 +1,5 @@
 import Page from '../../components/page/Page';
-import { Routes } from '../../router/routes';
+import { AppRoutes } from '../../router/routes';
 
 function Users() {
   return (
@@ -8,12 +8,11 @@ function Users() {
       title="Listing"
       breadcrumbs={[
         {
-          label: 'Dashboard',
-          to: Routes.DASHBOARD,
+          label: 'Masters',
+          to: AppRoutes.MASTERS_HOME,
         },
         {
           label: 'Users',
-          to: Routes.USERS,
           active: true,
         },
       ]}

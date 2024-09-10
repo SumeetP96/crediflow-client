@@ -1,25 +1,26 @@
+import { Link } from 'react-router-dom';
 import Page from '../../components/page/Page';
 import { AppRoutes } from '../../router/routes';
 
-function Transactions() {
+function Masters() {
   return (
     <Page
-      header="Transactions"
-      title="Listing"
+      header="Masters"
+      title="Home"
       breadcrumbs={[
         {
           label: 'Dashboard',
           to: AppRoutes.DASHBOARD,
         },
         {
-          label: 'Transactions',
+          label: 'Masters',
           active: true,
         },
       ]}
     >
-      Transactions
+      <Link to={AppRoutes.USERS}>Users</Link>
     </Page>
   );
 }
 
-export default Transactions;
+export default Masters;

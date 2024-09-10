@@ -6,9 +6,6 @@ import {
   Divider,
   Drawer,
   IconButton,
-  List,
-  ListItem,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -20,10 +17,11 @@ import {
   useTheme,
 } from '@mui/material';
 import { MouseEvent, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import { navLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
+import NestedNav from './NestedNav';
 
 export interface ISideNavAppBarLayout {
   children: React.ReactNode;
@@ -37,10 +35,6 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
 
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
 
-  const navigate = useNavigate();
-
-  const location = useLocation();
-
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [isClosing, setIsClosing] = useState(false);
@@ -48,10 +42,6 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(menuAnchorEl);
-
-  const isLinkActive = (link: string): boolean => {
-    return location.pathname.startsWith(link);
-  };
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -189,22 +179,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
 
           <Divider />
 
-          <List>
-            {navLinks.map((link) => (
-              <ListItem key={link.label} disablePadding>
-                <ListItemButton
-                  selected={isLinkActive(link.to)}
-                  onClick={() => {
-                    navigate(link.to);
-                    handleDrawerClose();
-                  }}
-                >
-                  <ListItemIcon>{link.icon}</ListItemIcon>
-                  <ListItemText primary={link.label} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          <NestedNav navLinks={navLinks} onClick={() => handleDrawerClose()} />
         </Drawer>
 
         <Box

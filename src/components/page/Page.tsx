@@ -49,7 +49,7 @@ function Page({ children, header, title, breadcrumbs }: IPageProps) {
         <Breadcrumbs separator="•">
           {breadcrumbs.map(({ label, to, active, disabled }) => (
             <Link
-              key={to}
+              key={label}
               underline={active || disabled ? 'none' : 'hover'}
               color={active || disabled ? 'textDisabled' : 'inherit'}
               onClick={() => {
