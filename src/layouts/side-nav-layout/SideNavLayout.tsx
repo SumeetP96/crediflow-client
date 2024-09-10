@@ -109,8 +109,8 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
               variant="h6"
               noWrap
               component="div"
-              fontWeight={400}
               sx={{ flexGrow: 1 }}
+              color="text.secondary"
             >
               {appBarHeader}
             </Typography>
@@ -174,7 +174,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" fontWeight={400} noWrap>
+            <Typography variant="h6" noWrap>
               <NavLink
                 to="/"
                 style={{
@@ -182,7 +182,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
                   color: 'inherit',
                 }}
               >
-                RTC Customers
+                {import.meta.env.VITE_APP_NAME}
               </NavLink>
             </Typography>
           </Toolbar>

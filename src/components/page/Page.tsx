@@ -5,8 +5,9 @@ import { useLayout } from '../../layouts/hooks/use-layout';
 
 interface IBreadCrumb {
   label: string;
-  to: string;
+  to?: string;
   active?: boolean;
+  disabled?: boolean;
 }
 
 export interface IPageProps {
@@ -25,7 +26,10 @@ function Page({ children, header, title, breadcrumbs }: IPageProps) {
 
   useEffect(() => {
     layout.actions.setAppBarHeader(header);
-  }, [header, layout.actions, location.pathname]);
+    if (title) {
+      document.title = `${header} - ${title}`;
+    }
+  }, [header, layout.actions, location.pathname, title]);
 
   return (
     <Box
@@ -42,17 +46,20 @@ function Page({ children, header, title, breadcrumbs }: IPageProps) {
       ) : null}
 
       {breadcrumbs?.length ? (
-        <Breadcrumbs>
-          {breadcrumbs.map(({ label, to, active }) => (
+        <Breadcrumbs separator="•">
+          {breadcrumbs.map(({ label, to, active, disabled }) => (
             <Link
               key={to}
-              underline="hover"
-              color={active ? 'text.primary' : 'inherit'}
+              underline={active || disabled ? 'none' : 'hover'}
+              color={active || disabled ? 'textDisabled' : 'inherit'}
               onClick={() => {
-                if (active) return;
+                if (active || disabled || !to) return;
                 navigate(to);
               }}
-              sx={{ cursor: 'pointer' }}
+              variant="subtitle2"
+              sx={{
+                cursor: active || disabled ? 'not-allowed' : 'pointer',
+              }}
             >
               {label}
             </Link>
