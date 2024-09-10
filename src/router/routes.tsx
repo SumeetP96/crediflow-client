@@ -1,6 +1,10 @@
 export enum AppRoutes {
   APP = '/',
 
+  SETTINGS = '/settings',
+
+  PROFILE = '/profile',
+
   DASHBOARD = '/dashboard',
 
   // Masters

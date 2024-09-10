@@ -6,7 +6,9 @@ import Dashboard from '../pages/dashboard/Dashboard';
 import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
 import Invoices from '../pages/invoices/Invoices';
 import Masters from '../pages/masters/Masters';
+import Profile from '../pages/profile/Profile';
 import Reports from '../pages/reports/Reports';
+import Settings from '../pages/settings/Settings';
 import TransactionTypes from '../pages/transaction-types/TransactionTypes';
 import Transactions from '../pages/transactions/Transactions';
 import Users from '../pages/users/Users';
@@ -17,6 +19,14 @@ export const router = createBrowserRouter([
     path: AppRoutes.APP,
     element: <App />,
     children: [
+      {
+        path: AppRoutes.SETTINGS,
+        element: <Settings />,
+      },
+      {
+        path: AppRoutes.PROFILE,
+        element: <Profile />,
+      },
       {
         path: AppRoutes.DASHBOARD,
         element: <Dashboard />,

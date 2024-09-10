@@ -11,13 +11,12 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { MouseEvent, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import { navLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
@@ -31,6 +30,8 @@ export interface ISideNavAppBarLayout {
 const drawerWidth = 240;
 
 function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
+  const navigate = useNavigate();
+
   const theme = useTheme();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
@@ -75,15 +76,14 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           sx={{
             width: { lg: `calc(100% - ${drawerWidth}px)` },
             ml: `${drawerWidth}px`,
+            px: 1,
             backgroundColor: 'transparent',
-            color: 'black',
-            background: 'rgba(255, 255, 255, 0.8)',
+            background: 'text.primary',
             backdropFilter: 'blur(6px)',
           }}
         >
           <Toolbar>
             <IconButton
-              color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
@@ -106,11 +106,14 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
             </Typography>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleProfileClick}>
-                  <Avatar alt="User" src={UserAvatar} />
-                </IconButton>
-              </Tooltip>
+              <IconButton
+                onClick={handleProfileClick}
+                sx={{
+                  padding: 1,
+                }}
+              >
+                <Avatar alt="User" src={UserAvatar} />
+              </IconButton>
 
               <Menu
                 id="profile-menu"
@@ -130,7 +133,15 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
               >
                 {profileMenuItems.map((item) => {
                   const components = [
-                    <MenuItem onClick={handleMenuClose}>
+                    <MenuItem
+                      key={item.id}
+                      onClick={() => {
+                        if (item.to) {
+                          navigate(item.to);
+                        }
+                        handleMenuClose();
+                      }}
+                    >
                       <ListItemIcon>{item.icon}</ListItemIcon>
                       <ListItemText>{item.label}</ListItemText>
                     </MenuItem>,
@@ -164,7 +175,11 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{ width: '100%', textAlign: 'center' }}
+            >
               <NavLink
                 to="/"
                 style={{
@@ -177,14 +192,16 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
             </Typography>
           </Toolbar>
 
-          <Divider />
-
           <NestedNav navLinks={navLinks} onClick={() => handleDrawerClose()} />
         </Drawer>
 
         <Box
           component="main"
-          sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+          sx={{
+            flexGrow: 1,
+            py: 3,
+            px: 4,
+          }}
         >
           <Toolbar />
           {children}
