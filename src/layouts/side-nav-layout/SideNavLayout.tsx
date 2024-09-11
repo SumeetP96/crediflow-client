@@ -76,7 +76,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           sx={{
             width: { lg: `calc(100% - ${drawerWidth}px)` },
             ml: `${drawerWidth}px`,
-            px: 1,
+            px: { lg: 1 },
             backgroundColor: 'transparent',
             background: 'text.primary',
             backdropFilter: 'blur(6px)',
@@ -200,7 +200,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           sx={{
             flexGrow: 1,
             py: 3,
-            px: 4,
+            px: { xs: 2, sm: 3, md: 4 },
           }}
         >
           <Toolbar />
