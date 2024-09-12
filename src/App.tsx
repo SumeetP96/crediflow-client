@@ -1,8 +1,11 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { LayoutProvider } from './layouts/LayoutProvider';
+
+const queryClient = new QueryClient();
 
 function App() {
   const navigate = useNavigate();
@@ -37,7 +40,9 @@ function App() {
         <CssBaseline />
 
         <LayoutProvider>
-          <Outlet />
+          <QueryClientProvider client={queryClient}>
+            <Outlet />
+          </QueryClientProvider>
         </LayoutProvider>
       </ThemeProvider>
     </>

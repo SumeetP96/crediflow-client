@@ -67,7 +67,7 @@ function Page({ children, header, title, breadcrumbs }: IPageProps) {
         </Breadcrumbs>
       ) : null}
 
-      {children}
+      <Box sx={{ mt: 2 }}>{children}</Box>
     </Box>
   );
 }

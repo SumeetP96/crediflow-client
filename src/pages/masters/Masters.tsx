@@ -33,7 +33,7 @@ function Masters() {
         },
       ]}
     >
-      <Grid2 container spacing={2} sx={{ mt: 3 }}>
+      <Grid2 container spacing={2}>
         {masters.map((master) => (
           <Grid2 key={master.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
             <Card variant="outlined" sx={{ width: '100%' }}>
