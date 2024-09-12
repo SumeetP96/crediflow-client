@@ -6,7 +6,7 @@ export interface ISorting {
   [key: string]: ISortOrder;
 }
 
-export interface IDataTableSortingParams<T> {
+export interface IUseDataTableSortingParams<T> {
   rows: T[];
   onSort?: (params: ISorting) => void;
 }
@@ -14,7 +14,7 @@ export interface IDataTableSortingParams<T> {
 export default function useDataTableSorting<T>({
   rows,
   onSort,
-}: IDataTableSortingParams<T>) {
+}: IUseDataTableSortingParams<T>) {
   const [sorting, setSorting] = useState<ISorting>();
 
   const [sortedRows, setSortedRows] = useState<T[]>([]);

@@ -7,13 +7,16 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
+  TablePagination,
   TableRow,
 } from '@mui/material';
 import useDataTableSorting, {
   ISorting,
   ISortOrder,
 } from './hooks/use-data-table-sorting';
+import TablePaginationActions from './TablePaginationActions';
 
 const fieldSortingIconMap: Record<ISortOrder, React.ReactNode> = {
   asc: <ArrowUpward fontSize="small" />,
@@ -34,18 +37,40 @@ export interface IDataTableProps<T> {
   rows: T[];
   keyField: keyof T;
   onSort?: (params: ISorting) => void;
+  page: number;
+  perPage: number;
+  totalRecords: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => void;
+  onPerPageChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  perPageOptions?: ReadonlyArray<number | { value: number; label: string }>;
 }
 
-function DataTable<T>({ columns, rows, keyField, onSort }: IDataTableProps<T>) {
+function DataTable<T>({
+  columns,
+  rows,
+  keyField,
+  onSort,
+  page,
+  perPage,
+  onPageChange,
+  onPerPageChange,
+  perPageOptions = [5, 10, 25],
+  totalRecords,
+}: IDataTableProps<T>) {
   const { sortedRows, getFieldSorting, updateSorting } = useDataTableSorting<T>(
-    {
-      rows,
-      onSort,
-    },
+    { rows, onSort },
   );
 
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows = perPage - rows.length;
+
   return (
-    <Paper elevation={0}>
+    <Paper elevation={0} sx={{ overflowX: 'auto' }}>
       <Table>
         <TableHead>
           <TableRow>
@@ -54,7 +79,6 @@ function DataTable<T>({ columns, rows, keyField, onSort }: IDataTableProps<T>) {
                 <Box
                   sx={{
                     position: 'relative',
-                    borderRight: '1px solid gainsboro',
                     pr: col.sorting ? 2 : 0,
                   }}
                 >
@@ -102,7 +126,37 @@ function DataTable<T>({ columns, rows, keyField, onSort }: IDataTableProps<T>) {
               ))}
             </TableRow>
           ))}
+
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={columns.length} />
+            </TableRow>
+          )}
         </TableBody>
+
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              colSpan={columns.length}
+              sx={{ borderBottom: 'none' }}
+              rowsPerPageOptions={perPageOptions}
+              count={totalRecords}
+              rowsPerPage={perPage}
+              page={page}
+              slotProps={{
+                select: {
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                },
+              }}
+              onPageChange={onPageChange}
+              onRowsPerPageChange={onPerPageChange}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
       </Table>
     </Paper>
   );

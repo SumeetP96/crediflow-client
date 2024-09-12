@@ -20,6 +20,7 @@ import { axiosGet } from '../../api/request';
 import DataTable, {
   IDataTableColumn,
 } from '../../components/data-table/DataTable';
+import useDataTablePagination from '../../components/data-table/hooks/use-data-table-pagination';
 import Page from '../../components/page/Page';
 import { AppRoutes } from '../../router/routes';
 import { IUser } from './interfaces';
@@ -76,6 +77,18 @@ function Users() {
   const [filters, setFilters] = useState<IUserFilters>({
     roles: [],
     status: '',
+  });
+
+  const {
+    page,
+    perPage,
+    paginatedRows,
+    handlePageChange,
+    handlePerPageChange,
+  } = useDataTablePagination<IUser>({
+    rows: users,
+    totalRows: users.length,
+    internalPagination: true,
   });
 
   const columns: IDataTableColumn<IUser>[] = [
@@ -205,7 +218,16 @@ function Users() {
           </Grid2>
         </Grid2>
 
-        <DataTable keyField="id" rows={users} columns={columns} />
+        <DataTable
+          keyField="id"
+          rows={paginatedRows}
+          columns={columns}
+          page={page}
+          perPage={perPage}
+          totalRecords={users.length}
+          onPageChange={handlePageChange}
+          onPerPageChange={handlePerPageChange}
+        />
       </Paper>
     </Page>
   );
