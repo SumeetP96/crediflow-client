@@ -1,5 +1,6 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import App from '../App';
+import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import Agents from '../pages/agents/Agents';
 import Customers from '../pages/customers/Customers';
 import Dashboard from '../pages/dashboard/Dashboard';
@@ -11,7 +12,8 @@ import Reports from '../pages/reports/Reports';
 import Settings from '../pages/settings/Settings';
 import TransactionTypes from '../pages/transaction-types/TransactionTypes';
 import Transactions from '../pages/transactions/Transactions';
-import Users from '../pages/users/Users';
+import UserForm from '../pages/user-form/UserForm';
+import UsersListing from '../pages/users-listing/UsersListing';
 import { AppRoutes } from './routes';
 
 export const router = createBrowserRouter([
@@ -33,7 +35,12 @@ export const router = createBrowserRouter([
       },
       {
         path: AppRoutes.MASTERS,
-        element: <Outlet />,
+        element: (
+          <RouterRedirect
+            from={AppRoutes.MASTERS}
+            to={AppRoutes.MASTERS_HOME}
+          />
+        ),
         children: [
           {
             path: AppRoutes.MASTERS_HOME,
@@ -41,7 +48,26 @@ export const router = createBrowserRouter([
           },
           {
             path: AppRoutes.USERS,
-            element: <Users />,
+            element: (
+              <RouterRedirect
+                from={AppRoutes.USERS}
+                to={AppRoutes.USERS_LIST}
+              />
+            ),
+            children: [
+              {
+                path: AppRoutes.USERS_LIST,
+                element: <UsersListing />,
+              },
+              {
+                path: AppRoutes.USERS_CREATE,
+                element: <UserForm />,
+              },
+              {
+                path: AppRoutes.USERS_UPDATE,
+                element: <UserForm />,
+              },
+            ],
           },
           {
             path: AppRoutes.CUSTOMERS,

@@ -14,11 +14,11 @@ import {
 } from '@mui/material';
 import useDataTableSorting, {
   ISorting,
-  ISortOrder,
+  TSortOrder,
 } from './hooks/use-data-table-sorting';
 import TablePaginationActions from './TablePaginationActions';
 
-const fieldSortingIconMap: Record<ISortOrder, React.ReactNode> = {
+const fieldSortingIconMap: Record<TSortOrder, React.ReactNode> = {
   asc: <ArrowUpward fontSize="small" />,
   desc: <ArrowDownward fontSize="small" />,
   none: <SwapVert fontSize="small" />,

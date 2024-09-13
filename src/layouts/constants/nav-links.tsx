@@ -31,7 +31,7 @@ export const navLinks: INavLink[] = [
     id: 'masters',
     icon: <FolderOpenTwoTone />,
     label: 'Masters',
-    to: AppRoutes.MASTERS_HOME,
+    to: AppRoutes.MASTERS,
     children: [
       {
         id: 'users',

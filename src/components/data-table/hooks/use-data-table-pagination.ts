@@ -5,7 +5,7 @@ export interface IUseDataTablePaginationParams<T> {
   defaultPerPage?: number;
   totalRows: number;
   rows: T[];
-  internalPagination?: boolean;
+  internalPagination: boolean;
 }
 
 export default function useDataTablePagination<T>({
