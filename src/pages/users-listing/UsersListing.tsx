@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import DataTable from '../../components/data-table/DataTable';
-import useDataTablePagination from '../../components/data-table/hooks/use-data-table-pagination';
+import useDataTableLocalPagination from '../../components/data-table/hooks/use-data-table-local-pagination';
 import Page from '../../components/page/Page';
 import { AppRoutes } from '../../router/routes';
 import { userRoleLabelMap, userRoles, userStatus } from './constants';
@@ -26,25 +26,30 @@ import { IUser } from './interfaces';
 import { useUserListingStore } from './store';
 
 function UsersListingPage() {
-  const { roles, status, updateRoles, updateStatus } = useUserListingStore();
-
-  const { rows, columns } = useUserListingData();
-
   const {
     page,
     perPage,
-    paginatedRows,
-    handlePageChange,
-    handlePerPageChange,
-  } = useDataTablePagination<IUser>({
+    roles,
+    status,
+    setRoles,
+    setStatus,
+    setPage,
+    setPerPage,
+  } = useUserListingStore();
+
+  const { rows, columns } = useUserListingData({
+    queryKey: ['users', page, perPage],
+  });
+
+  const { paginatedRows } = useDataTableLocalPagination<IUser>({
+    page,
+    perPage,
     rows,
-    totalRows: rows.length,
-    internalPagination: true,
   });
 
   return (
     <Paper variant="outlined">
-      <Tabs value={status} onChange={(_, value) => updateStatus(value)}>
+      <Tabs value={status} onChange={(_, value) => setStatus(value)}>
         {userStatus.map((status) => (
           <Tab key={status.label} value={status.value} label={status.label} />
         ))}
@@ -58,7 +63,7 @@ function UsersListingPage() {
             <Select
               value={roles}
               label="Role"
-              onChange={(e) => updateRoles(e.target.value)}
+              onChange={(e) => setRoles(e.target.value)}
               multiple
               renderValue={(selected) =>
                 selected.map((value) => userRoleLabelMap[value]).join(', ')
@@ -104,8 +109,8 @@ function UsersListingPage() {
         page={page}
         perPage={perPage}
         totalRecords={rows.length}
-        onPageChange={handlePageChange}
-        onPerPageChange={handlePerPageChange}
+        onPageChange={setPage}
+        onPerPageChange={setPerPage}
       />
     </Paper>
   );

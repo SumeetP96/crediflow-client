@@ -40,13 +40,8 @@ export interface IDataTableProps<T> {
   page: number;
   perPage: number;
   totalRecords: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => void;
-  onPerPageChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
+  onPageChange: (newPage: number) => void;
+  onPerPageChange: (perPage: number) => void;
   perPageOptions?: ReadonlyArray<number | { value: number; label: string }>;
 }
 
@@ -151,8 +146,10 @@ function DataTable<T>({
                   native: true,
                 },
               }}
-              onPageChange={onPageChange}
-              onRowsPerPageChange={onPerPageChange}
+              onPageChange={(_, newPage) => onPageChange(newPage)}
+              onRowsPerPageChange={(e) =>
+                onPerPageChange(parseInt(e.target.value, 10))
+              }
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>

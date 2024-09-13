@@ -5,9 +5,15 @@ import { axiosGet } from '../../../api/request';
 import { IDataTableColumn } from '../../../components/data-table/DataTable';
 import { IUser } from '../interfaces';
 
-export default function useUserListingData() {
+export interface IUseUserListingDataParams {
+  queryKey: Array<string | number>;
+}
+
+export default function useUserListingData({
+  queryKey,
+}: IUseUserListingDataParams) {
   const query = useQuery({
-    queryKey: ['users'],
+    queryKey,
     queryFn: async ({ signal }) => {
       return await axiosGet<IUser[]>('/users', { signal });
     },
