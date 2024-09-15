@@ -11,9 +11,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { defaultPerPageOptions } from '../../helpers/constants';
 import { TSortOrder } from '../../helpers/interfaces';
+import TableSkeleton from '../skeleton/TableSkeleton';
 import TablePaginationActions from './TablePaginationActions';
 
 const fieldSortingIconMap: Record<TSortOrder, React.ReactNode> = {
@@ -43,6 +45,7 @@ export interface IDataTableProps<T> {
   onPageChange: (nextPage: number) => void;
   onPerPageChange: (perPage: number) => void;
   perPageOptions?: ReadonlyArray<number | { value: number; label: string }>;
+  isLoading: boolean;
 }
 
 function DataTable<T>({
@@ -58,6 +61,7 @@ function DataTable<T>({
   onPerPageChange,
   perPageOptions = defaultPerPageOptions,
   totalRecords,
+  isLoading,
 }: IDataTableProps<T>) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = perPage - rows.length;
@@ -93,6 +97,7 @@ function DataTable<T>({
 
                   {col.sorting ? (
                     <IconButton
+                      disabled={isLoading}
                       onClick={() =>
                         handleSorting(col.field as string, sortOrder)
                       }
@@ -118,51 +123,64 @@ function DataTable<T>({
           </TableRow>
         </TableHead>
 
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row[keyField as keyof T] as string}>
-              {columns.map((col) => (
-                <TableCell key={col.field as string} sx={col.sx}>
-                  {col.render
-                    ? col.render(row)
-                    : (row[col.field as keyof T] as string)}
-                </TableCell>
+        {isLoading ? (
+          <TableSkeleton rowCount={5} colCount={columns.length} hasFooter />
+        ) : (
+          <>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row[keyField as keyof T] as string}>
+                  {columns.map((col) => (
+                    <TableCell key={col.field as string} sx={col.sx}>
+                      {col.render
+                        ? col.render(row)
+                        : (row[col.field as keyof T] as string)}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
 
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={columns.length} />
-            </TableRow>
-          )}
-        </TableBody>
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows - 1 }}>
+                  <TableCell colSpan={columns.length}>
+                    <Typography
+                      sx={{ textAlign: 'center' }}
+                      color="textDisabled"
+                    >
+                      No data found
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
 
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              colSpan={columns.length}
-              sx={{ borderBottom: 'none' }}
-              rowsPerPageOptions={perPageOptions}
-              count={totalRecords}
-              rowsPerPage={perPage}
-              page={!totalRecords || totalRecords <= 0 ? 0 : page}
-              slotProps={{
-                select: {
-                  inputProps: {
-                    'aria-label': 'rows per page',
-                  },
-                  native: true,
-                },
-              }}
-              onPageChange={(_, newPage) => onPageChange(newPage)}
-              onRowsPerPageChange={(e) =>
-                onPerPageChange(parseInt(e.target.value, 10))
-              }
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  colSpan={columns.length}
+                  sx={{ borderBottom: 'none' }}
+                  rowsPerPageOptions={perPageOptions}
+                  count={totalRecords}
+                  rowsPerPage={perPage}
+                  page={!totalRecords || totalRecords <= 0 ? 0 : page}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        'aria-label': 'rows per page',
+                      },
+                      native: true,
+                    },
+                  }}
+                  onPageChange={(_, newPage) => onPageChange(newPage)}
+                  onRowsPerPageChange={(e) =>
+                    onPerPageChange(parseInt(e.target.value, 10))
+                  }
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </>
+        )}
       </Table>
     </Paper>
   );

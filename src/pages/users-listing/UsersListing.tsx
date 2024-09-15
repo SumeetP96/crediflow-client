@@ -16,6 +16,7 @@ import {
   TextField,
 } from '@mui/material';
 import { useNavigate } from 'react-router';
+import ListingApiErrorAlert from '../../components/alerts/ListingApiErrorAlert';
 import DataTable from '../../components/data-table/DataTable';
 import Page from '../../components/page/Page';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
@@ -32,7 +33,7 @@ function UsersListingPage() {
 
   const { roles, status } = useUserListingParams();
 
-  const { rows, columns, totalRecords } = useUserListingData();
+  const { query, rows, columns, totalRecords } = useUserListingData();
 
   return (
     <Paper variant="outlined">
@@ -41,7 +42,12 @@ function UsersListingPage() {
         onChange={(_, value) => setSearchParams({ status: value })}
       >
         {userStatus.map((status) => (
-          <Tab key={status.label} value={status.value} label={status.label} />
+          <Tab
+            key={status.label}
+            value={status.value}
+            label={status.label}
+            disabled={query.isLoading}
+          />
         ))}
       </Tabs>
 
@@ -51,6 +57,7 @@ function UsersListingPage() {
           <FormControl fullWidth>
             <InputLabel>Role</InputLabel>
             <Select
+              disabled={query.isLoading}
               value={roles}
               label="Role"
               onChange={(e) => setSearchParams({ roles: e.target.value })}
@@ -78,6 +85,7 @@ function UsersListingPage() {
         <Grid2 size={{ xs: 12, md: 8, lg: 8 }}>
           <FormControl fullWidth>
             <TextField
+              disabled={query.isLoading}
               variant="outlined"
               placeholder="Search here ..."
               value={search}
@@ -96,8 +104,11 @@ function UsersListingPage() {
         </Grid2>
       </Grid2>
 
+      <ListingApiErrorAlert error={query.error} />
+
       <DataTable
         keyField="id"
+        isLoading={query.isLoading}
         columns={columns}
         rows={rows}
         page={page}

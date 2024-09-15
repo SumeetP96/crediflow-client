@@ -35,6 +35,7 @@ export default function useUserListingData() {
     queryFn: async ({ signal }) => {
       return await axiosGet<IUsersWithCount>('/users', { signal }, body);
     },
+    retry: false,
   });
 
   const { count, rows } = query.data?.data || { count: 0, rows: [] };
