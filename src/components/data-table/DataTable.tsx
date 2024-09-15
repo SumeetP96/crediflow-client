@@ -90,13 +90,18 @@ function DataTable<T>({
                 <Box
                   sx={{
                     position: 'relative',
-                    pr: col.sorting ? 2 : 0,
+                    paddingRight: col.sorting ? '30px' : '',
                   }}
                 >
                   {col.title}
 
                   {col.sorting ? (
                     <IconButton
+                      color={
+                        sortBy === col.field && sortOrder !== 'none'
+                          ? 'secondary'
+                          : 'default'
+                      }
                       disabled={isLoading}
                       onClick={() =>
                         handleSorting(col.field as string, sortOrder)
@@ -136,9 +141,11 @@ function DataTable<T>({
                 <TableRow key={row[keyField as keyof T] as string}>
                   {columns.map((col) => (
                     <TableCell key={col.field as string} sx={col.sx}>
-                      {col.render
-                        ? col.render(row)
-                        : (row[col.field as keyof T] as string)}
+                      <Box sx={{ paddingRight: col.sorting ? '30px' : '' }}>
+                        {col.render
+                          ? col.render(row)
+                          : (row[col.field as keyof T] as string)}
+                      </Box>
                     </TableCell>
                   ))}
                 </TableRow>

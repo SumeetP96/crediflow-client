@@ -15,14 +15,19 @@ import {
   Tabs,
   TextField,
 } from '@mui/material';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import ListingApiErrorAlert from '../../components/alerts/ListingApiErrorAlert';
+import DataTableColumnSelect from '../../components/data-table-column-select-menu/TableColumnSelectMenu';
 import DataTable from '../../components/data-table/DataTable';
 import Page from '../../components/page/Page';
+import SelectedFilters from '../../components/selected-filters/SelectedFilters';
+import { defaultPage } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { AppRoutes } from '../../router/routes';
 import { userRoleLabelMap, userRoles, userStatus } from './constants';
+import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
 import useUserListingParams from './hooks/use-user-listing-params';
 
@@ -33,7 +38,40 @@ function UsersListingPage() {
 
   const { roles, status } = useUserListingParams();
 
-  const { query, rows, columns, totalRecords } = useUserListingData();
+  const { query, rows, totalRecords } = useUserListingData();
+
+  const { allColumns, activeColumns, toggleColumn } = useUserListingColumns();
+
+  const filters = useMemo(() => {
+    const activeFilters = [];
+
+    if (sortBy && sortOrder) {
+      const column = allColumns.find((c) => c.field === sortBy);
+      activeFilters.push({
+        key: 'SORT',
+        label: `${column?.title} (${sortOrder.toUpperCase()})`,
+        onDelete: () => setSearchParams({ sortBy: null, sortOrder: null }),
+      });
+    }
+
+    if (roles.length) {
+      activeFilters.push({
+        key: 'ROLES',
+        label: `${roles.map((role) => userRoleLabelMap[role]).join(', ')}`,
+        onDelete: () => setSearchParams({ roles: null }),
+      });
+    }
+
+    if (search) {
+      activeFilters.push({
+        key: 'SEARCH',
+        label: `"${search}"`,
+        onDelete: () => setSearchParams({ search: null }),
+      });
+    }
+
+    return activeFilters;
+  }, [allColumns, roles, search, setSearchParams, sortBy, sortOrder]);
 
   return (
     <Paper variant="outlined">
@@ -106,10 +144,27 @@ function UsersListingPage() {
 
       <ListingApiErrorAlert error={query.error} />
 
+      <Grid2 container sx={{ px: 3 }}>
+        <Grid2 size={{ xs: 12, lg: 10 }}>
+          <SelectedFilters filters={filters} />
+        </Grid2>
+
+        <Grid2
+          size={{ xs: 12, lg: 2 }}
+          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+        >
+          <DataTableColumnSelect
+            columns={allColumns}
+            onToggleColumn={toggleColumn}
+            selectedColumn={activeColumns.map((col) => col.field)}
+          />
+        </Grid2>
+      </Grid2>
+
       <DataTable
         keyField="id"
         isLoading={query.isLoading}
-        columns={columns}
+        columns={activeColumns}
         rows={rows}
         page={page}
         perPage={perPage}
@@ -118,7 +173,9 @@ function UsersListingPage() {
         onPerPageChange={(perPage) => setSearchParams({ perPage })}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onSort={(sortBy, sortOrder) => setSearchParams({ sortBy, sortOrder })}
+        onSort={(sortBy, sortOrder) =>
+          setSearchParams({ page: defaultPage, sortBy, sortOrder })
+        }
       />
     </Paper>
   );
