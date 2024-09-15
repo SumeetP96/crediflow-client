@@ -124,7 +124,11 @@ function DataTable<T>({
         </TableHead>
 
         {isLoading ? (
-          <TableSkeleton rowCount={5} colCount={columns.length} hasFooter />
+          <TableSkeleton
+            rowCount={perPage}
+            colCount={columns.length}
+            hasFooter
+          />
         ) : (
           <>
             <TableBody>
