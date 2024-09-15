@@ -1,11 +1,9 @@
-import { SearchTwoTone } from '@mui/icons-material';
 import {
   Box,
   Button,
   Checkbox,
   FormControl,
   Grid2,
-  InputAdornment,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -13,13 +11,13 @@ import {
   Select,
   Tab,
   Tabs,
-  TextField,
 } from '@mui/material';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import ListingApiErrorAlert from '../../components/alerts/ListingApiErrorAlert';
 import DataTableColumnSelect from '../../components/data-table-column-select-menu/TableColumnSelectMenu';
 import DataTable from '../../components/data-table/DataTable';
+import DebouncedSearchField from '../../components/debounced-search-field/DebouncedTextField';
 import Page from '../../components/page/Page';
 import SelectedFilters from '../../components/selected-filters/SelectedFilters';
 import { defaultPage } from '../../helpers/constants';
@@ -121,24 +119,15 @@ function UsersListingPage() {
         </Grid2>
 
         <Grid2 size={{ xs: 12, md: 8, lg: 8 }}>
-          <FormControl fullWidth>
-            <TextField
-              disabled={query.isLoading}
-              variant="outlined"
-              placeholder="Search here ..."
-              value={search}
-              onChange={(e) => setSearchParams({ search: e.target.value })}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchTwoTone />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-          </FormControl>
+          <DebouncedSearchField
+            disabled={query.isLoading}
+            variant="outlined"
+            placeholder="Enter atleast 3 characters to search..."
+            value={search}
+            onChange={(search) => setSearchParams({ search })}
+            debouncedTime={1000}
+            minInputLength={3}
+          />
         </Grid2>
       </Grid2>
 
