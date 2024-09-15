@@ -48,7 +48,7 @@ function Page({
     >
       <Grid2 container spacing={2}>
         <Grid2
-          size={{ xs: 12, lg: 6 }}
+          size={{ xs: 12, md: 6 }}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -85,7 +85,7 @@ function Page({
         </Grid2>
 
         <Grid2
-          size={{ xs: 12, lg: 6 }}
+          size={{ xs: 12, md: 6 }}
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',

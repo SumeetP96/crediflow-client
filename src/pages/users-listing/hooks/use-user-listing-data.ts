@@ -1,25 +1,43 @@
 import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import { useMemo } from 'react';
-import { axiosGet } from '../../../api/request';
+import { axiosGet, TQueryParams } from '../../../api/request';
 import { IDataTableColumn } from '../../../components/data-table/DataTable';
-import { IUser } from '../interfaces';
+import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
+import { IUser, IUsersWithCount } from '../interfaces';
+import useUserListingParams from './use-user-listing-params';
 
-export interface IUseUserListingDataParams {
-  queryKey: Array<string | number>;
-}
+export default function useUserListingData() {
+  const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
-export default function useUserListingData({
-  queryKey,
-}: IUseUserListingDataParams) {
+  const { roles, status } = useUserListingParams();
+
+  const body: TQueryParams = {
+    search,
+    page,
+    perPage,
+    ...(sortBy && sortOrder ? { sortBy, sortOrder } : {}),
+    ...(roles.length ? { roles } : {}),
+    ...(status ? { status } : {}),
+  };
+
   const query = useQuery({
-    queryKey,
+    queryKey: [
+      'users',
+      page,
+      perPage,
+      roles,
+      sortBy,
+      sortOrder,
+      search,
+      status,
+    ],
     queryFn: async ({ signal }) => {
-      return await axiosGet<IUser[]>('/users', { signal });
+      return await axiosGet<IUsersWithCount>('/users', { signal }, body);
     },
   });
 
-  const rows = query.data?.data || [];
+  const { count, rows } = query.data?.data || { count: 0, rows: [] };
 
   const columns: IDataTableColumn<IUser>[] = useMemo(
     () => [
@@ -65,5 +83,5 @@ export default function useUserListingData({
     [],
   );
 
-  return { query, rows, columns };
+  return { query, rows, columns, totalRecords: count };
 }

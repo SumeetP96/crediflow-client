@@ -5,12 +5,6 @@ import {
   TUserRoleFilterValue,
 } from './interfaces';
 
-export const userRoles: IUserRoleFilterOption[] = [
-  { label: 'Super Admin', value: 'super_admin' },
-  { label: 'Admin', value: 'admin' },
-  { label: 'Employee', value: 'employee' },
-];
-
 export const userRoleLabelMap: Record<
   TUserRoleFilterValue,
   TUserRoleFilterLabel
@@ -19,6 +13,12 @@ export const userRoleLabelMap: Record<
   admin: 'Admin',
   employee: 'Employee',
 };
+
+export const userRoles: IUserRoleFilterOption[] = [
+  { label: 'Super Admin', value: 'super_admin' },
+  { label: 'Admin', value: 'admin' },
+  { label: 'Employee', value: 'employee' },
+];
 
 export const userStatus: IUserStatusFilterOption[] = [
   { label: 'All', value: 'all' },

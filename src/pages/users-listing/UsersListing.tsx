@@ -17,39 +17,29 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router';
 import DataTable from '../../components/data-table/DataTable';
-import useDataTableLocalPagination from '../../components/data-table/hooks/use-data-table-local-pagination';
 import Page from '../../components/page/Page';
+import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
+import useQueryParams from '../../helpers/hooks/use-query-params';
 import { AppRoutes } from '../../router/routes';
 import { userRoleLabelMap, userRoles, userStatus } from './constants';
 import useUserListingData from './hooks/use-user-listing-data';
-import { IUser } from './interfaces';
-import { useUserListingStore } from './store';
+import useUserListingParams from './hooks/use-user-listing-params';
 
 function UsersListingPage() {
-  const {
-    page,
-    perPage,
-    roles,
-    status,
-    setRoles,
-    setStatus,
-    setPage,
-    setPerPage,
-  } = useUserListingStore();
+  const { setSearchParams } = useQueryParams();
 
-  const { rows, columns } = useUserListingData({
-    queryKey: ['users', page, perPage],
-  });
+  const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
-  const { paginatedRows } = useDataTableLocalPagination<IUser>({
-    page,
-    perPage,
-    rows,
-  });
+  const { roles, status } = useUserListingParams();
+
+  const { rows, columns, totalRecords } = useUserListingData();
 
   return (
     <Paper variant="outlined">
-      <Tabs value={status} onChange={(_, value) => setStatus(value)}>
+      <Tabs
+        value={status}
+        onChange={(_, value) => setSearchParams({ status: value })}
+      >
         {userStatus.map((status) => (
           <Tab key={status.label} value={status.value} label={status.label} />
         ))}
@@ -63,11 +53,13 @@ function UsersListingPage() {
             <Select
               value={roles}
               label="Role"
-              onChange={(e) => setRoles(e.target.value)}
+              onChange={(e) => setSearchParams({ roles: e.target.value })}
               multiple
-              renderValue={(selected) =>
-                selected.map((value) => userRoleLabelMap[value]).join(', ')
-              }
+              renderValue={(selected) => {
+                return selected
+                  .map((value) => userRoleLabelMap[value])
+                  .join(', ');
+              }}
             >
               {userRoles.map((role) => (
                 <MenuItem
@@ -88,6 +80,8 @@ function UsersListingPage() {
             <TextField
               variant="outlined"
               placeholder="Search here ..."
+              value={search}
+              onChange={(e) => setSearchParams({ search: e.target.value })}
               slotProps={{
                 input: {
                   startAdornment: (
@@ -104,13 +98,16 @@ function UsersListingPage() {
 
       <DataTable
         keyField="id"
-        rows={paginatedRows}
         columns={columns}
+        rows={rows}
         page={page}
         perPage={perPage}
-        totalRecords={rows.length}
-        onPageChange={setPage}
-        onPerPageChange={setPerPage}
+        totalRecords={totalRecords}
+        onPageChange={(nextPage) => setSearchParams({ page: nextPage })}
+        onPerPageChange={(perPage) => setSearchParams({ perPage })}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        onSort={(sortBy, sortOrder) => setSearchParams({ sortBy, sortOrder })}
       />
     </Paper>
   );

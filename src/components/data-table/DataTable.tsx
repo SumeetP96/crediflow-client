@@ -12,10 +12,8 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import useDataTableSorting, {
-  ISorting,
-  TSortOrder,
-} from './hooks/use-data-table-sorting';
+import { defaultPerPageOptions } from '../../helpers/constants';
+import { TSortOrder } from '../../helpers/interfaces';
 import TablePaginationActions from './TablePaginationActions';
 
 const fieldSortingIconMap: Record<TSortOrder, React.ReactNode> = {
@@ -36,11 +34,13 @@ export interface IDataTableProps<T> {
   columns: IDataTableColumn<T>[];
   rows: T[];
   keyField: keyof T;
-  onSort?: (params: ISorting) => void;
+  sortBy: string;
+  sortOrder: TSortOrder;
+  onSort: (sortBy: string, sortDirection: TSortOrder) => void;
   page: number;
   perPage: number;
   totalRecords: number;
-  onPageChange: (newPage: number) => void;
+  onPageChange: (nextPage: number) => void;
   onPerPageChange: (perPage: number) => void;
   perPageOptions?: ReadonlyArray<number | { value: number; label: string }>;
 }
@@ -49,20 +49,32 @@ function DataTable<T>({
   columns,
   rows,
   keyField,
+  sortBy,
+  sortOrder,
   onSort,
   page,
   perPage,
   onPageChange,
   onPerPageChange,
-  perPageOptions = [5, 10, 25],
+  perPageOptions = defaultPerPageOptions,
   totalRecords,
 }: IDataTableProps<T>) {
-  const { sortedRows, getFieldSorting, updateSorting } = useDataTableSorting<T>(
-    { rows, onSort },
-  );
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = perPage - rows.length;
+
+  const handleSorting = (sortByField: string, sortFieldOrder: string) => {
+    if (sortByField !== sortBy) {
+      onSort(sortByField, 'asc');
+    } else {
+      const newOrder: TSortOrder =
+        sortFieldOrder === 'asc'
+          ? 'desc'
+          : sortFieldOrder === 'desc'
+          ? 'none'
+          : 'asc';
+      onSort(sortBy, newOrder);
+    }
+  };
 
   return (
     <Paper elevation={0} sx={{ overflowX: 'auto' }}>
@@ -81,12 +93,9 @@ function DataTable<T>({
 
                   {col.sorting ? (
                     <IconButton
-                      color={
-                        getFieldSorting(col.field as string) === 'none'
-                          ? 'default'
-                          : 'secondary'
+                      onClick={() =>
+                        handleSorting(col.field as string, sortOrder)
                       }
-                      onClick={() => updateSorting(col.field as string)}
                       size="small"
                       sx={{
                         mr: 1,
@@ -98,7 +107,7 @@ function DataTable<T>({
                     >
                       {
                         fieldSortingIconMap[
-                          getFieldSorting(col.field as string)
+                          col.field === sortBy ? sortOrder : 'none'
                         ]
                       }
                     </IconButton>
@@ -110,7 +119,7 @@ function DataTable<T>({
         </TableHead>
 
         <TableBody>
-          {sortedRows.map((row) => (
+          {rows.map((row) => (
             <TableRow key={row[keyField as keyof T] as string}>
               {columns.map((col) => (
                 <TableCell key={col.field as string} sx={col.sx}>
@@ -137,7 +146,7 @@ function DataTable<T>({
               rowsPerPageOptions={perPageOptions}
               count={totalRecords}
               rowsPerPage={perPage}
-              page={page}
+              page={!totalRecords || totalRecords <= 0 ? 0 : page}
               slotProps={{
                 select: {
                   inputProps: {

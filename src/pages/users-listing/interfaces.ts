@@ -9,6 +9,11 @@ export interface IUser {
   deletedAt: string | null;
 }
 
+export interface IUsersWithCount {
+  count: number;
+  rows: IUser[];
+}
+
 export type TUserRoleFilterValue = 'super_admin' | 'admin' | 'employee';
 
 export type TUserRoleFilterLabel = 'Super Admin' | 'Admin' | 'Employee';

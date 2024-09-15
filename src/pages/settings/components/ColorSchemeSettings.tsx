@@ -4,7 +4,7 @@ import {
   SettingsBrightnessTwoTone,
 } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
-import { useDarkMode } from '../../../hooks/use-dark-mode';
+import { useDarkMode } from '../../../helpers/hooks/use-dark-mode';
 
 export type Mode = 'light' | 'dark' | 'system';
 

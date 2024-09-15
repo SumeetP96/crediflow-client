@@ -4,7 +4,12 @@ import { IApiResponse } from './interfaces';
 
 export type TQueryParams = Record<
   string,
-  string | number | string[] | number[]
+  | string
+  | number
+  | string[]
+  | number[]
+  | Array<string | number>
+  | Record<string, string | number>
 >;
 
 const generateUrlWithQueryParams = (
@@ -21,7 +26,19 @@ const generateUrlWithQueryParams = (
         .map((v) => `${encodeURIComponent(key)}[]=${encodeURIComponent(v)}`)
         .join('&');
     }
-    return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    if (!Array.isArray(value) && typeof value === 'object') {
+      return Object.entries(value)
+        .map(
+          ([subKey, subValue]) =>
+            `${encodeURIComponent(key)}[${encodeURIComponent(
+              subKey,
+            )}]=${encodeURIComponent(subValue)}`,
+        )
+        .join('&');
+    }
+    if (typeof value === 'string' || typeof value === 'number') {
+      return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    }
   });
 
   return `${url}?${queryParamsArray.join('&')}`;
