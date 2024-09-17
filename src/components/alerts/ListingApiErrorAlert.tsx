@@ -6,9 +6,7 @@ export interface IListingApiErrorAlertProps {
   error: any;
 }
 
-export default function ListingApiErrorAlert({
-  error,
-}: IListingApiErrorAlertProps) {
+export default function ListingApiErrorAlert({ error }: IListingApiErrorAlertProps) {
   const parsedError = error ? parseApiErrorResponse(error) : null;
 
   if (!parsedError) {

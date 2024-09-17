@@ -14,15 +14,9 @@ export interface ISideNavLayoutContext {
   actions: ISideNavLayoutContextActions;
 }
 
-export const SideNavLayoutContext = createContext<ISideNavLayoutContext | null>(
-  null,
-);
+export const SideNavLayoutContext = createContext<ISideNavLayoutContext | null>(null);
 
-export const SideNavLayoutProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const SideNavLayoutProvider = ({ children }: { children: React.ReactNode }) => {
   const [appBarHeader, setAppBarHeader] = useState('');
 
   const state = {
@@ -35,9 +29,7 @@ export const SideNavLayoutProvider = ({
 
   return (
     <SideNavLayoutContext.Provider value={{ state, actions }}>
-      <SideNavAppBarLayout appBarHeader={appBarHeader}>
-        {children}
-      </SideNavAppBarLayout>
+      <SideNavAppBarLayout appBarHeader={appBarHeader}>{children}</SideNavAppBarLayout>
     </SideNavLayoutContext.Provider>
   );
 };

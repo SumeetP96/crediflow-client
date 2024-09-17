@@ -1,45 +1,29 @@
-import {
-  FirstPage,
-  KeyboardArrowLeft,
-  KeyboardArrowRight,
-  LastPage,
-} from '@mui/icons-material';
+import { FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage } from '@mui/icons-material';
 import { Box, IconButton } from '@mui/material';
 
 interface ITablePaginationActionsProps {
   count: number;
   page: number;
   rowsPerPage: number;
-  onPageChange: (
-    event: React.MouseEvent<HTMLButtonElement>,
-    newPage: number,
-  ) => void;
+  onPageChange: (event: React.MouseEvent<HTMLButtonElement>, newPage: number) => void;
 }
 
 function TablePaginationActions(props: ITablePaginationActionsProps) {
   const { count, page, rowsPerPage, onPageChange } = props;
 
-  const handleFirstPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleFirstPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, 0);
   };
 
-  const handleBackButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, page - 1);
   };
 
-  const handleNextButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, page + 1);
   };
 
-  const handleLastPageButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const handleLastPageButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
@@ -53,11 +37,7 @@ function TablePaginationActions(props: ITablePaginationActionsProps) {
         <FirstPage />
       </IconButton>
 
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
         <KeyboardArrowLeft />
       </IconButton>
 

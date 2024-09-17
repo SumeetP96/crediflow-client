@@ -175,11 +175,7 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           }}
         >
           <Toolbar>
-            <Typography
-              variant="h6"
-              noWrap
-              sx={{ width: '100%', textAlign: 'center' }}
-            >
+            <Typography variant="h6" noWrap sx={{ width: '100%', textAlign: 'center' }}>
               <NavLink
                 to="/"
                 style={{

@@ -17,9 +17,7 @@ export default function useSorting() {
         }
 
         if (typeof aValue === 'string' && typeof bValue === 'string') {
-          return sortOrder === 'asc'
-            ? aValue.localeCompare(bValue)
-            : bValue.localeCompare(aValue);
+          return sortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         }
 
         if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1;

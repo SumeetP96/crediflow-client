@@ -18,13 +18,7 @@ export interface IPageProps {
   topRightComponent?: React.ReactNode;
 }
 
-function Page({
-  children,
-  header,
-  title,
-  breadcrumbs,
-  topRightComponent,
-}: IPageProps) {
+function Page({ children, header, title, breadcrumbs, topRightComponent }: IPageProps) {
   const navigate = useNavigate();
 
   const location = useLocation();

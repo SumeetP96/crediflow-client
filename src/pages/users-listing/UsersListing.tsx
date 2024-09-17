@@ -29,7 +29,7 @@ import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
 import useUserListingParams from './hooks/use-user-listing-params';
 
-function UsersListingPage() {
+function UsersListingComponent() {
   const { setSearchParams } = useQueryParams();
 
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
@@ -43,7 +43,7 @@ function UsersListingPage() {
   const filters = useMemo(() => {
     const activeFilters = [];
 
-    if (sortBy && sortOrder) {
+    if (sortBy && sortOrder && sortOrder !== 'none') {
       const column = allColumns.find((c) => c.field === sortBy);
       activeFilters.push({
         key: 'SORT',
@@ -73,10 +73,7 @@ function UsersListingPage() {
 
   return (
     <Paper variant="outlined">
-      <Tabs
-        value={status}
-        onChange={(_, value) => setSearchParams({ status: value })}
-      >
+      <Tabs value={status} onChange={(_, value) => setSearchParams({ status: value })}>
         {userStatus.map((status) => (
           <Tab
             key={status.label}
@@ -99,17 +96,11 @@ function UsersListingPage() {
               onChange={(e) => setSearchParams({ roles: e.target.value })}
               multiple
               renderValue={(selected) => {
-                return selected
-                  .map((value) => userRoleLabelMap[value])
-                  .join(', ');
+                return selected.map((value) => userRoleLabelMap[value]).join(', ');
               }}
             >
               {userRoles.map((role) => (
-                <MenuItem
-                  key={role.value}
-                  value={role.value}
-                  sx={{ height: '50px' }}
-                >
+                <MenuItem key={role.value} value={role.value} sx={{ height: '50px' }}>
                   <Checkbox checked={roles.indexOf(role.value) > -1} />
                   <ListItemText primary={role.label} />
                 </MenuItem>
@@ -138,10 +129,7 @@ function UsersListingPage() {
           <SelectedFilters filters={filters} />
         </Grid2>
 
-        <Grid2
-          size={{ xs: 12, lg: 2 }}
-          sx={{ display: 'flex', justifyContent: 'flex-end' }}
-        >
+        <Grid2 size={{ xs: 12, lg: 2 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <DataTableColumnSelect
             columns={allColumns}
             onToggleColumn={toggleColumn}
@@ -162,9 +150,7 @@ function UsersListingPage() {
         onPerPageChange={(perPage) => setSearchParams({ perPage })}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onSort={(sortBy, sortOrder) =>
-          setSearchParams({ page: defaultPage, sortBy, sortOrder })
-        }
+        onSort={(sortBy, sortOrder) => setSearchParams({ page: defaultPage, sortBy, sortOrder })}
       />
     </Paper>
   );
@@ -175,11 +161,7 @@ function TopRightComponent() {
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        size="large"
-        onClick={() => navigate(AppRoutes.USERS_CREATE)}
-      >
+      <Button variant="contained" size="large" onClick={() => navigate(AppRoutes.USERS_CREATE)}>
         New User
       </Button>
     </Box>
@@ -194,7 +176,7 @@ export default function UsersListing() {
       breadcrumbs={[
         {
           label: 'Masters',
-          to: AppRoutes.MASTERS_HOME,
+          to: AppRoutes.MASTERS,
         },
         {
           label: 'Users',
@@ -203,7 +185,7 @@ export default function UsersListing() {
       ]}
       topRightComponent={<TopRightComponent />}
     >
-      <UsersListingPage />
+      <UsersListingComponent />
     </Page>
   );
 }

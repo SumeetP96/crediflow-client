@@ -35,12 +35,7 @@ export const router = createBrowserRouter([
       },
       {
         path: AppRoutes.MASTERS,
-        element: (
-          <RouterRedirect
-            from={AppRoutes.MASTERS}
-            to={AppRoutes.MASTERS_HOME}
-          />
-        ),
+        element: <RouterRedirect from={AppRoutes.MASTERS} to={AppRoutes.MASTERS_HOME} />,
         children: [
           {
             path: AppRoutes.MASTERS_HOME,
@@ -48,12 +43,7 @@ export const router = createBrowserRouter([
           },
           {
             path: AppRoutes.USERS,
-            element: (
-              <RouterRedirect
-                from={AppRoutes.USERS}
-                to={AppRoutes.USERS_LIST}
-              />
-            ),
+            element: <RouterRedirect from={AppRoutes.USERS} to={AppRoutes.USERS_LIST} />,
             children: [
               {
                 path: AppRoutes.USERS_LIST,

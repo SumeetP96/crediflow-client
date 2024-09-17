@@ -8,7 +8,7 @@ const config: CreateAxiosDefaults = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
     Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVyYWRtaW4iLCJzdWIiOjEsImlhdCI6MTcyNjA0NjI4MCwiZXhwIjoxNzI2NDc4MjgwfQ.WQCPgPRfACHqJkonHebgoQLDCS1MwzYQOp9borwwOPU',
+      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVyYWRtaW4iLCJzdWIiOjEsImlhdCI6MTcyNjQ4MDM1NiwiZXhwIjoxNzI2OTEyMzU2fQ.rCOVgnwDxPmGCdpVNX_w91n43XxaSn47EsS7LiFuUwE',
   },
 };
 

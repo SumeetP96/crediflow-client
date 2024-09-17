@@ -25,9 +25,7 @@ export default function useUserListingParams() {
 
     return {
       roles:
-        (roles?.split(
-          defaultQueryParamsArraySeparator,
-        ) as TUserRoleFilterValue[]) || defaultRoles,
+        (roles?.split(defaultQueryParamsArraySeparator) as TUserRoleFilterValue[]) || defaultRoles,
       status: status || defaultStatus,
     };
   });
@@ -38,9 +36,8 @@ export default function useUserListingParams() {
     setParams(
       produce((draft) => {
         draft.roles =
-          (roles?.split(
-            defaultQueryParamsArraySeparator,
-          ) as TUserRoleFilterValue[]) || defaultRoles;
+          (roles?.split(defaultQueryParamsArraySeparator) as TUserRoleFilterValue[]) ||
+          defaultRoles;
         draft.status = status || defaultStatus;
       }),
     );

@@ -1,20 +1,11 @@
-export interface IUser {
-  id: number;
-  name: string;
-  username: string;
-  role: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
+import { IUser, TUserRole, TUserStatus } from '../../helpers/interfaces';
 
 export interface IUsersWithCount {
   count: number;
   rows: IUser[];
 }
 
-export type TUserRoleFilterValue = 'super_admin' | 'admin' | 'employee';
+export type TUserRoleFilterValue = TUserRole;
 
 export type TUserRoleFilterLabel = 'Super Admin' | 'Admin' | 'Employee';
 
@@ -23,9 +14,9 @@ export interface IUserRoleFilterOption {
   value: TUserRoleFilterValue;
 }
 
-export type TUserStatusFilterValue = 'all' | 'active' | 'in_active' | 'deleted';
+export type TUserStatusFilterValue = 'all' | TUserStatus;
 
-export type TUserStatusFilterLabel = 'All' | 'Active' | 'Inactive' | 'Deleted';
+export type TUserStatusFilterLabel = 'All' | 'Active' | 'Inactive';
 
 export interface IUserStatusFilterOption {
   label: TUserStatusFilterLabel;

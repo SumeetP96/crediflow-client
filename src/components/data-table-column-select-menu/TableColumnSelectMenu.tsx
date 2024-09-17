@@ -29,10 +29,7 @@ export default function DataTableColumnSelect<T>({
   return (
     <Box>
       <Tooltip title="Select Columns">
-        <IconButton
-          color="primary"
-          onClick={(event) => setAnchorEl(event.currentTarget)}
-        >
+        <IconButton color="primary" onClick={(event) => setAnchorEl(event.currentTarget)}>
           <ViewWeekTwoTone />
         </IconButton>
       </Tooltip>
@@ -51,10 +48,7 @@ export default function DataTableColumnSelect<T>({
         }}
       >
         {columns.map((col) => (
-          <MenuItem
-            key={col.field as string}
-            onClick={() => onToggleColumn(col.field)}
-          >
+          <MenuItem key={col.field as string} onClick={() => onToggleColumn(col.field)}>
             <ListItemIcon>
               <Checkbox checked={selectedColumn.includes(col.field)} />
             </ListItemIcon>

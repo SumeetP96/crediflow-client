@@ -18,12 +18,7 @@ export interface INavList {
   isNested?: boolean;
 }
 
-function NestedNav({
-  onClick,
-  listProps,
-  navLinks = [],
-  isNested = false,
-}: INavList) {
+function NestedNav({ onClick, listProps, navLinks = [], isNested = false }: INavList) {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -68,9 +63,7 @@ function NestedNav({
             >
               <ListItemIcon>{link.icon}</ListItemIcon>
               <ListItemText primary={link.label} />
-              {hasChildren ? (
-                <>{isOpen ? <ExpandLess /> : <ExpandMore />}</>
-              ) : null}
+              {hasChildren ? <>{isOpen ? <ExpandLess /> : <ExpandMore />}</> : null}
             </ListItemButton>
 
             <Collapse in={isOpen} timeout="auto" unmountOnExit>

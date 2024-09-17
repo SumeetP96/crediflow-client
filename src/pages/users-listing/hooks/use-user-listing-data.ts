@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosGet, TQueryParams } from '../../../api/request';
+import { ApiEndpoints } from '../../../helpers/constants';
 import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
 import { IUsersWithCount } from '../interfaces';
 import useUserListingParams from './use-user-listing-params';
@@ -19,18 +20,9 @@ export default function useUserListingData() {
   };
 
   const query = useQuery({
-    queryKey: [
-      'users',
-      page,
-      perPage,
-      roles,
-      sortBy,
-      sortOrder,
-      search,
-      status,
-    ],
+    queryKey: ['users', page, perPage, roles, sortBy, sortOrder, search, status],
     queryFn: async ({ signal }) => {
-      return await axiosGet<IUsersWithCount>('/users', { signal }, body);
+      return await axiosGet<IUsersWithCount>(ApiEndpoints.ALL_USERS, { signal }, body);
     },
     retry: false,
   });

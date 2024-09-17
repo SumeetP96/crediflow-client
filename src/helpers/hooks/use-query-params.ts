@@ -32,14 +32,11 @@ export default function useQueryParams() {
   const setSearchParams = useCallback(
     <T = any>(params: Record<string, T>) => {
       const currentParams = getSearchParams();
-      const updatedParams = produce(
-        currentParams,
-        (draft: Record<string, any>) => {
-          Object.keys(params).forEach((key) => {
-            draft[key] = params[key] as string;
-          });
-        },
-      );
+      const updatedParams = produce(currentParams, (draft: Record<string, any>) => {
+        Object.keys(params).forEach((key) => {
+          draft[key] = params[key] as string;
+        });
+      });
       replaceSearchParams(updatedParams);
     },
     [getSearchParams, replaceSearchParams],

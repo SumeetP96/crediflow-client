@@ -1,10 +1,5 @@
 import { SearchTwoTone } from '@mui/icons-material';
-import {
-  FormControl,
-  InputAdornment,
-  TextField,
-  TextFieldProps,
-} from '@mui/material';
+import { FormControl, InputAdornment, TextField, TextFieldProps } from '@mui/material';
 import { useState } from 'react';
 import useDebounce from '../../helpers/hooks/use-debounce';
 
@@ -37,9 +32,7 @@ export default function DebouncedSearchField({
     }
   }, debouncedTime);
 
-  const handleSearchChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSearch(e.target.value);
     debouncedRequest();
   };

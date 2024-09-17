@@ -71,11 +71,7 @@ function DataTable<T>({
       onSort(sortByField, 'asc');
     } else {
       const newOrder: TSortOrder =
-        sortFieldOrder === 'asc'
-          ? 'desc'
-          : sortFieldOrder === 'desc'
-          ? 'none'
-          : 'asc';
+        sortFieldOrder === 'asc' ? 'desc' : sortFieldOrder === 'desc' ? 'none' : 'asc';
       onSort(sortBy, newOrder);
     }
   };
@@ -97,15 +93,9 @@ function DataTable<T>({
 
                   {col.sorting ? (
                     <IconButton
-                      color={
-                        sortBy === col.field && sortOrder !== 'none'
-                          ? 'secondary'
-                          : 'default'
-                      }
+                      color={sortBy === col.field && sortOrder !== 'none' ? 'secondary' : 'default'}
                       disabled={isLoading}
-                      onClick={() =>
-                        handleSorting(col.field as string, sortOrder)
-                      }
+                      onClick={() => handleSorting(col.field as string, sortOrder)}
                       size="small"
                       sx={{
                         mr: 1,
@@ -115,11 +105,7 @@ function DataTable<T>({
                         transform: 'translateY(-50%)',
                       }}
                     >
-                      {
-                        fieldSortingIconMap[
-                          col.field === sortBy ? sortOrder : 'none'
-                        ]
-                      }
+                      {fieldSortingIconMap[col.field === sortBy ? sortOrder : 'none']}
                     </IconButton>
                   ) : null}
                 </Box>
@@ -129,11 +115,7 @@ function DataTable<T>({
         </TableHead>
 
         {isLoading ? (
-          <TableSkeleton
-            rowCount={perPage}
-            colCount={columns.length}
-            hasFooter
-          />
+          <TableSkeleton rowCount={perPage} colCount={columns.length} hasFooter />
         ) : (
           <>
             <TableBody>
@@ -142,9 +124,7 @@ function DataTable<T>({
                   {columns.map((col) => (
                     <TableCell key={col.field as string} sx={col.sx}>
                       <Box sx={{ paddingRight: col.sorting ? '30px' : '' }}>
-                        {col.render
-                          ? col.render(row)
-                          : (row[col.field as keyof T] as string)}
+                        {col.render ? col.render(row) : (row[col.field as keyof T] as string)}
                       </Box>
                     </TableCell>
                   ))}
@@ -154,10 +134,7 @@ function DataTable<T>({
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows - 1 }}>
                   <TableCell colSpan={columns.length}>
-                    <Typography
-                      sx={{ textAlign: 'center' }}
-                      color="textDisabled"
-                    >
+                    <Typography sx={{ textAlign: 'center' }} color="textDisabled">
                       No data found
                     </Typography>
                   </TableCell>
@@ -183,9 +160,7 @@ function DataTable<T>({
                     },
                   }}
                   onPageChange={(_, newPage) => onPageChange(newPage)}
-                  onRowsPerPageChange={(e) =>
-                    onPerPageChange(parseInt(e.target.value, 10))
-                  }
+                  onRowsPerPageChange={(e) => onPerPageChange(parseInt(e.target.value, 10))}
                   ActionsComponent={TablePaginationActions}
                 />
               </TableRow>

@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  Grid2,
-  Typography,
-} from '@mui/material';
+import { Card, CardActionArea, CardContent, Grid2, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Page from '../../components/page/Page';
 import { navLinks } from '../../layouts/constants/nav-links';

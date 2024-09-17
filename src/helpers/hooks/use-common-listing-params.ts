@@ -31,14 +31,10 @@ export default function useCommonListingParams() {
     setParams(
       produce((draft) => {
         draft.page = parseInt(String(urlParams.page ?? defaultPage), 10);
-        draft.perPage = parseInt(
-          String(urlParams.perPage ?? defaultPerPage),
-          10,
-        );
+        draft.perPage = parseInt(String(urlParams.perPage ?? defaultPerPage), 10);
         draft.search = String(urlParams.search || '');
         draft.sortBy = String(urlParams.sortBy || '');
-        draft.sortOrder =
-          (urlParams.sortOrder as TSortOrder) || defaultSortOrder;
+        draft.sortOrder = (urlParams.sortOrder as TSortOrder) || defaultSortOrder;
       }),
     );
 

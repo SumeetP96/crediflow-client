@@ -5,10 +5,7 @@ import {
   TUserRoleFilterValue,
 } from './interfaces';
 
-export const userRoleLabelMap: Record<
-  TUserRoleFilterValue,
-  TUserRoleFilterLabel
-> = {
+export const userRoleLabelMap: Record<TUserRoleFilterValue, TUserRoleFilterLabel> = {
   super_admin: 'Super Admin',
   admin: 'Admin',
   employee: 'Employee',
@@ -24,5 +21,4 @@ export const userStatus: IUserStatusFilterOption[] = [
   { label: 'All', value: 'all' },
   { label: 'Active', value: 'active' },
   { label: 'Inactive', value: 'in_active' },
-  { label: 'Deleted', value: 'deleted' },
 ];
