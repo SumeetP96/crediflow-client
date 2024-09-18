@@ -1,12 +1,15 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import {
+  Box,
   Collapse,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   ListProps,
+  ListSubheader,
 } from '@mui/material';
+import { produce } from 'immer';
 import { Fragment, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { INavLink } from '../constants/nav-links';
@@ -14,11 +17,12 @@ import { INavLink } from '../constants/nav-links';
 export interface INavList {
   onClick: () => void;
   listProps?: ListProps;
+  subHeader?: string;
   navLinks?: INavLink[];
   isNested?: boolean;
 }
 
-function NestedNav({ onClick, listProps, navLinks = [], isNested = false }: INavList) {
+function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHeader }: INavList) {
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -30,57 +34,84 @@ function NestedNav({ onClick, listProps, navLinks = [], isNested = false }: INav
   const [openIds, setOpenIds] = useState<string[]>([]);
 
   return (
-    <List component="nav" {...(listProps || {})}>
-      {navLinks.map((link) => {
-        const hasChildren = link.children && link.children.length > 0;
-        const isOpen =
-          openIds.includes(link.id) ||
-          (isLinkActive(String(link.to)) && location.pathname !== link.to);
-        const isActive = isLinkActive(String(link.to)) || isOpen;
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <List
+        {...(listProps || {})}
+        component="nav"
+        sx={{
+          width: '220px',
+        }}
+      >
+        {subHeader ? <ListSubheader>{subHeader}</ListSubheader> : null}
 
-        return (
-          <Fragment key={link.label}>
-            <ListItemButton
-              selected={isActive}
-              onClick={() => {
-                if (hasChildren) {
-                  if (isOpen) {
-                    setOpenIds((prev) => prev.filter((id) => id !== link.id));
-                  } else {
-                    setOpenIds((prev) => [...prev, link.id]);
-                  }
+        {navLinks.map((link) => {
+          const hasChildren = link.children && link.children.length > 0;
+          const isOpen = openIds.includes(link.id);
+          const isActive = isLinkActive(String(link.to));
+          const toggleCollapse = () => {
+            setOpenIds(
+              produce((draft) => {
+                if (isOpen) {
+                  draft = openIds.filter((id) => id !== link.id);
+                } else {
+                  draft = openIds.concat(link.id);
                 }
+                return draft;
+              }),
+            );
+          };
 
-                if (link.to) {
-                  navigate(link.to);
-                }
-
-                onClick();
-              }}
-              sx={{
-                pl: isNested ? 4 : 'auto',
-              }}
-            >
-              <ListItemIcon>{link.icon}</ListItemIcon>
-              <ListItemText primary={link.label} />
-              {hasChildren ? <>{isOpen ? <ExpandLess /> : <ExpandMore />}</> : null}
-            </ListItemButton>
-
-            <Collapse in={isOpen} timeout="auto" unmountOnExit>
-              <NestedNav
-                isNested
-                navLinks={link.children}
-                onClick={onClick}
-                listProps={{
-                  component: 'div',
-                  disablePadding: true,
+          return (
+            <Fragment key={link.label}>
+              <ListItemButton
+                selected={isActive}
+                sx={{
+                  mt: 0.5,
+                  pl: isNested ? 4 : 'auto',
+                  py: 0.5,
+                  borderRadius: '8px',
                 }}
-              />
-            </Collapse>
-          </Fragment>
-        );
-      })}
-    </List>
+                onClick={() => {
+                  toggleCollapse();
+                  if (link.to) {
+                    navigate(link.to);
+                  }
+                  onClick();
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: '40px' }}>
+                  {isActive ? link.activeIcon || link.icon : link.icon}
+                </ListItemIcon>
+
+                <ListItemText
+                  primary={link.label}
+                  primaryTypographyProps={{
+                    fontWeight: isActive ? 500 : 'inherit',
+                    fontSize: '0.95rem',
+                  }}
+                />
+
+                {hasChildren ? <>{isOpen ? <ExpandLess /> : <ExpandMore />}</> : null}
+              </ListItemButton>
+
+              {hasChildren ? (
+                <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                  <NestedNav
+                    isNested
+                    navLinks={link.children}
+                    onClick={onClick}
+                    listProps={{
+                      component: 'div',
+                      disablePadding: true,
+                    }}
+                  />
+                </Collapse>
+              ) : null}
+            </Fragment>
+          );
+        })}
+      </List>
+    </Box>
   );
 }
 

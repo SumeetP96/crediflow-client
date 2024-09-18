@@ -1,14 +1,14 @@
 import { Card, CardActionArea, CardContent, Grid2, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Page from '../../components/page/Page';
-import { navLinks } from '../../layouts/constants/nav-links';
+import { mainMenuLinks } from '../../layouts/constants/nav-links';
 import { AppRoutes } from '../../router/routes';
 
 function Masters() {
   const navigate = useNavigate();
 
   const masters =
-    navLinks
+    mainMenuLinks
       .find((link) => link.id === 'masters')
       ?.children?.filter((link) => link.id !== 'masters-home') || [];
 

@@ -18,7 +18,8 @@ import {
 import { MouseEvent, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserAvatar from '../../assets/avatar-1.jpg';
-import { navLinks } from '../constants/nav-links';
+import bankImage from '../../assets/bank.png';
+import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import NestedNav from './NestedNav';
 
@@ -28,6 +29,8 @@ export interface ISideNavAppBarLayout {
 }
 
 const drawerWidth = 240;
+
+const appName = import.meta.env.VITE_APP_NAME;
 
 function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
   const navigate = useNavigate();
@@ -175,20 +178,28 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap sx={{ width: '100%', textAlign: 'center' }}>
+            <Typography variant="h6" noWrap>
               <NavLink
                 to="/"
                 style={{
                   textDecoration: 'none',
                   color: 'inherit',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
-                {import.meta.env.VITE_APP_NAME}
+                <img
+                  src={bankImage}
+                  alt="brand-logo"
+                  width={25}
+                  style={{ marginRight: '0.675rem' }}
+                />
+                {appName}
               </NavLink>
             </Typography>
           </Toolbar>
 
-          <NestedNav navLinks={navLinks} onClick={() => handleDrawerClose()} />
+          <NestedNav navLinks={mainMenuLinks} onClick={() => handleDrawerClose()} />
         </Drawer>
 
         <Box

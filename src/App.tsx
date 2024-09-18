@@ -30,7 +30,7 @@ function App() {
       },
     },
     shape: {
-      borderRadius: 16,
+      borderRadius: 12,
     },
   });
 
