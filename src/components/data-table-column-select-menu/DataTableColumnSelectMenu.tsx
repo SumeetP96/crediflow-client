@@ -7,9 +7,10 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  MenuList,
   Tooltip,
 } from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { IDataTableColumn } from '../data-table/DataTable';
 
 export interface IDataTableColumnSelect<T> {
@@ -24,7 +25,10 @@ export default function DataTableColumnSelect<T>({
   onToggleColumn,
 }: IDataTableColumnSelect<T>) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const open = Boolean(anchorEl);
+
+  const filteredColumns = useMemo(() => columns.filter((col) => col.select !== false), [columns]);
 
   return (
     <Box>
@@ -48,19 +52,25 @@ export default function DataTableColumnSelect<T>({
           paper: {
             style: {
               maxHeight: 600,
-              minWidth: '20ch',
+              minWidth: '18ch',
             },
           },
         }}
       >
-        {columns.map((col) => (
-          <MenuItem key={col.field as string} onClick={() => onToggleColumn(col.field)}>
-            <ListItemIcon>
-              <Checkbox checked={selectedColumn.includes(col.field)} />
-            </ListItemIcon>
-            <ListItemText>{col.title}</ListItemText>
-          </MenuItem>
-        ))}
+        <MenuList>
+          {filteredColumns.map((col) => (
+            <MenuItem
+              key={col.field as string}
+              onClick={() => onToggleColumn(col.field)}
+              sx={{ py: 0 }}
+            >
+              <ListItemIcon>
+                <Checkbox size="small" checked={selectedColumn.includes(col.field)} disableRipple />
+              </ListItemIcon>
+              <ListItemText>{col.title}</ListItemText>
+            </MenuItem>
+          ))}
+        </MenuList>
       </Menu>
     </Box>
   );

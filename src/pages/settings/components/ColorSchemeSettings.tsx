@@ -1,12 +1,13 @@
 import { DarkModeTwoTone, LightModeTwoTone, SettingsBrightnessTwoTone } from '@mui/icons-material';
 import { Box, Button } from '@mui/material';
+import { ReactNode } from 'react';
 import { useDarkMode } from '../../../helpers/hooks/use-dark-mode';
 
 export type Mode = 'light' | 'dark' | 'system';
 
 export interface IColorScheme {
   mode: Mode;
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
 }
 

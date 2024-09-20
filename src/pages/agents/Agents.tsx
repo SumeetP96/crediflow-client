@@ -4,15 +4,14 @@ import { AppRoutes } from '../../router/routes';
 function Agents() {
   return (
     <Page
-      header="Agents"
-      title="Listing"
+      title="Agents Listing"
       breadcrumbs={[
         {
           label: 'Masters',
           to: AppRoutes.MASTERS_HOME,
         },
         {
-          label: 'Agents',
+          label: 'Agents Listing',
           active: true,
         },
       ]}

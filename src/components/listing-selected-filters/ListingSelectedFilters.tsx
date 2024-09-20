@@ -1,20 +1,25 @@
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Chip, SxProps, Typography } from '@mui/material';
 import { ReactNode } from 'react';
 
-export type ISelectedFilter = {
+export type IListingSelectedFilter = {
   key: string;
   label: ReactNode;
-  onClick?: (filter: ISelectedFilter) => void;
-  onDelete?: (filter: ISelectedFilter) => void;
+  onClick?: (filter: IListingSelectedFilter) => void;
+  onDelete?: (filter: IListingSelectedFilter) => void;
 };
 
-export interface ISelectedFilters {
-  filters: ISelectedFilter[];
+export interface IListingSelectedFilters {
+  filters: IListingSelectedFilter[];
+  sx?: SxProps;
 }
 
-export default function SelectedFilters({ filters }: ISelectedFilters) {
+export default function ListingSelectedFilters({ filters, sx }: IListingSelectedFilters) {
+  if (!filters.length) {
+    return null;
+  }
+
   return (
-    <Box sx={{ display: 'flex', alignItems: 'start', flexWrap: 'wrap', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'start', flexWrap: 'wrap', gap: 1, ...sx }}>
       {filters.map((filter) => (
         <Chip
           key={filter.key}

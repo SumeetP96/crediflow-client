@@ -1,8 +1,13 @@
+import { IDataTableColumn, IDataTableExtraColumns } from '../../components/data-table/DataTable';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/interfaces';
+
+export type TUserRecord = IUser & IDataTableExtraColumns;
+
+export type TUserColumns = IDataTableColumn<TUserRecord>[];
 
 export interface IUsersWithCount {
   count: number;
-  rows: IUser[];
+  rows: TUserRecord[];
 }
 
 export type TUserRoleFilterValue = TUserRole;

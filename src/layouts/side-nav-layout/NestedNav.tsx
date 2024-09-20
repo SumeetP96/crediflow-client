@@ -68,7 +68,7 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
                 sx={{
                   mt: 0.5,
                   pl: isNested ? 4 : 'auto',
-                  py: 0.5,
+                  py: 0.75,
                   borderRadius: '8px',
                 }}
                 onClick={() => {

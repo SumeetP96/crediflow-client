@@ -1,7 +1,7 @@
 import Page from '../../components/page/Page';
 
 function Dashboard() {
-  return <Page header="Dashboard">Dashboard</Page>;
+  return <Page title="Dashboard">Dashboard</Page>;
 }
 
 export default Dashboard;

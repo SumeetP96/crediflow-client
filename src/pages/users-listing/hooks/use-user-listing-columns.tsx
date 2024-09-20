@@ -1,26 +1,33 @@
+import { Edit, MoreVert } from '@mui/icons-material';
+import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import moment from 'moment';
 import { useMemo, useState } from 'react';
-import { IDataTableColumn } from '../../../components/data-table/DataTable';
-import { IUser } from '../interfaces';
+import { useNavigate } from 'react-router';
+import ButtonMenu from '../../../components/button-menu/ButtonMenu';
+import { AppRoutes } from '../../../router/routes';
+import { TUserColumns, TUserRecord } from '../interfaces';
 
 export default function useUserListingColumns() {
-  const columns: IDataTableColumn<IUser>[] = useMemo(
+  const navigate = useNavigate();
+
+  const columns: TUserColumns = useMemo(
     () => [
       {
         field: 'id',
         title: 'ID',
         sx: { textAlign: 'center', width: '120px' },
-        sorting: true,
+        sort: true,
       },
       {
         field: 'name',
         title: 'Name',
-        sorting: true,
+        sort: true,
+        filter: true,
       },
       {
         field: 'username',
         title: 'Username',
-        sorting: true,
+        sort: true,
       },
       {
         field: 'role',
@@ -30,7 +37,7 @@ export default function useUserListingColumns() {
             .split('_')
             .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
             .join(' '),
-        sorting: true,
+        sort: true,
       },
       {
         field: 'status',
@@ -40,16 +47,30 @@ export default function useUserListingColumns() {
             .split('_')
             .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
             .join('-'),
-        sorting: true,
+        sort: true,
       },
       {
         field: 'createdAt',
         title: 'Created At',
         render: ({ createdAt }) => moment(createdAt).format('DD/MM/YYYY HH:mm'),
-        sorting: true,
+        sort: true,
+      },
+      {
+        field: 'actions',
+        title: '',
+        render: ({ id }) => (
+          <ButtonMenu size="small" tooltip="Actions" isIconButton icon={<MoreVert />}>
+            <MenuItem onClick={() => navigate(AppRoutes.USERS_UPDATE.replace(':id', String(id)))}>
+              <ListItemIcon>
+                <Edit />
+              </ListItemIcon>
+              <ListItemText>Edit</ListItemText>
+            </MenuItem>
+          </ButtonMenu>
+        ),
       },
     ],
-    [],
+    [navigate],
   );
 
   const [selectedColumnFields, setSelectedColumnsFields] = useState(
@@ -61,7 +82,7 @@ export default function useUserListingColumns() {
     [columns, selectedColumnFields],
   );
 
-  const toggleColumn = (field: keyof IUser) => {
+  const toggleColumn = (field: keyof TUserRecord) => {
     const isVisible = selectedColumnFields.includes(field);
     if (isVisible) {
       setSelectedColumnsFields(selectedColumnFields.filter((f) => f !== field));

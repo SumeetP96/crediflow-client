@@ -1,4 +1,4 @@
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { HelpOutlineOutlined, Menu as MenuIcon, SettingsOutlined } from '@mui/icons-material';
 import {
   AppBar,
   Avatar,
@@ -15,24 +15,25 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, ReactNode, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
+import { AppRoutes } from '../../router/routes';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import NestedNav from './NestedNav';
 
 export interface ISideNavAppBarLayout {
-  children: React.ReactNode;
-  appBarHeader: string;
+  children: ReactNode;
+  appBarHeaderComponent: ReactNode;
 }
 
 const drawerWidth = 240;
 
 const appName = import.meta.env.VITE_APP_NAME;
 
-function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
+function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBarLayout) {
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -79,7 +80,6 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           sx={{
             width: { lg: `calc(100% - ${drawerWidth}px)` },
             ml: `${drawerWidth}px`,
-            px: { lg: 1 },
             backgroundColor: 'transparent',
             background: 'text.primary',
             backdropFilter: 'blur(6px)',
@@ -98,23 +98,24 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
               <MenuIcon />
             </IconButton>
 
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ flexGrow: 1 }}
-              color="text.secondary"
-            >
-              {appBarHeader}
-            </Typography>
+            <Box component="div" sx={{ flexGrow: 1 }}>
+              {appBarHeaderComponent}
+            </Box>
 
             <Box sx={{ flexGrow: 0 }}>
+              <IconButton size="small" sx={{ ml: 1, display: { xs: 'none', md: 'inline-flex' } }}>
+                <HelpOutlineOutlined />
+              </IconButton>
+
               <IconButton
-                onClick={handleProfileClick}
-                sx={{
-                  padding: 1,
-                }}
+                size="small"
+                sx={{ ml: 1, display: { xs: 'none', md: 'inline-flex' } }}
+                onClick={() => navigate(AppRoutes.SETTINGS)}
               >
+                <SettingsOutlined />
+              </IconButton>
+
+              <IconButton onClick={handleProfileClick} sx={{ padding: 1, ml: 2 }}>
                 <Avatar alt="User" src={UserAvatar} />
               </IconButton>
 
@@ -206,7 +207,8 @@ function SideNavAppBarLayout({ children, appBarHeader }: ISideNavAppBarLayout) {
           component="main"
           sx={{
             flexGrow: 1,
-            py: 3,
+            pt: 2,
+            pb: 3,
             px: { xs: 2, sm: 3, md: 4 },
             width: '100%',
           }}

@@ -1,12 +1,12 @@
-import React, { createContext, useState } from 'react';
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from 'react';
 import SideNavAppBarLayout from './SideNavLayout';
 
 export interface ISideNavLayoutContextState {
-  appBarHeader: string;
+  appBarHeaderComponent: ReactNode;
 }
 
 export interface ISideNavLayoutContextActions {
-  setAppBarHeader: (header: string) => void;
+  setAppBarHeaderComponent: Dispatch<SetStateAction<ReactNode>>;
 }
 
 export interface ISideNavLayoutContext {
@@ -16,20 +16,22 @@ export interface ISideNavLayoutContext {
 
 export const SideNavLayoutContext = createContext<ISideNavLayoutContext | null>(null);
 
-export const SideNavLayoutProvider = ({ children }: { children: React.ReactNode }) => {
-  const [appBarHeader, setAppBarHeader] = useState('');
+export const SideNavLayoutProvider = ({ children }: { children: ReactNode }) => {
+  const [appBarHeaderComponent, setAppBarHeaderComponent] = useState<ReactNode>();
 
   const state = {
-    appBarHeader,
+    appBarHeaderComponent,
   };
 
   const actions = {
-    setAppBarHeader,
+    setAppBarHeaderComponent,
   };
 
   return (
     <SideNavLayoutContext.Provider value={{ state, actions }}>
-      <SideNavAppBarLayout appBarHeader={appBarHeader}>{children}</SideNavAppBarLayout>
+      <SideNavAppBarLayout appBarHeaderComponent={appBarHeaderComponent}>
+        {children}
+      </SideNavAppBarLayout>
     </SideNavLayoutContext.Provider>
   );
 };

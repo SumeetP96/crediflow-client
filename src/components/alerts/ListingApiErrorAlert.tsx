@@ -1,12 +1,13 @@
-import { Alert, AlertTitle, Box } from '@mui/material';
+import { Alert, AlertTitle, Box, SxProps } from '@mui/material';
 import { parseApiErrorResponse } from '../../api/response';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IListingApiErrorAlertProps {
   error: any;
+  sx?: SxProps;
 }
 
-export default function ListingApiErrorAlert({ error }: IListingApiErrorAlertProps) {
+export default function ListingApiErrorAlert({ error, sx }: IListingApiErrorAlertProps) {
   const parsedError = error ? parseApiErrorResponse(error) : null;
 
   if (!parsedError) {
@@ -14,7 +15,7 @@ export default function ListingApiErrorAlert({ error }: IListingApiErrorAlertPro
   }
 
   return (
-    <Box sx={{ px: 3, pb: 2 }}>
+    <Box sx={sx}>
       <Alert severity="error">
         {parsedError.errors.length ? (
           <>

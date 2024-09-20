@@ -1,44 +1,29 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  Grid2,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  Paper,
-  Select,
-  Tab,
-  Tabs,
-} from '@mui/material';
+import { Paper } from '@mui/material';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router';
-import ListingApiErrorAlert from '../../components/alerts/ListingApiErrorAlert';
-import DataTableColumnSelect from '../../components/data-table-column-select-menu/TableColumnSelectMenu';
 import DataTable from '../../components/data-table/DataTable';
-import DebouncedSearchField from '../../components/debounced-search-field/DebouncedTextField';
+import ListingHeader from '../../components/listing-header/ListingHeader';
 import Page from '../../components/page/Page';
-import SelectedFilters from '../../components/selected-filters/SelectedFilters';
 import { defaultPage } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { AppRoutes } from '../../router/routes';
-import { userRoleLabelMap, userRoles, userStatus } from './constants';
+import { userRoleLabelMap } from './constants';
 import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
 import useUserListingParams from './hooks/use-user-listing-params';
 
-function UsersListingComponent() {
+const pageTitle = 'Users Listing';
+
+export default function UsersListing() {
   const { setSearchParams } = useQueryParams();
-
-  const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
-
-  const { roles, status } = useUserListingParams();
 
   const { query, rows, totalRecords } = useUserListingData();
 
   const { allColumns, activeColumns, toggleColumn } = useUserListingColumns();
+
+  const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
+
+  const { roles, status } = useUserListingParams();
 
   const filters = useMemo(() => {
     const activeFilters = [];
@@ -72,120 +57,39 @@ function UsersListingComponent() {
   }, [allColumns, roles, search, setSearchParams, sortBy, sortOrder]);
 
   return (
-    <Paper variant="outlined">
-      <Tabs value={status} onChange={(_, value) => setSearchParams({ status: value })}>
-        {userStatus.map((status) => (
-          <Tab
-            key={status.label}
-            value={status.value}
-            label={status.label}
-            disabled={query.isLoading}
-          />
-        ))}
-      </Tabs>
-
-      {/* Filters */}
-      <Grid2 container spacing={2} sx={{ m: 3 }}>
-        <Grid2 size={{ xs: 12, md: 4, lg: 4 }}>
-          <FormControl fullWidth>
-            <InputLabel>Role</InputLabel>
-            <Select
-              disabled={query.isLoading}
-              value={roles}
-              label="Role"
-              onChange={(e) => setSearchParams({ roles: e.target.value })}
-              multiple
-              renderValue={(selected) => {
-                return selected.map((value) => userRoleLabelMap[value]).join(', ');
-              }}
-            >
-              {userRoles.map((role) => (
-                <MenuItem key={role.value} value={role.value} sx={{ height: '50px' }}>
-                  <Checkbox checked={roles.indexOf(role.value) > -1} />
-                  <ListItemText primary={role.label} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid2>
-
-        <Grid2 size={{ xs: 12, md: 8, lg: 8 }}>
-          <DebouncedSearchField
-            disabled={query.isLoading}
-            variant="outlined"
-            placeholder="Enter atleast 3 characters to search..."
-            value={search}
-            onChange={(search) => setSearchParams({ search })}
-            debouncedTime={1000}
-            minInputLength={3}
-          />
-        </Grid2>
-      </Grid2>
-
-      <ListingApiErrorAlert error={query.error} />
-
-      <Grid2 container sx={{ px: 3 }}>
-        <Grid2 size={{ xs: 12, lg: 10 }}>
-          <SelectedFilters filters={filters} />
-        </Grid2>
-
-        <Grid2 size={{ xs: 12, lg: 2 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <DataTableColumnSelect
-            columns={allColumns}
-            onToggleColumn={toggleColumn}
-            selectedColumn={activeColumns.map((col) => col.field)}
-          />
-        </Grid2>
-      </Grid2>
-
-      <DataTable
-        keyField="id"
-        isLoading={query.isLoading}
-        columns={activeColumns}
-        rows={rows}
-        page={page}
-        perPage={perPage}
-        totalRecords={totalRecords}
-        onPageChange={(nextPage) => setSearchParams({ page: nextPage })}
-        onPerPageChange={(perPage) => setSearchParams({ perPage })}
-        sortBy={sortBy}
-        sortOrder={sortOrder}
-        onSort={(sortBy, sortOrder) => setSearchParams({ page: defaultPage, sortBy, sortOrder })}
-      />
-    </Paper>
-  );
-}
-
-function TopRightComponent() {
-  const navigate = useNavigate();
-
-  return (
-    <Box>
-      <Button variant="contained" size="large" onClick={() => navigate(AppRoutes.USERS_CREATE)}>
-        New User
-      </Button>
-    </Box>
-  );
-}
-
-export default function UsersListing() {
-  return (
     <Page
-      header="Users"
-      title="Listing"
+      title={pageTitle}
       breadcrumbs={[
-        {
-          label: 'Masters',
-          to: AppRoutes.MASTERS,
-        },
-        {
-          label: 'Users',
-          active: true,
-        },
+        { label: 'Masters', to: AppRoutes.MASTERS },
+        { label: 'Users', active: true },
       ]}
-      topRightComponent={<TopRightComponent />}
     >
-      <UsersListingComponent />
+      <Paper variant="outlined">
+        <ListingHeader
+          pageTitle={pageTitle}
+          isApiLoading={query.isLoading}
+          apiError={query.error}
+          columns={allColumns}
+          selectedColumns={activeColumns}
+          onToggleColumn={toggleColumn}
+          filters={filters}
+        />
+
+        <DataTable
+          keyField="id"
+          isLoading={query.isLoading}
+          columns={activeColumns}
+          rows={rows}
+          page={page}
+          perPage={perPage}
+          totalRecords={totalRecords}
+          onPageChange={(nextPage) => setSearchParams({ page: nextPage })}
+          onPerPageChange={(perPage) => setSearchParams({ perPage })}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSort={(sortBy, sortOrder) => setSearchParams({ page: defaultPage, sortBy, sortOrder })}
+        />
+      </Paper>
     </Page>
   );
 }

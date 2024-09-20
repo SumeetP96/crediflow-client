@@ -1,7 +1,8 @@
+import { ReactNode } from 'react';
 import { useCurrentLayout } from './hooks/use-current-layout';
 
 export interface ILayoutProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const LayoutProvider = ({ children }: ILayoutProviderProps) => {

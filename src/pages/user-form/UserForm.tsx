@@ -322,8 +322,6 @@ export default function UserForm() {
 
   return (
     <Page
-      header="Users"
-      title={isUpdateMode ? 'Update User' : 'Create New User'}
       breadcrumbs={[
         {
           label: 'Masters',
@@ -338,6 +336,7 @@ export default function UserForm() {
           active: true,
         },
       ]}
+      title={isUpdateMode ? 'Update User' : 'Create New User'}
     >
       <UserFormComponent id={Number(id)} isUpdateMode={isUpdateMode} />
     </Page>

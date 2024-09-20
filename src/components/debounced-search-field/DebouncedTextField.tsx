@@ -1,9 +1,11 @@
 import { SearchTwoTone } from '@mui/icons-material';
-import { FormControl, InputAdornment, TextField, TextFieldProps } from '@mui/material';
-import { useState } from 'react';
+import { InputAdornment, SxProps, TextField, TextFieldProps } from '@mui/material';
+import { useEffect, useState } from 'react';
 import useDebounce from '../../helpers/hooks/use-debounce';
 
 export interface IDebouncedSearchField {
+  size?: TextFieldProps['size'];
+  sx?: SxProps;
   disabled: boolean;
   value: string;
   onChange: (search: string) => void;
@@ -14,6 +16,8 @@ export interface IDebouncedSearchField {
 }
 
 export default function DebouncedSearchField({
+  size,
+  sx,
   disabled,
   value,
   onChange,
@@ -22,10 +26,14 @@ export default function DebouncedSearchField({
   debouncedTime,
   minInputLength,
 }: IDebouncedSearchField) {
-  const [search, setSearch] = useState<string>(value);
+  const [search, setSearch] = useState<string>('');
+
+  useEffect(() => {
+    setSearch(value);
+  }, [value]);
 
   const debouncedRequest = useDebounce(() => {
-    if (search.length >= minInputLength) {
+    if (search && search.length >= minInputLength) {
       onChange(search ?? '');
     } else {
       onChange('');
@@ -38,24 +46,24 @@ export default function DebouncedSearchField({
   };
 
   return (
-    <FormControl fullWidth>
-      <TextField
-        autoComplete="off"
-        disabled={disabled}
-        variant={variant}
-        placeholder={placeholder}
-        defaultValue={search}
-        onChange={handleSearchChange}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchTwoTone />
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
-    </FormControl>
+    <TextField
+      size={size}
+      autoComplete="off"
+      disabled={disabled}
+      variant={variant}
+      placeholder={placeholder}
+      value={search}
+      onChange={handleSearchChange}
+      sx={sx}
+      slotProps={{
+        input: {
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchTwoTone />
+            </InputAdornment>
+          ),
+        },
+      }}
+    />
   );
 }
