@@ -1,29 +1,10 @@
-export enum AppRoutes {
-  APP = '/',
+import { AppRoutes, EAppRoutes } from './constants';
 
-  SETTINGS = '/settings',
+export const AppRoute = (
+  route: keyof typeof EAppRoutes,
+  params?: string | number | Array<string | number>,
+): string => {
+  const path = AppRoutes[route].path;
 
-  PROFILE = '/profile',
-
-  DASHBOARD = '/dashboard',
-
-  MASTERS = '/masters',
-  MASTERS_HOME = '/masters/home',
-
-  USERS = '/masters/users',
-  USERS_LIST = '/masters/users/list',
-  USERS_CREATE = '/masters/users/create',
-  USERS_UPDATE = '/masters/users/update/:id',
-
-  CUSTOMERS = '/masters/customers',
-  AGENTS = '/masters/agents',
-  INVOICE_CATEGORIES = '/masters/invoice-categories',
-  TRANSACTION_TYPES = '/masters/transaction-types',
-
-  INVOICES = '/invoices',
-
-  TRANSACTIONS = '/transactions',
-
-  REPORTS = '/reports',
-  REPORTS_HOME = '/reports/home',
-}
+  return typeof path === 'function' ? path(params) : path;
+};

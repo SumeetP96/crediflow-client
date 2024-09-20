@@ -2,7 +2,6 @@ import { Card, CardActionArea, CardContent, Grid2, Typography } from '@mui/mater
 import { useNavigate } from 'react-router';
 import Page from '../../components/page/Page';
 import { mainMenuLinks } from '../../layouts/constants/nav-links';
-import { AppRoutes } from '../../router/routes';
 
 function Masters() {
   const navigate = useNavigate();
@@ -13,20 +12,7 @@ function Masters() {
       ?.children?.filter((link) => link.id !== 'masters-home') || [];
 
   return (
-    <Page
-      header="Masters"
-      title="Home"
-      breadcrumbs={[
-        {
-          label: 'Dashboard',
-          to: AppRoutes.DASHBOARD,
-        },
-        {
-          label: 'Masters',
-          active: true,
-        },
-      ]}
-    >
+    <Page title="Home" header="Masters Home">
       <Grid2 container spacing={2}>
         {masters.map((master) => (
           <Grid2 key={master.id} size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>

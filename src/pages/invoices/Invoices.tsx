@@ -1,15 +1,14 @@
 import Page from '../../components/page/Page';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 
 function Invoices() {
   return (
     <Page
-      header="Invoices"
       title="Listing"
       breadcrumbs={[
         {
           label: 'Dashboard',
-          to: AppRoutes.DASHBOARD,
+          to: AppRoute('DASHBOARD'),
         },
         {
           label: 'Invoices',

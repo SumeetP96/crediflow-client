@@ -6,7 +6,6 @@ import Page from '../../components/page/Page';
 import { defaultPage } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { AppRoutes } from '../../router/routes';
 import { userRoleLabelMap } from './constants';
 import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
@@ -57,13 +56,7 @@ export default function UsersListing() {
   }, [allColumns, roles, search, setSearchParams, sortBy, sortOrder]);
 
   return (
-    <Page
-      title={pageTitle}
-      breadcrumbs={[
-        { label: 'Masters', to: AppRoutes.MASTERS },
-        { label: 'Users', active: true },
-      ]}
-    >
+    <Page title={pageTitle}>
       <Paper variant="outlined">
         <ListingHeader
           pageTitle={pageTitle}

@@ -3,7 +3,7 @@ import { Box, Button, Collapse, Grid2, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import DataTableColumnSelect from '../data-table-column-select-menu/DataTableColumnSelectMenu';
 import { IDataTableColumn } from '../data-table/DataTable';
@@ -92,7 +92,7 @@ export default function ListingHeader<Col>({
             <Button
               startIcon={<Add />}
               variant="contained"
-              onClick={() => navigate(AppRoutes.USERS_CREATE)}
+              onClick={() => navigate(AppRoute('USERS_CREATE'))}
               disableElevation
             >
               New User

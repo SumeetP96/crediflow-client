@@ -1,6 +1,6 @@
 import { Logout, Person, Settings } from '@mui/icons-material';
 import { ReactNode } from 'react';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 
 export interface IProfileMenuItem {
   id: string;
@@ -15,13 +15,13 @@ export const profileMenuItems = [
     id: 'my-profile',
     icon: <Person />,
     label: 'My Profile',
-    to: AppRoutes.PROFILE,
+    to: AppRoute('PROFILE'),
   },
   {
     id: 'settings',
     icon: <Settings />,
     label: 'Settings',
-    to: AppRoutes.SETTINGS,
+    to: AppRoute('SETTINGS'),
   },
   {
     id: 'logout',

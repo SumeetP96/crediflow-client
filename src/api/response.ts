@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IApiErrorResponse, IParsedApiError } from './interfaces';
+import { IApiErrorResponse, IParsedApiError } from './types';
 
 export const parseApiErrorObject = (error: any): IApiErrorResponse => {
   return error?.response?.data || { message: 'Something went wrong' };

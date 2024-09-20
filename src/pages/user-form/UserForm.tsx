@@ -18,10 +18,10 @@ import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { useNavigate, useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
+import { ApiRoutes } from '../../api/routes';
 import Page from '../../components/page/Page';
-import { ApiEndpoints } from '../../helpers/constants';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/interfaces';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 import { userRoles, userStatus } from './constants';
 import { IFormUser } from './interfaces';
 import { confirmPasswordSchema, passwordSchema } from './validations';
@@ -37,7 +37,7 @@ function UserFormComponent({ id, isUpdateMode }: IUserFormPage) {
   const { data } = useQuery({
     queryKey: ['USER_BY_ID'],
     queryFn: async () => {
-      return await axiosGet<IUser>(ApiEndpoints.USER_BY_ID(id as number));
+      return await axiosGet<IUser>(ApiRoutes.USER_BY_ID(id as number));
     },
     enabled: isUpdateMode,
     retry: false,
@@ -56,11 +56,11 @@ function UserFormComponent({ id, isUpdateMode }: IUserFormPage) {
     },
     onSubmit: async ({ value }) => {
       if (isUpdateMode) {
-        await axiosPatch(ApiEndpoints.UPDATE_USER_BY_ID(id as number), value);
+        await axiosPatch(ApiRoutes.USER_UPDATE(id as number), value);
       } else {
-        await axiosPost(ApiEndpoints.CREATE_USER, value);
+        await axiosPost(ApiRoutes.USER_CREATE, value);
       }
-      navigate(AppRoutes.USERS);
+      navigate(AppRoute('USERS'));
     },
     validatorAdapter: zodValidator(),
   });
@@ -302,7 +302,7 @@ function UserFormComponent({ id, isUpdateMode }: IUserFormPage) {
                 type="reset"
                 onClick={() => {
                   form.reset();
-                  navigate(AppRoutes.USERS);
+                  navigate(AppRoute('USERS'));
                 }}
               >
                 Cancel
@@ -321,23 +321,7 @@ export default function UserForm() {
   const isUpdateMode = Boolean(id);
 
   return (
-    <Page
-      breadcrumbs={[
-        {
-          label: 'Masters',
-          to: AppRoutes.MASTERS,
-        },
-        {
-          label: 'Users',
-          to: AppRoutes.USERS,
-        },
-        {
-          label: isUpdateMode ? 'Update User' : 'Create User',
-          active: true,
-        },
-      ]}
-      title={isUpdateMode ? 'Update User' : 'Create New User'}
-    >
+    <Page title={isUpdateMode ? 'Update User' : 'Create New User'}>
       <UserFormComponent id={Number(id)} isUpdateMode={isUpdateMode} />
     </Page>
   );

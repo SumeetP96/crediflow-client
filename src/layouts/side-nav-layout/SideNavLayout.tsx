@@ -19,7 +19,7 @@ import { MouseEvent, ReactNode, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import NestedNav from './NestedNav';
@@ -110,7 +110,7 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
               <IconButton
                 size="small"
                 sx={{ ml: 1, display: { xs: 'none', md: 'inline-flex' } }}
-                onClick={() => navigate(AppRoutes.SETTINGS)}
+                onClick={() => navigate(AppRoute('SETTINGS'))}
               >
                 <SettingsOutlined />
               </IconButton>

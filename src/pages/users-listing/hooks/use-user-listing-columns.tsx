@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
-import { AppRoutes } from '../../../router/routes';
+import { AppRoute } from '../../../router/routes';
 import { TUserColumns, TUserRecord } from '../interfaces';
 
 export default function useUserListingColumns() {
@@ -15,7 +15,7 @@ export default function useUserListingColumns() {
       {
         field: 'id',
         title: 'ID',
-        sx: { textAlign: 'center', width: '120px' },
+        sx: { width: '150px', pl: 4 },
         sort: true,
       },
       {
@@ -28,39 +28,45 @@ export default function useUserListingColumns() {
         field: 'username',
         title: 'Username',
         sort: true,
+        sx: { width: '200px', textAlign: 'center' },
       },
       {
         field: 'role',
         title: 'Role',
+        sort: true,
+        sx: { width: '150px', textAlign: 'center' },
         render: ({ role }) =>
           role
             .split('_')
             .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
             .join(' '),
-        sort: true,
       },
       {
         field: 'status',
         title: 'Status',
+        sort: true,
+        sx: { width: '150px', textAlign: 'center' },
         render: ({ status }) =>
           status
             .split('_')
             .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
             .join('-'),
-        sort: true,
       },
       {
         field: 'createdAt',
         title: 'Created At',
-        render: ({ createdAt }) => moment(createdAt).format('DD/MM/YYYY HH:mm'),
         sort: true,
+        sx: { width: '200px', textAlign: 'center' },
+        render: ({ createdAt }) => moment(createdAt).format('DD/MM/YYYY HH:mm'),
       },
       {
         field: 'actions',
         title: '',
+        select: false,
+        sx: { width: '50px' },
         render: ({ id }) => (
           <ButtonMenu size="small" tooltip="Actions" isIconButton icon={<MoreVert />}>
-            <MenuItem onClick={() => navigate(AppRoutes.USERS_UPDATE.replace(':id', String(id)))}>
+            <MenuItem onClick={() => navigate(AppRoute('USERS_UPDATE', id))}>
               <ListItemIcon>
                 <Edit />
               </ListItemIcon>

@@ -14,83 +14,83 @@ import TransactionTypes from '../pages/transaction-types/TransactionTypes';
 import Transactions from '../pages/transactions/Transactions';
 import UserForm from '../pages/user-form/UserForm';
 import UsersListing from '../pages/users-listing/UsersListing';
-import { AppRoutes } from './routes';
+import { EAppRoutes } from './constants';
 
 export const router = createBrowserRouter([
   {
-    path: AppRoutes.APP,
+    path: EAppRoutes.APP,
     element: <App />,
     children: [
       {
-        path: AppRoutes.SETTINGS,
+        path: EAppRoutes.SETTINGS,
         element: <Settings />,
       },
       {
-        path: AppRoutes.PROFILE,
+        path: EAppRoutes.PROFILE,
         element: <Profile />,
       },
       {
-        path: AppRoutes.DASHBOARD,
+        path: EAppRoutes.DASHBOARD,
         element: <Dashboard />,
       },
       {
-        path: AppRoutes.MASTERS,
-        element: <RouterRedirect from={AppRoutes.MASTERS} to={AppRoutes.MASTERS_HOME} />,
+        path: EAppRoutes.MASTERS,
+        element: <RouterRedirect from={EAppRoutes.MASTERS} to={EAppRoutes.MASTERS_HOME} />,
         children: [
           {
-            path: AppRoutes.MASTERS_HOME,
+            path: EAppRoutes.MASTERS_HOME,
             element: <Masters />,
           },
           {
-            path: AppRoutes.USERS,
-            element: <RouterRedirect from={AppRoutes.USERS} to={AppRoutes.USERS_LIST} />,
+            path: EAppRoutes.USERS,
+            element: <RouterRedirect from={EAppRoutes.USERS} to={EAppRoutes.USERS_LIST} />,
             children: [
               {
-                path: AppRoutes.USERS_LIST,
+                path: EAppRoutes.USERS_LIST,
                 element: <UsersListing />,
               },
               {
-                path: AppRoutes.USERS_CREATE,
+                path: EAppRoutes.USERS_CREATE,
                 element: <UserForm />,
               },
               {
-                path: AppRoutes.USERS_UPDATE,
+                path: EAppRoutes.USERS_UPDATE,
                 element: <UserForm />,
               },
             ],
           },
           {
-            path: AppRoutes.CUSTOMERS,
+            path: EAppRoutes.CUSTOMERS,
             element: <Customers />,
           },
           {
-            path: AppRoutes.AGENTS,
+            path: EAppRoutes.AGENTS,
             element: <Agents />,
           },
           {
-            path: AppRoutes.INVOICE_CATEGORIES,
+            path: EAppRoutes.INVOICE_CATEGORIES,
             element: <InvoiceCategories />,
           },
           {
-            path: AppRoutes.TRANSACTION_TYPES,
+            path: EAppRoutes.TRANSACTION_TYPES,
             element: <TransactionTypes />,
           },
         ],
       },
       {
-        path: AppRoutes.INVOICES,
+        path: EAppRoutes.INVOICES,
         element: <Invoices />,
       },
       {
-        path: AppRoutes.TRANSACTIONS,
+        path: EAppRoutes.TRANSACTIONS,
         element: <Transactions />,
       },
       {
-        path: AppRoutes.REPORTS,
+        path: EAppRoutes.REPORTS,
         element: <Outlet />,
         children: [
           {
-            path: AppRoutes.REPORTS_HOME,
+            path: EAppRoutes.REPORTS_HOME,
             element: <Reports />,
           },
         ],

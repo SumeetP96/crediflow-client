@@ -19,7 +19,7 @@ import {
   SpaceDashboardOutlined,
 } from '@mui/icons-material';
 import { ReactNode } from 'react';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 
 export interface INavLink {
   id: string;
@@ -37,21 +37,21 @@ export const mainMenuLinks: INavLink[] = [
     icon: <SpaceDashboardOutlined />,
     activeIcon: <SpaceDashboard />,
     label: 'Dashboard',
-    to: AppRoutes.DASHBOARD,
+    to: AppRoute('DASHBOARD'),
   },
   {
     id: 'masters',
     icon: <FolderOpenOutlined />,
     activeIcon: <FolderOpen />,
     label: 'Masters',
-    to: AppRoutes.MASTERS,
+    to: AppRoute('MASTERS'),
     children: [
       {
         id: 'users',
         icon: <AccountCircleOutlined />,
         activeIcon: <AccountCircle />,
         label: 'Users',
-        to: AppRoutes.USERS,
+        to: AppRoute('USERS'),
         description: 'Manage system users',
       },
       {
@@ -59,7 +59,7 @@ export const mainMenuLinks: INavLink[] = [
         icon: <PeopleAltOutlined />,
         activeIcon: <PeopleAlt />,
         label: 'Customers',
-        to: AppRoutes.CUSTOMERS,
+        to: AppRoute('CUSTOMERS'),
         description: 'Manage business customers',
       },
       {
@@ -67,7 +67,7 @@ export const mainMenuLinks: INavLink[] = [
         icon: <PeopleAltOutlined />,
         activeIcon: <PeopleAlt />,
         label: 'Agents',
-        to: AppRoutes.AGENTS,
+        to: AppRoute('AGENTS'),
         description: 'Manage business agents',
       },
       {
@@ -75,7 +75,7 @@ export const mainMenuLinks: INavLink[] = [
         icon: <DescriptionOutlined />,
         activeIcon: <Description />,
         label: 'Invoice Categories',
-        to: AppRoutes.INVOICE_CATEGORIES,
+        to: AppRoute('INVOICE_CATEGORIES'),
         description: 'Manage invoice categories',
       },
       {
@@ -83,7 +83,7 @@ export const mainMenuLinks: INavLink[] = [
         icon: <DescriptionOutlined />,
         activeIcon: <Description />,
         label: 'Transaction Types',
-        to: AppRoutes.TRANSACTION_TYPES,
+        to: AppRoute('TRANSACTION_TYPES'),
         description: 'Manage transaction types',
       },
     ],
@@ -93,21 +93,21 @@ export const mainMenuLinks: INavLink[] = [
     icon: <ReceiptLongOutlined />,
     activeIcon: <ReceiptLong />,
     label: 'Invoices',
-    to: AppRoutes.INVOICES,
+    to: AppRoute('INVOICES'),
   },
   {
     id: 'transactions',
     icon: <PaidOutlined />,
     activeIcon: <Paid />,
     label: 'Transactions',
-    to: AppRoutes.TRANSACTIONS,
+    to: AppRoute('TRANSACTIONS'),
   },
   {
     id: 'reports',
     icon: <DataUsageOutlined />,
     activeIcon: <DataUsage />,
     label: 'Reports',
-    to: AppRoutes.REPORTS_HOME,
+    to: AppRoute('REPORTS_HOME'),
   },
 ];
 
@@ -117,6 +117,6 @@ export const bottomNavLinks: INavLink[] = [
     icon: <SettingsOutlined />,
     activeIcon: <Settings />,
     label: 'Settings',
-    to: AppRoutes.DASHBOARD,
+    to: AppRoute('DASHBOARD'),
   },
 ];

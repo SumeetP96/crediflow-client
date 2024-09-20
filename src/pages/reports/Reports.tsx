@@ -1,15 +1,14 @@
 import Page from '../../components/page/Page';
-import { AppRoutes } from '../../router/routes';
+import { AppRoute } from '../../router/routes';
 
 function Reports() {
   return (
     <Page
-      header="Reports"
       title="Home"
       breadcrumbs={[
         {
           label: 'Dashboard',
-          to: AppRoutes.DASHBOARD,
+          to: AppRoute('DASHBOARD'),
         },
         {
           label: 'Reports',

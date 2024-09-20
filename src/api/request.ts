@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import axiosClient from './axios-client';
-import { IApiResponse } from './interfaces';
+import { IApiResponse } from './types';
 
 export type TQueryParams = Record<
   string,
