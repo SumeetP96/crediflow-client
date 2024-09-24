@@ -19,7 +19,7 @@ const safeQueryParamsObject = (obj: TQueryParams): TQueryParams => {
 export default function useUserListingData() {
   const { getSearchParams } = useQueryParams();
 
-  const { id, name, username, roles = [], status, createdAt = [] } = getSearchParams();
+  const { id, name, username, role = [], status, createdAt = [] } = getSearchParams();
 
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
@@ -27,7 +27,15 @@ export default function useUserListingData() {
     page,
     perPage,
     ...(sortBy && sortOrder ? { sortBy, sortOrder } : {}),
-    ...safeQueryParamsObject({ search, id, name, username, roles, status, createdAt }),
+    ...safeQueryParamsObject({
+      search,
+      id,
+      name,
+      username,
+      role: role ? (Array.isArray(role) ? role : [role]) : '',
+      status,
+      createdAt,
+    }),
   };
 
   const queryKey = [
@@ -40,7 +48,7 @@ export default function useUserListingData() {
     id,
     name,
     username,
-    roles,
+    ...[Array.isArray(role) ? role : [role]],
     status,
     createdAt,
   ];

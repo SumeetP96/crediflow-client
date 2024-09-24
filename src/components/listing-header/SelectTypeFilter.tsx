@@ -40,7 +40,7 @@ export default function SelectTypeFilter<Col>({
   ) => {
     if (Array.isArray(selection)) {
       const value = selection.map((opt) => opt.value);
-      onChange(value.length || '');
+      onChange(value || '');
     } else {
       onChange(selection.value);
     }
