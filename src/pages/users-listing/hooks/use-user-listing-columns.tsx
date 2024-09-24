@@ -4,8 +4,9 @@ import moment from 'moment';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
+import { defaultQueryParamsArraySeparator } from '../../../helpers/constants';
 import { AppRoute } from '../../../router/routes';
-import { userStatusOptions } from '../constants';
+import { userRoleOptions, userStatusOptions } from '../constants';
 import { TUserColumns, TUserRecord } from '../types';
 
 export default function useUserListingColumns() {
@@ -52,6 +53,15 @@ export default function useUserListingColumns() {
         filter: {
           label: 'Role',
           type: 'multiselect',
+          selectOptions: userRoleOptions,
+          render: (_, value) => {
+            return value
+              ? String(value)
+                  .split(defaultQueryParamsArraySeparator)
+                  .map((role) => userRoleOptions.find((ur) => ur.value === role)?.label)
+                  .join(', ')
+              : '';
+          },
         },
         render: ({ role }) =>
           role

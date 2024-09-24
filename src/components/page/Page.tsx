@@ -20,14 +20,16 @@ function Page({ children, title, breadcrumbs, header }: IPageProps) {
     const oldComponent = layout.state.appBarHeaderComponent as JSX.Element;
 
     const newComponent = header ? (
-      <Typography color="text.primary">{header}</Typography>
+      <Typography key={location.pathname} color="text.primary">
+        {header}
+      </Typography>
     ) : (
       <Breadcrumbs key={location.pathname} breadcrumbs={breadcrumbs ?? []} />
     );
 
     const isDifferent = oldComponent?.key !== newComponent?.key;
 
-    if (isDifferent || header) {
+    if (isDifferent) {
       layout.actions.setAppBarHeaderComponent(newComponent);
     }
   }, [breadcrumbs, header, layout.actions, layout.state.appBarHeaderComponent, location.pathname]);

@@ -35,7 +35,7 @@ export interface IDataTableExtraColumns {
 export type TDataTableFilterType = 'text' | 'select' | 'multiselect' | 'date' | 'daterange';
 
 export interface IDataTableFilterSelectOption {
-  label: string;
+  label: string | null;
   value: string | number;
   [key: string]: unknown;
 }

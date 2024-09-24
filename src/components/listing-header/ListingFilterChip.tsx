@@ -4,7 +4,7 @@ import useQueryParams from '../../helpers/hooks/use-query-params';
 import { TDataTableFilterType } from '../data-table/DataTable';
 import SelectTypeFilter from './SelectTypeFilter';
 import TextTypeFilter from './TextTypeFilter';
-import { ISelectedFilter } from './types';
+import { ISelectedFilter, TSelectedOptionValue } from './types';
 
 export interface IListingFilterChipProps<Col> {
   filter: ISelectedFilter<Col>;
@@ -59,7 +59,9 @@ export default function ListingFilterChip<Col>({
   const filterTypeProps = {
     filter: filter,
     value: fieldValue,
-    onChange: (value: string) => setSearchParams({ [filter.field]: value }),
+    onChange: (value: TSelectedOptionValue) => {
+      setSearchParams({ [filter.field]: value });
+    },
   };
 
   const renderFilterByType = (type: TDataTableFilterType) => {
@@ -68,6 +70,8 @@ export default function ListingFilterChip<Col>({
         return <TextTypeFilter {...filterTypeProps} />;
       case 'select':
         return <SelectTypeFilter {...filterTypeProps} />;
+      case 'multiselect':
+        return <SelectTypeFilter {...filterTypeProps} multiple />;
       default:
         return null;
     }

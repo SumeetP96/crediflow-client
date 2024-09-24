@@ -1,24 +1,57 @@
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
-import { ISelectedFilter } from './types';
+import { SyntheticEvent, useMemo } from 'react';
+import { IDataTableFilterSelectOption } from '../data-table/DataTable';
+import { ISelectedFilter, TSelectedOptionValue } from './types';
 
 export interface ISelectTypeFilterProps<Col> {
   filter: ISelectedFilter<Col>;
-  value: string;
-  onChange: (value: string) => void;
+  value: TSelectedOptionValue;
+  onChange: (value: TSelectedOptionValue) => void;
+  multiple?: boolean;
 }
 
 export default function SelectTypeFilter<Col>({
   filter,
   value,
   onChange,
+  multiple = false,
 }: ISelectTypeFilterProps<Col>) {
-  const selectedOption = filter.selectOptions?.find((opt) => opt.value === value);
+  const selectedOption = useMemo(() => {
+    let selectedOption: IDataTableFilterSelectOption | IDataTableFilterSelectOption[] | undefined;
+
+    if (!value) {
+      return selectedOption;
+    }
+
+    const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value);
+
+    if (Array.isArray(value)) {
+      selectedOption = filter.selectOptions?.filter((opt) => value.includes(opt.value));
+    } else if (multiple && singleSelectedOption) {
+      selectedOption = [singleSelectedOption];
+    } else {
+      selectedOption = singleSelectedOption;
+    }
+  }, [filter.selectOptions, multiple, value]);
+
+  const handleChange = (
+    _: SyntheticEvent,
+    selection: IDataTableFilterSelectOption | IDataTableFilterSelectOption[],
+  ) => {
+    if (Array.isArray(selection)) {
+      const value = selection.map((opt) => opt.value);
+      onChange(value.length || '');
+    } else {
+      onChange(selection.value);
+    }
+  };
 
   return (
     <Box sx={{ px: 2, pt: 1, pb: 2 }}>
       <Typography variant="subtitle2">{filter.label} is:</Typography>
 
       <Autocomplete
+        multiple={multiple}
         disableClearable
         autoFocus
         value={selectedOption}
@@ -27,7 +60,7 @@ export default function SelectTypeFilter<Col>({
         options={filter.selectOptions || []}
         sx={{ mt: 1, minWidth: 200 }}
         renderInput={(params) => <TextField {...params} autoFocus />}
-        onChange={(_, v) => onChange(v.value as string)}
+        onChange={handleChange}
       />
     </Box>
   );
