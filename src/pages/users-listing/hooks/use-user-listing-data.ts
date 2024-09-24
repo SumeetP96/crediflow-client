@@ -2,25 +2,46 @@ import { useQuery } from '@tanstack/react-query';
 import { axiosGet, TQueryParams } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
 import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
+import useQueryParams from '../../../helpers/hooks/use-query-params';
 import { IUsersWithCount } from '../interfaces';
-import useUserListingParams from './use-user-listing-params';
+
+const safeQueryParamsObject = (obj: TQueryParams): TQueryParams => {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v != null && (Array.isArray(v) ? v.length > 0 : true)),
+  );
+};
 
 export default function useUserListingData() {
+  const { getSearchParams } = useQueryParams();
+
+  const { id, name, username, roles = [], status, createdAt = [] } = getSearchParams();
+
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
-  const { roles, status } = useUserListingParams();
-
   const body: TQueryParams = {
-    search,
     page,
     perPage,
     ...(sortBy && sortOrder ? { sortBy, sortOrder } : {}),
-    ...(roles.length ? { roles } : {}),
-    ...(status ? { status } : {}),
+    ...safeQueryParamsObject({ search, id, name, username, roles, status, createdAt }),
   };
 
+  const queryKey = [
+    'users',
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    search,
+    id,
+    name,
+    username,
+    roles,
+    status,
+    createdAt,
+  ];
+
   const query = useQuery({
-    queryKey: ['users', page, perPage, roles, sortBy, sortOrder, search, status],
+    queryKey,
     queryFn: async ({ signal }) => {
       return await axiosGet<IUsersWithCount>(ApiRoutes.USER_ALL, { signal }, body);
     },

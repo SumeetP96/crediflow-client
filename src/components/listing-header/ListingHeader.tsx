@@ -1,144 +1,25 @@
-import {
-  Abc,
-  Add,
-  DateRangeOutlined,
-  ExpandCircleDownOutlined,
-  FilterList,
-  FormatListBulleted,
-  TodayOutlined,
-  ViewWeekTwoTone,
-} from '@mui/icons-material';
+import { Add, FilterList, ViewWeekTwoTone } from '@mui/icons-material';
 import {
   Box,
   Button,
   Checkbox,
-  Chip,
-  ClickAwayListener,
   Collapse,
-  Divider,
-  Fade,
   Grid2,
   ListItemIcon,
   ListItemText,
-  Menu,
   MenuItem,
   MenuList,
-  Paper,
-  Popper,
-  Tooltip,
   Typography,
 } from '@mui/material';
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { AppRoute } from '../../router/routes';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
-import { IDataTableColumn, TDataTableFilterType } from '../data-table/DataTable';
-import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
-import ListingSelectedFilters, {
-  IListingSelectedFilter,
-} from '../listing-selected-filters/ListingSelectedFilters';
-
-const filterIconMap: Record<TDataTableFilterType, ReactNode> = {
-  text: <Abc />,
-  select: <ExpandCircleDownOutlined />,
-  multiselect: <FormatListBulleted />,
-  date: <TodayOutlined />,
-  daterange: <DateRangeOutlined />,
-};
-
-export interface ISelectedFilter<Col> {
-  field: keyof Col;
-  label: string;
-  value: string;
-  type: TDataTableFilterType;
-}
-
-function FilterChip<Col>({
-  filter,
-  isApiLoading = false,
-}: {
-  filter: ISelectedFilter<Col>;
-  isApiLoading: boolean;
-}) {
-  const { getSearchParams, setSearchParams } = useQueryParams();
-
-  const chipRef = useRef<HTMLDivElement | null>(null);
-
-  const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (chipRef.current) {
-      setAnchorEl(chipRef.current);
-    }
-  }, []);
-
-  const open = Boolean(anchorEl);
-
-  const allParams = getSearchParams();
-
-  const fieldValue = (allParams[filter.field] as string) || '';
-
-  return (
-    <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
-      <Box component="div" sx={{ display: 'inline-block' }}>
-        <Chip
-          key={filter.field as string}
-          component="div"
-          ref={chipRef}
-          label={
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-                {filter.label as string} :
-              </Typography>
-              <Typography variant="subtitle2" sx={{ fontWeight: 400 }}>
-                {filter.value}
-              </Typography>
-            </Box>
-          }
-          variant="outlined"
-          size="medium"
-          onClick={(e) => setAnchorEl(!anchorEl ? e.currentTarget : null)}
-        />
-
-        <Popper
-          open={open}
-          anchorEl={anchorEl}
-          placement="bottom-start"
-          transition
-          sx={{ zIndex: 1000 }}
-        >
-          {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
-              <Paper elevation={5}>
-                {filter.type === 'text' ? (
-                  <Box sx={{ px: 2, pt: 1, pb: 2 }}>
-                    <Typography variant="subtitle2">{filter.label} contains</Typography>
-
-                    <DebouncedSearchField
-                      hasSearchIcon={false}
-                      size="small"
-                      autoFocus
-                      variant="outlined"
-                      placeholder={`Filter by ${filter.field as string}`}
-                      debouncedTime={1000}
-                      minInputLength={3}
-                      value={fieldValue}
-                      disabled={isApiLoading}
-                      onChange={(search) => setSearchParams({ [filter.field]: search })}
-                      sx={{ width: '100%', mt: 1 }}
-                    />
-                  </Box>
-                ) : null}
-              </Paper>
-            </Fade>
-          )}
-        </Popper>
-      </Box>
-    </ClickAwayListener>
-  );
-}
+import { IDataTableColumn } from '../data-table/DataTable';
+import { filterIconMap } from './constants';
+import ListingFilterChip, { ISelectedFilter } from './ListingFilterChip';
 
 export interface IListingHeaderProps<Col> {
   pageTitle: string;
@@ -147,7 +28,6 @@ export interface IListingHeaderProps<Col> {
   columns: Array<IDataTableColumn<Col>>;
   selectedColumns: Array<IDataTableColumn<Col>>;
   onToggleColumn: (field: keyof Col) => void;
-  filters: IListingSelectedFilter[];
 }
 
 export default function ListingHeader<Col>({
@@ -157,26 +37,54 @@ export default function ListingHeader<Col>({
   columns,
   selectedColumns,
   onToggleColumn,
-  filters,
 }: IListingHeaderProps<Col>) {
   const navigate = useNavigate();
 
-  const [selectedFilters, setSelectedFilters] = useState<ISelectedFilter<Col>[]>([]);
+  const [openFilterField, setOpenFilterField] = useState<keyof Col>();
 
-  const [filterMenuAnchor, setFilterMenuAnchor] = useState<HTMLElement | null>(null);
+  const { getSearchParams, setSearchParams } = useQueryParams();
 
-  const isFilterMenuOpen = Boolean(filterMenuAnchor);
+  const allParams = getSearchParams();
 
-  const selectableColumns = useMemo(() => columns.filter((col) => col.select !== false), [columns]);
+  const selectableColumns = useMemo(() => {
+    return columns.filter((col) => col.select !== false);
+  }, [columns]);
 
-  const filterableColumns = useMemo(
-    () => columns.filter((col) => Boolean(col.filter?.type)),
-    [columns],
-  );
+  const filterableColumns = useMemo(() => {
+    return columns.filter((col) => Boolean(col.filter?.type));
+  }, [columns]);
+
+  const selectedFilters = useMemo(() => {
+    const selected: ISelectedFilter<Col>[] = [];
+
+    filterableColumns
+      .filter((col) => Object.keys(allParams).includes(col.field as string))
+      .forEach((col) => {
+        if (col.filter) {
+          selected.push({
+            ...col.filter,
+            field: col.field,
+            value: allParams[col.field],
+          });
+        }
+      });
+
+    return selected;
+  }, [allParams, filterableColumns]);
+
+  const filterMenuOptions = useMemo(() => {
+    return filterableColumns.filter((col) => {
+      return !selectedFilters.find((f) => f.field === col.field);
+    });
+  }, [filterableColumns, selectedFilters]);
 
   return (
-    <Box sx={{ px: 3, py: 2 }}>
-      <Grid2 container spacing={2} sx={{ alignItems: 'end', mb: filters.length > 0 ? 0 : 0.5 }}>
+    <Box sx={{ p: 3 }}>
+      <Grid2
+        container
+        spacing={2}
+        sx={{ alignItems: 'end', mb: selectedFilters.length > 0 ? 0 : 0.5 }}
+      >
         <Grid2 size={{ xs: 12, md: 4 }}>
           <Typography variant="h6" fontWeight={500} noWrap>
             {pageTitle}
@@ -200,62 +108,37 @@ export default function ListingHeader<Col>({
               gap: 1.25,
             }}
           >
-            <Tooltip title="Add Filters to Table">
-              <Button
-                color="primary"
-                onClick={(event) => setFilterMenuAnchor(event.currentTarget)}
-                variant="outlined"
-                disableElevation
-                startIcon={<FilterList />}
-              >
-                Add Filter
-              </Button>
-            </Tooltip>
-
-            <Menu
-              open={isFilterMenuOpen}
-              onClose={() => setFilterMenuAnchor(null)}
-              anchorEl={filterMenuAnchor}
-              slotProps={{
-                paper: {
-                  style: {
-                    maxHeight: 600,
-                    minWidth: '18ch',
-                  },
-                },
-              }}
+            <ButtonMenu
+              label="Add Filters"
+              tooltip="Add Filters to Table"
+              icon={<FilterList />}
+              isIconButton={false}
             >
-              <MenuList>
-                {filterableColumns.map((col) => (
-                  <MenuItem
-                    key={col.field as string}
-                    onClick={() => {
-                      if (col.filter) {
-                        setSelectedFilters(
-                          selectedFilters.concat({
-                            field: col.field,
-                            label: col.title,
-                            value: '',
-                            type: col.filter?.type,
-                          }),
-                        );
-                      }
-                      setFilterMenuAnchor(null);
-                    }}
-                    sx={{ py: 1 }}
-                  >
-                    <ListItemIcon>
-                      {col.filter?.type
-                        ? col.filter.icon
+              {({ closeMenu }) => (
+                <MenuList>
+                  {filterMenuOptions.map((col) => (
+                    <MenuItem
+                      key={col.field as string}
+                      onClick={() => {
+                        setSearchParams({ [col.field]: '' });
+                        setOpenFilterField(col.field);
+                        closeMenu();
+                      }}
+                      sx={{ py: 1 }}
+                    >
+                      <ListItemIcon>
+                        {col.filter?.type
                           ? col.filter.icon
-                          : filterIconMap[col.filter?.type]
-                        : null}
-                    </ListItemIcon>
-                    <ListItemText>{col.title}</ListItemText>
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </Menu>
+                            ? col.filter.icon
+                            : filterIconMap[col.filter?.type]
+                          : null}
+                      </ListItemIcon>
+                      <ListItemText>{col.title}</ListItemText>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              )}
+            </ButtonMenu>
 
             <ButtonMenu
               label="Columns"
@@ -295,18 +178,17 @@ export default function ListingHeader<Col>({
         </Grid2>
       </Grid2>
 
-      <Divider sx={{ mt: 2 }} />
-
-      {selectedFilters.length ? (
+      <Collapse in={selectedFilters.length > 0}>
         <Box sx={{ mt: 2, display: 'flex', alignItems: 'start', gap: 1 }}>
           {selectedFilters.map((filter) => (
-            <FilterChip key={String(filter.field)} filter={filter} isApiLoading={isApiLoading} />
+            <ListingFilterChip
+              key={String(filter.field)}
+              filter={filter}
+              isApiLoading={isApiLoading}
+              openFilterField={openFilterField}
+            />
           ))}
         </Box>
-      ) : null}
-
-      <Collapse in={Boolean(filters.length)}>
-        <ListingSelectedFilters filters={filters} sx={{ mt: 2 }} />
       </Collapse>
 
       <Collapse in={Boolean(apiError)}>

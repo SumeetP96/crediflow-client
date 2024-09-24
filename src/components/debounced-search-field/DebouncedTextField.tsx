@@ -3,29 +3,34 @@ import { InputAdornment, SxProps, TextField, TextFieldProps } from '@mui/materia
 import { useEffect, useState } from 'react';
 import useDebounce from '../../helpers/hooks/use-debounce';
 
-export interface IDebouncedSearchField {
+export interface IDebouncedSearchFieldProps {
   size?: TextFieldProps['size'];
   sx?: SxProps;
-  disabled: boolean;
+  disabled?: boolean;
   value: string;
   onChange: (search: string) => void;
   variant: TextFieldProps['variant'];
   placeholder: string;
   debouncedTime: number;
   minInputLength: number;
+  autoFocus?: boolean;
+  hasSearchIcon?: boolean;
 }
 
 export default function DebouncedSearchField({
   size,
   sx,
-  disabled,
+  disabled = false,
   value,
   onChange,
   variant,
   placeholder,
   debouncedTime,
   minInputLength,
-}: IDebouncedSearchField) {
+  autoFocus = false,
+  hasSearchIcon = true,
+  ...props
+}: IDebouncedSearchFieldProps) {
   const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
@@ -49,6 +54,7 @@ export default function DebouncedSearchField({
     <TextField
       size={size}
       autoComplete="off"
+      autoFocus={autoFocus}
       disabled={disabled}
       variant={variant}
       placeholder={placeholder}
@@ -57,13 +63,14 @@ export default function DebouncedSearchField({
       sx={sx}
       slotProps={{
         input: {
-          startAdornment: (
+          startAdornment: hasSearchIcon ? (
             <InputAdornment position="start">
               <SearchTwoTone />
             </InputAdornment>
-          ),
+          ) : null,
         },
       }}
+      {...(props || {})}
     />
   );
 }

@@ -1,5 +1,6 @@
 {
-  "name": "rtc-customers-client",
+  "name": "crediflow-client",
+  "description": "CrediFlow Client Application",
   "private": true,
   "version": "0.0.0",
   "type": "module",

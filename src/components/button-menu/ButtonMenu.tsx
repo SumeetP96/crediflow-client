@@ -1,18 +1,24 @@
 import { Box, Button, ButtonProps, IconButton, Menu, Tooltip } from '@mui/material';
 import { ReactNode, useState } from 'react';
 
+export interface IChildrenProps {
+  closeMenu: () => void;
+}
+
 export interface IButtonMenu {
   tooltip?: string;
+  label?: string;
   isIconButton?: boolean;
   icon?: ReactNode;
   iconPosition?: 'start' | 'end';
   size?: 'small' | 'medium' | 'large';
   variant?: ButtonProps['variant'];
-  children: ReactNode;
+  children: ReactNode | ((params: IChildrenProps) => ReactNode);
 }
 
 export default function ButtonMenu({
   tooltip = 'Open Menu',
+  label = 'Menu',
   isIconButton = true,
   iconPosition = 'start',
   icon,
@@ -23,6 +29,14 @@ export default function ButtonMenu({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const open = Boolean(anchorEl);
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const childrenProps: IChildrenProps = {
+    closeMenu,
+  };
 
   return (
     <Box>
@@ -46,7 +60,7 @@ export default function ButtonMenu({
               [iconPosition === 'start' ? 'startIcon' : 'endIcon']: icon,
             }}
           >
-            Columns
+            {label}
           </Button>
         )}
       </Tooltip>
@@ -64,7 +78,7 @@ export default function ButtonMenu({
           },
         }}
       >
-        {children}
+        {typeof children === 'function' ? children(childrenProps) : children}
       </Menu>
     </Box>
   );

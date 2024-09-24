@@ -1,4 +1,4 @@
-import { Edit, MoreVert } from '@mui/icons-material';
+import { Edit, MoreVert, Tag } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import moment from 'moment';
 import { useMemo, useState } from 'react';
@@ -17,24 +17,40 @@ export default function useUserListingColumns() {
         title: 'ID',
         sx: { width: '150px', pl: 4 },
         sort: true,
+        filter: {
+          label: 'User ID',
+          type: 'text',
+          Icon: <Tag />,
+        },
       },
       {
         field: 'name',
         title: 'Name',
         sort: true,
-        filter: true,
+        filter: {
+          label: 'Name',
+          type: 'text',
+        },
       },
       {
         field: 'username',
         title: 'Username',
         sort: true,
         sx: { width: '200px', textAlign: 'center' },
+        filter: {
+          label: 'Username',
+          type: 'text',
+        },
       },
       {
         field: 'role',
         title: 'Role',
         sort: true,
         sx: { width: '150px', textAlign: 'center' },
+        filter: {
+          label: 'Role',
+          type: 'multiselect',
+        },
         render: ({ role }) =>
           role
             .split('_')
@@ -46,6 +62,10 @@ export default function useUserListingColumns() {
         title: 'Status',
         sort: true,
         sx: { width: '150px', textAlign: 'center' },
+        filter: {
+          label: 'Status',
+          type: 'select',
+        },
         render: ({ status }) =>
           status
             .split('_')
@@ -57,6 +77,10 @@ export default function useUserListingColumns() {
         title: 'Created At',
         sort: true,
         sx: { width: '200px', textAlign: 'center' },
+        filter: {
+          label: 'Created At',
+          type: 'daterange',
+        },
         render: ({ createdAt }) => moment(createdAt).format('DD/MM/YYYY HH:mm'),
       },
       {

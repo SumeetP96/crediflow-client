@@ -32,13 +32,21 @@ export interface IDataTableExtraColumns {
   actions: string;
 }
 
+export type TDataTableFilterType = 'text' | 'select' | 'multiselect' | 'date' | 'daterange';
+
+export interface IDataTableFilter {
+  type: TDataTableFilterType;
+  label: string;
+  icon?: ReactNode;
+}
+
 export interface IDataTableColumn<T> {
   field: keyof T;
   title: string;
   sx?: SxProps;
   render?: (params: T) => ReactNode;
   sort?: boolean;
-  filter?: boolean;
+  filter?: IDataTableFilter;
   select?: boolean;
 }
 

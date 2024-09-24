@@ -19,9 +19,9 @@ export interface IUserRoleFilterOption {
   value: TUserRoleFilterValue;
 }
 
-export type TUserStatusFilterValue = 'all' | TUserStatus;
+export type TUserStatusFilterValue = TUserStatus | null;
 
-export type TUserStatusFilterLabel = 'All' | 'Active' | 'Inactive';
+export type TUserStatusFilterLabel = 'Active' | 'Inactive';
 
 export interface IUserStatusFilterOption {
   label: TUserStatusFilterLabel;
