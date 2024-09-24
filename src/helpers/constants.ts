@@ -1,4 +1,4 @@
-import { TSortOrder } from './interfaces';
+import { TSortOrder } from './types';
 
 export const defaultQueryParamsArraySeparator = '|';
 

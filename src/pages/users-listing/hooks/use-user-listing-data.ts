@@ -3,11 +3,16 @@ import { axiosGet, TQueryParams } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
 import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../../helpers/hooks/use-query-params';
-import { IUsersWithCount } from '../interfaces';
+import { IUsersWithCount } from '../types';
 
 const safeQueryParamsObject = (obj: TQueryParams): TQueryParams => {
   return Object.fromEntries(
-    Object.entries(obj).filter(([, v]) => v != null && (Array.isArray(v) ? v.length > 0 : true)),
+    Object.entries(obj).filter(
+      ([, v]) =>
+        v != null &&
+        (typeof v === 'string' ? v.trim().length > 0 : true) &&
+        (Array.isArray(v) ? v.length > 0 : true),
+    ),
   );
 };
 

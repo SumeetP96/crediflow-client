@@ -1,13 +1,10 @@
 import { Box, Chip, ClickAwayListener, Fade, Paper, Popper, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { IDataTableFilter } from '../data-table/DataTable';
-import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
-
-export interface ISelectedFilter<Col> extends IDataTableFilter {
-  field: keyof Col;
-  value: string;
-}
+import { TDataTableFilterType } from '../data-table/DataTable';
+import SelectTypeFilter from './SelectTypeFilter';
+import TextTypeFilter from './TextTypeFilter';
+import { ISelectedFilter } from './types';
 
 export interface IListingFilterChipProps<Col> {
   filter: ISelectedFilter<Col>;
@@ -21,6 +18,7 @@ export default function ListingFilterChip<Col>({
   openFilterField,
 }: IListingFilterChipProps<Col>) {
   console.log('🚀 ~ isApiLoading:', isApiLoading);
+
   const { getSearchParams, setSearchParams } = useQueryParams();
 
   const chipRef = useRef<HTMLDivElement | null>(null);
@@ -58,6 +56,23 @@ export default function ListingFilterChip<Col>({
 
   const fieldValue = (allParams[filter.field] as string) || '';
 
+  const filterTypeProps = {
+    filter: filter,
+    value: fieldValue,
+    onChange: (value: string) => setSearchParams({ [filter.field]: value }),
+  };
+
+  const renderFilterByType = (type: TDataTableFilterType) => {
+    switch (type) {
+      case 'text':
+        return <TextTypeFilter {...filterTypeProps} />;
+      case 'select':
+        return <SelectTypeFilter {...filterTypeProps} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={() => setAnchorEl(null)}>
       <Box component="div" sx={{ display: 'inline-block' }}>
@@ -72,7 +87,7 @@ export default function ListingFilterChip<Col>({
                 {filter.label as string}:
               </Typography>
               <Typography variant="subtitle2" sx={{ fontWeight: 500, mr: 0.25 }}>
-                {filter.value}
+                {filter.render ? filter.render(filter, filter.value) : filter.value}
               </Typography>
             </Box>
           }
@@ -92,27 +107,7 @@ export default function ListingFilterChip<Col>({
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
-              <Paper elevation={5}>
-                {filter.type === 'text' ? (
-                  <Box sx={{ px: 2, pt: 1, pb: 2 }}>
-                    <Typography variant="subtitle2">{filter.label} contains:</Typography>
-
-                    <DebouncedSearchField
-                      hasSearchIcon={false}
-                      size="small"
-                      autoFocus
-                      variant="outlined"
-                      placeholder={`Filter by ${filter.field as string}`}
-                      debouncedTime={1000}
-                      minInputLength={3}
-                      value={fieldValue}
-                      // disabled={isApiLoading}
-                      onChange={(search) => setSearchParams({ [filter.field]: search })}
-                      sx={{ width: '100%', mt: 1 }}
-                    />
-                  </Box>
-                ) : null}
-              </Paper>
+              <Paper elevation={5}>{renderFilterByType(filter.type)}</Paper>
             </Fade>
           )}
         </Popper>

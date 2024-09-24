@@ -1,4 +1,4 @@
-import { Add, FilterList, ViewWeekTwoTone } from '@mui/icons-material';
+import { AddCircleOutline, FilterList, ViewWeekTwoTone } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -19,7 +19,8 @@ import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
 import { IDataTableColumn } from '../data-table/DataTable';
 import { filterIconMap } from './constants';
-import ListingFilterChip, { ISelectedFilter } from './ListingFilterChip';
+import ListingFilterChip from './ListingFilterChip';
+import { ISelectedFilter } from './types';
 
 export interface IListingHeaderProps<Col> {
   pageTitle: string;
@@ -167,7 +168,7 @@ export default function ListingHeader<Col>({
             </ButtonMenu>
 
             <Button
-              startIcon={<Add />}
+              startIcon={<AddCircleOutline />}
               variant="contained"
               onClick={() => navigate(AppRoute('USERS_CREATE'))}
               disableElevation

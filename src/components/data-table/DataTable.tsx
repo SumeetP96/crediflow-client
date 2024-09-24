@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { ReactNode, useState } from 'react';
 import { defaultPerPageOptions } from '../../helpers/constants';
-import { TSortOrder } from '../../helpers/interfaces';
+import { TSortOrder } from '../../helpers/types';
 import TableSkeleton from '../skeleton/TableSkeleton';
 import TablePaginationActions from './TablePaginationActions';
 
@@ -34,10 +34,19 @@ export interface IDataTableExtraColumns {
 
 export type TDataTableFilterType = 'text' | 'select' | 'multiselect' | 'date' | 'daterange';
 
+export interface IDataTableFilterSelectOption {
+  label: string;
+  value: string | number;
+  [key: string]: unknown;
+}
+
 export interface IDataTableFilter {
   type: TDataTableFilterType;
   label: string;
   icon?: ReactNode;
+  isExactMatch?: boolean;
+  selectOptions?: IDataTableFilterSelectOption[];
+  render?: (filter: IDataTableFilter, value?: string | number) => string | number;
 }
 
 export interface IDataTableColumn<T> {

@@ -1,5 +1,5 @@
 import { Draft, produce } from 'immer';
-import { TSortOrder } from '../interfaces';
+import { TSortOrder } from '../types';
 
 export default function useSorting() {
   const sortData = <T>(data: T[], field: string, sortOrder: TSortOrder) => {

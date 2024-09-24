@@ -5,7 +5,8 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
 import { AppRoute } from '../../../router/routes';
-import { TUserColumns, TUserRecord } from '../interfaces';
+import { userStatusOptions } from '../constants';
+import { TUserColumns, TUserRecord } from '../types';
 
 export default function useUserListingColumns() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function useUserListingColumns() {
           label: 'User ID',
           type: 'text',
           Icon: <Tag />,
+          isExactMatch: true,
         },
       },
       {
@@ -65,6 +67,10 @@ export default function useUserListingColumns() {
         filter: {
           label: 'Status',
           type: 'select',
+          selectOptions: userStatusOptions,
+          render: (_, value) => {
+            return (userStatusOptions.find((opt) => opt.value === value)?.label || value) as string;
+          },
         },
         render: ({ status }) =>
           status

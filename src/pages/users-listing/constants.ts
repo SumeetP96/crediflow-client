@@ -1,24 +1,12 @@
-import {
-  IUserRoleFilterOption,
-  IUserStatusFilterOption,
-  TUserRoleFilterLabel,
-  TUserRoleFilterValue,
-} from './interfaces';
+import { IDataTableFilterSelectOption } from '../../components/data-table/DataTable';
 
-export const userRoleLabelMap: Record<TUserRoleFilterValue, TUserRoleFilterLabel> = {
-  super_admin: 'Super Admin',
-  admin: 'Admin',
-  employee: 'Employee',
-};
-
-export const userRoles: IUserRoleFilterOption[] = [
+export const userRoleOptions: IDataTableFilterSelectOption[] = [
   { label: 'Super Admin', value: 'super_admin' },
   { label: 'Admin', value: 'admin' },
   { label: 'Employee', value: 'employee' },
 ];
 
-export const userStatus: IUserStatusFilterOption[] = [
-  { label: 'All', value: 'all' },
+export const userStatusOptions: IDataTableFilterSelectOption[] = [
   { label: 'Active', value: 'active' },
   { label: 'Inactive', value: 'in_active' },
 ];

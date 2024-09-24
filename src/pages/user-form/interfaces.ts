@@ -1,4 +1,4 @@
-import { TUserRole, TUserStatus } from '../../helpers/interfaces';
+import { TUserRole, TUserStatus } from '../../helpers/types';
 
 export type TUserRoleSelectValue = TUserRole;
 

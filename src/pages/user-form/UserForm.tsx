@@ -20,7 +20,7 @@ import { z } from 'zod';
 import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import Page from '../../components/page/Page';
-import { IUser, TUserRole, TUserStatus } from '../../helpers/interfaces';
+import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/routes';
 import { userRoles, userStatus } from './constants';
 import { IFormUser } from './interfaces';

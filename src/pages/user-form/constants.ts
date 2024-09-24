@@ -1,4 +1,4 @@
-import { IUserRoleFilterOption } from '../users-listing/interfaces';
+import { IUserRoleFilterOption } from '../users-listing/types';
 import { IUserStatusSelectOption } from './interfaces';
 
 export const userRoles: IUserRoleFilterOption[] = [
