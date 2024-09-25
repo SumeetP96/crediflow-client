@@ -1,5 +1,7 @@
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
@@ -39,11 +41,13 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <LayoutProvider>
-          <QueryClientProvider client={queryClient}>
-            <Outlet />
-          </QueryClientProvider>
-        </LayoutProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LayoutProvider>
+            <QueryClientProvider client={queryClient}>
+              <Outlet />
+            </QueryClientProvider>
+          </LayoutProvider>
+        </LocalizationProvider>
       </ThemeProvider>
     </>
   );

@@ -3,18 +3,11 @@ import { axiosGet, TQueryParams } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
 import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../../helpers/hooks/use-query-params';
+import {
+  transformMultiSelectValue,
+  transformToApiQueryParamsObject,
+} from '../../../helpers/utils/transformers';
 import { IUsersWithCount } from '../types';
-
-const safeQueryParamsObject = (obj: TQueryParams): TQueryParams => {
-  return Object.fromEntries(
-    Object.entries(obj).filter(
-      ([, v]) =>
-        v != null &&
-        (typeof v === 'string' ? v.trim().length > 0 : true) &&
-        (Array.isArray(v) ? v.length > 0 : true),
-    ),
-  );
-};
 
 export default function useUserListingData() {
   const { getSearchParams } = useQueryParams();
@@ -27,12 +20,12 @@ export default function useUserListingData() {
     page,
     perPage,
     ...(sortBy && sortOrder ? { sortBy, sortOrder } : {}),
-    ...safeQueryParamsObject({
+    ...transformToApiQueryParamsObject({
       search,
       id,
       name,
       username,
-      role: !role ? '' : Array.isArray(role) ? role : [role],
+      role: transformMultiSelectValue(role),
       status,
       createdAt,
     }),

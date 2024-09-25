@@ -7,8 +7,7 @@ import { ISelectedFilter } from './types';
 export type TSelectedOption =
   | IDataTableFilterSelectOption
   | IDataTableFilterSelectOption[]
-  | string
-  | undefined;
+  | string;
 
 export interface ISelectTypeFilterProps<Col> {
   filter: ISelectedFilter<Col>;
@@ -28,10 +27,10 @@ export default function SelectTypeFilter<Col>({
       return multiple ? [] : '';
     }
 
-    const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value);
+    const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value) ?? '';
 
     if (Array.isArray(value)) {
-      return filter.selectOptions?.filter((opt) => value.includes(opt.value));
+      return filter.selectOptions?.filter((opt) => value.includes(opt.value)) ?? '';
     }
 
     if (multiple && singleSelectedOption) {
@@ -46,7 +45,7 @@ export default function SelectTypeFilter<Col>({
   ) => {
     if (Array.isArray(selection)) {
       const value = selection.map((opt) => opt.value);
-      onChange(value);
+      onChange(value.length ?? ''); // To preserve empty filter
     } else {
       onChange(selection.value);
     }
@@ -60,15 +59,13 @@ export default function SelectTypeFilter<Col>({
         multiple={multiple}
         disableClearable
         autoFocus
-        value={selectedOption}
+        value={selectedOption as IDataTableFilterSelectOption | IDataTableFilterSelectOption[]}
         disablePortal
         size="small"
         options={filter.selectOptions || []}
         sx={{ mt: 1, minWidth: 200 }}
         renderInput={(params) => <TextField {...params} autoFocus />}
-        onChange={(_, v) =>
-          handleChange(v as IDataTableFilterSelectOption | IDataTableFilterSelectOption[])
-        }
+        onChange={(_, v) => handleChange(v)}
       />
     </Box>
   );

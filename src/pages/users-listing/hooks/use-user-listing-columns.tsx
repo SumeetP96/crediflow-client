@@ -1,6 +1,6 @@
 import { Edit, MoreVert, Tag } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
@@ -98,9 +98,9 @@ export default function useUserListingColumns() {
         sx: { width: '200px', textAlign: 'center' },
         filter: {
           label: 'Created At',
-          type: 'daterange',
+          type: 'date',
         },
-        render: ({ createdAt }) => moment(createdAt).format('DD/MM/YYYY HH:mm'),
+        render: ({ createdAt }) => dayjs(createdAt).format('DD/MM/YYYY HH:mm'),
       },
       {
         field: 'actions',

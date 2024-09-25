@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { TMultiSelectOptionValue } from '../../helpers/types';
 import { TDataTableFilterType } from '../data-table/DataTable';
+import DateTypeFilter from './DateTypeFilter';
 import SelectTypeFilter from './SelectTypeFilter';
 import TextTypeFilter from './TextTypeFilter';
 import { ISelectedFilter } from './types';
@@ -73,6 +74,8 @@ export default function ListingFilterChip<Col>({
         return <SelectTypeFilter {...filterTypeProps} />;
       case 'multiselect':
         return <SelectTypeFilter {...filterTypeProps} multiple />;
+      case 'date':
+        return <DateTypeFilter {...filterTypeProps} />;
       default:
         return null;
     }
