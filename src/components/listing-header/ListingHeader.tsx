@@ -10,6 +10,8 @@ import {
   MenuItem,
   MenuList,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -40,6 +42,11 @@ export default function ListingHeader<Col>({
   onToggleColumn,
 }: IListingHeaderProps<Col>) {
   const navigate = useNavigate();
+
+  const theme = useTheme();
+
+  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
+  console.log('🚀 ~ isTablet:', isTablet);
 
   const [openFilterField, setOpenFilterField] = useState<keyof Col>();
 
@@ -80,7 +87,7 @@ export default function ListingHeader<Col>({
   }, [filterableColumns, selectedFilters]);
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
       <Grid2
         container
         spacing={2}
@@ -102,9 +109,12 @@ export default function ListingHeader<Col>({
         >
           <Box
             sx={{
+              mt: { xs: 1, md: 0 },
+              width: '100%',
               display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: { xs: 'space-between', md: 'flex-end' },
+              flexWrap: { xs: 'no-wrap', md: 'wrap' },
+              flexDirection: 'row',
+              justifyContent: { xs: 'space-between', sm: 'flex-end' },
               alignItems: 'top',
               gap: 1.25,
             }}
@@ -113,7 +123,7 @@ export default function ListingHeader<Col>({
               label="Add Filters"
               tooltip="Add Filters to Table"
               icon={<FilterList />}
-              isIconButton={false}
+              isIconButton={!isTablet}
             >
               {({ closeMenu }) => (
                 <MenuList>
@@ -145,7 +155,7 @@ export default function ListingHeader<Col>({
               label="Columns"
               tooltip="Select Columns"
               icon={<ViewWeekTwoTone />}
-              isIconButton={false}
+              isIconButton={!isTablet}
             >
               <MenuList>
                 {selectableColumns.map((col) => (
@@ -172,6 +182,7 @@ export default function ListingHeader<Col>({
               variant="contained"
               onClick={() => navigate(AppRoute('USERS_CREATE'))}
               disableElevation
+              sx={{ width: { xs: '100%', sm: 'unset' } }}
             >
               Create New
             </Button>
@@ -180,7 +191,15 @@ export default function ListingHeader<Col>({
       </Grid2>
 
       <Collapse in={selectedFilters.length > 0}>
-        <Box sx={{ mt: 2, display: 'flex', alignItems: 'start', gap: 1 }}>
+        <Box
+          sx={{
+            mt: { xs: 3, md: 2 },
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'start',
+            gap: 1,
+          }}
+        >
           {selectedFilters.map((filter) => (
             <ListingFilterChip
               key={String(filter.field)}

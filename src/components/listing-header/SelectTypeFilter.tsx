@@ -1,12 +1,19 @@
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
-import { SyntheticEvent, useMemo } from 'react';
+import { useMemo } from 'react';
+import { TMultiSelectOptionValue } from '../../helpers/types';
 import { IDataTableFilterSelectOption } from '../data-table/DataTable';
-import { ISelectedFilter, TSelectedOptionValue } from './types';
+import { ISelectedFilter } from './types';
+
+export type TSelectedOption =
+  | IDataTableFilterSelectOption
+  | IDataTableFilterSelectOption[]
+  | string
+  | undefined;
 
 export interface ISelectTypeFilterProps<Col> {
   filter: ISelectedFilter<Col>;
-  value: TSelectedOptionValue;
-  onChange: (value: TSelectedOptionValue) => void;
+  value: TMultiSelectOptionValue | TMultiSelectOptionValue[];
+  onChange: (value: TMultiSelectOptionValue | TMultiSelectOptionValue[]) => void;
   multiple?: boolean;
 }
 
@@ -16,31 +23,30 @@ export default function SelectTypeFilter<Col>({
   onChange,
   multiple = false,
 }: ISelectTypeFilterProps<Col>) {
-  const selectedOption = useMemo(() => {
-    let selectedOption: IDataTableFilterSelectOption | IDataTableFilterSelectOption[] | undefined;
-
+  const selectedOption: TSelectedOption = useMemo(() => {
     if (!value) {
-      return selectedOption;
+      return multiple ? [] : '';
     }
 
     const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value);
 
     if (Array.isArray(value)) {
-      selectedOption = filter.selectOptions?.filter((opt) => value.includes(opt.value));
-    } else if (multiple && singleSelectedOption) {
-      selectedOption = [singleSelectedOption];
-    } else {
-      selectedOption = singleSelectedOption;
+      return filter.selectOptions?.filter((opt) => value.includes(opt.value));
     }
+
+    if (multiple && singleSelectedOption) {
+      return [singleSelectedOption];
+    }
+
+    return singleSelectedOption;
   }, [filter.selectOptions, multiple, value]);
 
   const handleChange = (
-    _: SyntheticEvent,
     selection: IDataTableFilterSelectOption | IDataTableFilterSelectOption[],
   ) => {
     if (Array.isArray(selection)) {
       const value = selection.map((opt) => opt.value);
-      onChange(value || '');
+      onChange(value);
     } else {
       onChange(selection.value);
     }
@@ -60,7 +66,9 @@ export default function SelectTypeFilter<Col>({
         options={filter.selectOptions || []}
         sx={{ mt: 1, minWidth: 200 }}
         renderInput={(params) => <TextField {...params} autoFocus />}
-        onChange={handleChange}
+        onChange={(_, v) =>
+          handleChange(v as IDataTableFilterSelectOption | IDataTableFilterSelectOption[])
+        }
       />
     </Box>
   );

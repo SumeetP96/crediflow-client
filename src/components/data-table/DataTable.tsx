@@ -110,9 +110,13 @@ function DataTable<T>({
   return (
     <Paper
       elevation={0}
-      sx={{ overflowX: 'auto', borderTopRightRadius: 0, borderTopLeftRadius: 0 }}
+      sx={{
+        overflowX: 'auto',
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
+      }}
     >
-      <TableContainer sx={{ maxHeight: '440px' }}>
+      <TableContainer sx={{ maxHeight: { xs: '55vh', sm: '62vh', lg: '60vh' } }}>
         <Table size={isDense ? 'small' : 'medium'} stickyHeader sx={{ borderRadius: 0 }}>
           <TableHead>
             <TableRow>
@@ -167,7 +171,7 @@ function DataTable<T>({
                         key={col.field as string}
                         sx={{ borderBottomStyle: 'dashed', ...col.sx }}
                       >
-                        <Box sx={{ paddingRight: col.sort ? '30px' : '', py: isDense ? 0 : 0.5 }}>
+                        <Box sx={{ paddingRight: col.sort ? '30px' : '', py: isDense ? 0 : 0.625 }}>
                           {col.render ? col.render(row) : (row[col.field as keyof T] as string)}
                         </Box>
                       </TableCell>
@@ -193,9 +197,10 @@ function DataTable<T>({
       <Grid2 container sx={{ pl: 3, pr: 1, py: 0.25, alignItems: 'center' }}>
         <Grid2 size={{ xs: 12, md: 2 }}>
           <FormControlLabel
+            sx={{ mt: { xs: 1.5, md: 0 } }}
             control={
               <Switch
-                size="small"
+                size="medium"
                 checked={isDense}
                 onChange={(e) => setIsDense(e.target.checked)}
                 name="dense"

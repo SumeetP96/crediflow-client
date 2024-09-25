@@ -1,4 +1,4 @@
-import { Box, Button, ButtonProps, IconButton, Menu, Tooltip } from '@mui/material';
+import { Box, Button, ButtonProps, IconButton, Menu, SxProps, Tooltip } from '@mui/material';
 import { ReactNode, useState } from 'react';
 
 export interface IChildrenProps {
@@ -14,17 +14,19 @@ export interface IButtonMenu {
   size?: 'small' | 'medium' | 'large';
   variant?: ButtonProps['variant'];
   children: ReactNode | ((params: IChildrenProps) => ReactNode);
+  sx?: SxProps;
 }
 
 export default function ButtonMenu({
-  tooltip = 'Open Menu',
-  label = 'Menu',
+  tooltip,
+  label,
   isIconButton = true,
   iconPosition = 'start',
   icon,
   variant = 'outlined',
   children,
   size,
+  sx,
 }: IButtonMenu) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -39,7 +41,7 @@ export default function ButtonMenu({
   };
 
   return (
-    <Box>
+    <Box sx={sx}>
       <Tooltip title={tooltip}>
         {isIconButton ? (
           <IconButton

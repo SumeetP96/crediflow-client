@@ -14,6 +14,8 @@ export default function useQueryParams() {
     return queryString.parse(location.search, {
       parseBooleans: true,
       parseNumbers: true,
+      arrayFormat: 'separator',
+      arrayFormatSeparator: defaultQueryParamsArraySeparator,
     }) as T;
   }, [location.search]);
 

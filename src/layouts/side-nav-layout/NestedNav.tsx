@@ -76,7 +76,9 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
                   if (link.to) {
                     navigate(link.to);
                   }
-                  onClick();
+                  if (!hasChildren) {
+                    onClick();
+                  }
                 }}
               >
                 <ListItemIcon sx={{ minWidth: '40px' }}>

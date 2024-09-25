@@ -1,10 +1,11 @@
 import { Box, Chip, ClickAwayListener, Fade, Paper, Popper, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useQueryParams from '../../helpers/hooks/use-query-params';
+import { TMultiSelectOptionValue } from '../../helpers/types';
 import { TDataTableFilterType } from '../data-table/DataTable';
 import SelectTypeFilter from './SelectTypeFilter';
 import TextTypeFilter from './TextTypeFilter';
-import { ISelectedFilter, TSelectedOptionValue } from './types';
+import { ISelectedFilter } from './types';
 
 export interface IListingFilterChipProps<Col> {
   filter: ISelectedFilter<Col>;
@@ -59,7 +60,7 @@ export default function ListingFilterChip<Col>({
   const filterTypeProps = {
     filter: filter,
     value: fieldValue,
-    onChange: (value: TSelectedOptionValue) => {
+    onChange: (value: TMultiSelectOptionValue | TMultiSelectOptionValue[]) => {
       setSearchParams({ [filter.field]: value });
     },
   };

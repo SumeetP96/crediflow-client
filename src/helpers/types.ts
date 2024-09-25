@@ -13,3 +13,5 @@ export interface IUser {
   updatedAt: string;
   deletedAt: string | null;
 }
+
+export type TMultiSelectOptionValue = string | number | boolean;
