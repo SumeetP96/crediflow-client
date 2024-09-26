@@ -6,6 +6,7 @@ import {
   PickerChangeHandlerContext,
 } from '@mui/x-date-pickers';
 import { Dayjs } from 'dayjs';
+import { useState } from 'react';
 
 export interface IDatePickerInputProps {
   value: Dayjs | null | undefined;
@@ -21,11 +22,16 @@ export default function DatePickerInput({ value, onChange }: IDatePickerInputPro
 
   const Picker = isTablet ? MobileDatePicker : DatePicker;
 
+  const [open, setOpen] = useState(isTablet ? true : false);
+
   return (
     <Picker
+      open={open}
       autoFocus
       format="DD-MM-YYYY"
       value={value}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       onChange={onChange}
       sx={{
         width: '150px',
