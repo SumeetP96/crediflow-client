@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 import { TMultiSelectOptionValue } from '../../helpers/types';
+import DatePickerInput from '../date-picker-input/DatePickerInput';
 import { ISelectedFilter } from './types';
 
 export interface IDateTypeFilter<Col> {
@@ -20,7 +20,9 @@ export default function DateTypeFilter<Col>({ filter, value, onChange }: IDateTy
     <Box sx={{ px: 2, pt: 1, pb: 2 }}>
       <Typography variant="subtitle2">{filter.label} is:</Typography>
 
-      <DatePicker format="DD-MM-YYYY" value={dayjs(value)} onChange={handleChange} />
+      <Box sx={{ mt: 1 }}>
+        <DatePickerInput value={dayjs(value)} onChange={(value) => handleChange(value)} />
+      </Box>
     </Box>
   );
 }

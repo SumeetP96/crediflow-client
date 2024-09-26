@@ -200,7 +200,7 @@ function DataTable<T>({
             sx={{ mt: { xs: 1.5, md: 0 } }}
             control={
               <Switch
-                size="medium"
+                size="small"
                 checked={isDense}
                 onChange={(e) => setIsDense(e.target.checked)}
                 name="dense"
