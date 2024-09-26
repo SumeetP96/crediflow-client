@@ -1,5 +1,5 @@
 import { TQueryParams } from '../../api/request';
-import { TMultiSelectOptionValue } from '../types';
+import { TListingFilterValue } from '../types';
 
 export const transformToApiQueryParamsObject = (obj: TQueryParams): TQueryParams => {
   return Object.fromEntries(
@@ -23,8 +23,8 @@ export const transformMultiSelectValue = (value?: string | string[]) => {
 };
 
 export const transformMultiSelectSelectedValue = (
-  value: TMultiSelectOptionValue | TMultiSelectOptionValue[],
-): TMultiSelectOptionValue[] | null => {
+  value: TListingFilterValue | TListingFilterValue[],
+): TListingFilterValue[] | null => {
   if (typeof value === 'string') {
     return !value.length ? null : [value];
   }

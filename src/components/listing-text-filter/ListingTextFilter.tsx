@@ -1,14 +1,18 @@
 import { Box, Typography } from '@mui/material';
+import { IListingSelectedFilter } from '../../helpers/types';
 import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
-import { ISelectedFilter } from './types';
 
-export interface ITextTypeFilter<Col> {
-  filter: ISelectedFilter<Col>;
+export interface IListingTextFilter<Col> {
+  filter: IListingSelectedFilter<Col>;
   value: string;
   onChange: (value: string) => void;
 }
 
-export default function TextTypeFilter<Col>({ filter, value, onChange }: ITextTypeFilter<Col>) {
+export default function ListingTextFilter<Col>({
+  filter,
+  value,
+  onChange,
+}: IListingTextFilter<Col>) {
   return (
     <Box sx={{ px: 2, pt: 1, pb: 2 }}>
       <Typography variant="subtitle2">

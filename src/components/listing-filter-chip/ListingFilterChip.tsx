@@ -1,26 +1,24 @@
 import { Box, Chip, ClickAwayListener, Fade, Paper, Popper, Typography } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { TMultiSelectOptionValue } from '../../helpers/types';
+import { IListingSelectedFilter, TListingFilterValue } from '../../helpers/types';
 import { TDataTableFilterType } from '../data-table/DataTable';
-import DateTypeFilter from './DateTypeFilter';
-import SelectTypeFilter from './SelectTypeFilter';
-import TextTypeFilter from './TextTypeFilter';
-import { ISelectedFilter } from './types';
+import ListingDateFilter from '../listing-date-filter/ListingDateFilter';
+import ListingDateRangeFilter from '../listing-date-range-filter/ListingDateRangeFilter';
+import ListingSelectFilter from '../listing-select-filter/ListingSelectFilter';
+import ListingTextFilter from '../listing-text-filter/ListingTextFilter';
 
 export interface IListingFilterChipProps<Col> {
-  filter: ISelectedFilter<Col>;
+  filter: IListingSelectedFilter<Col>;
   isApiLoading: boolean;
   openFilterField?: keyof Col;
 }
 
 export default function ListingFilterChip<Col>({
   filter,
-  isApiLoading = false,
+  // isApiLoading = false,
   openFilterField,
 }: IListingFilterChipProps<Col>) {
-  console.log('🚀 ~ isApiLoading:', isApiLoading);
-
   const { getSearchParams, setSearchParams } = useQueryParams();
 
   const chipRef = useRef<HTMLDivElement | null>(null);
@@ -61,7 +59,7 @@ export default function ListingFilterChip<Col>({
   const filterTypeProps = {
     filter: filter,
     value: fieldValue,
-    onChange: (value: TMultiSelectOptionValue | TMultiSelectOptionValue[]) => {
+    onChange: (value: TListingFilterValue | TListingFilterValue[]) => {
       setSearchParams({ [filter.field]: value });
     },
   };
@@ -69,13 +67,22 @@ export default function ListingFilterChip<Col>({
   const renderFilterByType = (type: TDataTableFilterType) => {
     switch (type) {
       case 'text':
-        return <TextTypeFilter {...filterTypeProps} />;
+        return <ListingTextFilter {...filterTypeProps} />;
       case 'select':
-        return <SelectTypeFilter {...filterTypeProps} />;
+        return <ListingSelectFilter {...filterTypeProps} />;
       case 'multiselect':
-        return <SelectTypeFilter {...filterTypeProps} multiple />;
+        return <ListingSelectFilter {...filterTypeProps} multiple />;
       case 'date':
-        return <DateTypeFilter {...filterTypeProps} />;
+        return <ListingDateFilter {...filterTypeProps} />;
+      case 'daterange':
+        return (
+          <ListingDateRangeFilter
+            {...filterTypeProps}
+            value={
+              Array.isArray(fieldValue) ? (fieldValue as string[]) : ([fieldValue] as string[])
+            }
+          />
+        );
       default:
         return null;
     }

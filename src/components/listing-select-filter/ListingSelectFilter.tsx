@@ -1,43 +1,44 @@
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { TMultiSelectOptionValue } from '../../helpers/types';
+import { IListingSelectedFilter, TListingFilterValue } from '../../helpers/types';
 import { IDataTableFilterSelectOption } from '../data-table/DataTable';
-import { ISelectedFilter } from './types';
 
 export type TSelectedOption =
   | IDataTableFilterSelectOption
   | IDataTableFilterSelectOption[]
   | string;
 
-export interface ISelectTypeFilterProps<Col> {
-  filter: ISelectedFilter<Col>;
-  value: TMultiSelectOptionValue | TMultiSelectOptionValue[];
-  onChange: (value: TMultiSelectOptionValue | TMultiSelectOptionValue[]) => void;
+export interface IListingSelectFilter<Col> {
+  filter: IListingSelectedFilter<Col>;
+  value: TListingFilterValue | TListingFilterValue[];
+  onChange: (value: TListingFilterValue | TListingFilterValue[]) => void;
   multiple?: boolean;
 }
 
-export default function SelectTypeFilter<Col>({
+export default function ListingSelectFilter<Col>({
   filter,
   value,
   onChange,
   multiple = false,
-}: ISelectTypeFilterProps<Col>) {
-  const selectedOption: TSelectedOption = useMemo(() => {
+}: IListingSelectFilter<Col>) {
+  const selectedOption = useMemo(() => {
+    const defValue = multiple ? [] : '';
+
     if (!value) {
-      return multiple ? [] : '';
+      return defValue;
     }
 
-    const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value) ?? '';
+    const singleSelectedOption = filter.selectOptions?.find((opt) => opt.value === value) || '';
 
     if (Array.isArray(value)) {
-      return filter.selectOptions?.filter((opt) => value.includes(opt.value)) ?? '';
+      return filter.selectOptions?.filter((opt) => value.includes(opt.value)) ?? defValue;
     }
 
     if (multiple && singleSelectedOption) {
       return [singleSelectedOption];
     }
 
-    return singleSelectedOption;
+    return singleSelectedOption || defValue;
   }, [filter.selectOptions, multiple, value]);
 
   const handleChange = (
@@ -45,7 +46,7 @@ export default function SelectTypeFilter<Col>({
   ) => {
     if (Array.isArray(selection)) {
       const value = selection.map((opt) => opt.value);
-      onChange(value.length ?? ''); // To preserve empty filter
+      onChange(value.length ? value : ''); // To preserve empty filter
     } else {
       onChange(selection.value);
     }

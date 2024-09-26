@@ -17,6 +17,7 @@
     "@mui/icons-material": "^6.0.2",
     "@mui/material": "^6.0.2",
     "@mui/x-date-pickers": "^7.18.0",
+    "@mui/x-date-pickers-pro": "^7.18.0",
     "@tanstack/react-form": "^0.32.0",
     "@tanstack/react-query": "^5.55.4",
     "@tanstack/zod-form-adapter": "^0.32.0",

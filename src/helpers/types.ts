@@ -1,3 +1,5 @@
+import { IDataTableFilter } from '../components/data-table/DataTable';
+
 export type TSortOrder = 'asc' | 'desc' | 'none';
 
 export type TUserRole = 'super_admin' | 'admin' | 'employee';
@@ -14,4 +16,9 @@ export interface IUser {
   deletedAt: string | null;
 }
 
-export type TMultiSelectOptionValue = string | number | boolean;
+export type TListingFilterValue = string | number | boolean;
+
+export interface IListingSelectedFilter<Col> extends IDataTableFilter {
+  field: keyof Col;
+  value: string;
+}

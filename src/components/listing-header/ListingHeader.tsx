@@ -16,13 +16,13 @@ import {
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import useQueryParams from '../../helpers/hooks/use-query-params';
+import { IListingSelectedFilter } from '../../helpers/types';
 import { AppRoute } from '../../router/routes';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
 import { IDataTableColumn } from '../data-table/DataTable';
-import { filterIconMap } from './constants';
-import ListingFilterChip from './ListingFilterChip';
-import { ISelectedFilter } from './types';
+import ListingFilterChip from '../listing-filter-chip/ListingFilterChip';
+import ListingFilterIcon from '../listing-filter-icon/ListingFilterIcon';
 
 export interface IListingHeaderProps<Col> {
   pageTitle: string;
@@ -63,7 +63,7 @@ export default function ListingHeader<Col>({
   }, [columns]);
 
   const selectedFilters = useMemo(() => {
-    const selected: ISelectedFilter<Col>[] = [];
+    const selected: IListingSelectedFilter<Col>[] = [];
 
     filterableColumns
       .filter((col) => Object.keys(allParams).includes(col.field as string))
@@ -138,11 +138,13 @@ export default function ListingHeader<Col>({
                       sx={{ py: 1 }}
                     >
                       <ListItemIcon>
-                        {col.filter?.type
-                          ? col.filter.icon
-                            ? col.filter.icon
-                            : filterIconMap[col.filter?.type]
-                          : null}
+                        {col.filter?.type ? (
+                          col.filter.icon ? (
+                            col.filter.icon
+                          ) : (
+                            <ListingFilterIcon type={col.filter.type} />
+                          )
+                        ) : null}
                       </ListItemIcon>
                       <ListItemText>{col.title}</ListItemText>
                     </MenuItem>

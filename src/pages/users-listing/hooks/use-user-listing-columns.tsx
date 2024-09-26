@@ -4,7 +4,8 @@ import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
-import { TMultiSelectOptionValue } from '../../../helpers/types';
+import { defaultDateVisibleFormat } from '../../../helpers/constants';
+import { TListingFilterValue } from '../../../helpers/types';
 import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
 import { AppRoute } from '../../../router/routes';
 import { userRoleOptions, userStatusOptions } from '../constants';
@@ -56,9 +57,7 @@ export default function useUserListingColumns() {
           type: 'multiselect',
           selectOptions: userRoleOptions,
           render: (_, value) => {
-            const selectedValues = transformMultiSelectSelectedValue(
-              value as TMultiSelectOptionValue,
-            );
+            const selectedValues = transformMultiSelectSelectedValue(value as TListingFilterValue);
             return selectedValues
               ? selectedValues
                   .map((role) => userRoleOptions.find((ur) => ur.value === role)?.label)
@@ -98,7 +97,8 @@ export default function useUserListingColumns() {
         sx: { width: '200px', textAlign: 'center' },
         filter: {
           label: 'Created At',
-          type: 'date',
+          type: 'daterange',
+          render: (_, value) => (value ? dayjs(value).format(defaultDateVisibleFormat) : ''),
         },
         render: ({ createdAt }) => dayjs(createdAt).format('DD/MM/YYYY HH:mm'),
       },
