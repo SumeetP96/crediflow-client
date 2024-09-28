@@ -75,15 +75,15 @@ export const AppRoutes: TAppRoutesMap = {
     path: EAppRoutes.USERS,
   },
   USERS_LIST: {
-    label: 'Users Listing',
+    label: 'Users',
     path: EAppRoutes.USERS_LIST,
   },
   USERS_CREATE: {
-    label: 'Create User',
+    label: 'Create',
     path: EAppRoutes.USERS_CREATE,
   },
   USERS_UPDATE: {
-    label: 'Update User',
+    label: 'Update',
     path: (id: string | number) => EAppRoutes.USERS_UPDATE.replace(':id', String(id)),
   },
 

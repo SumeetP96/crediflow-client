@@ -1,26 +1,21 @@
 import { ArrowDownward, ArrowUpward, SwapVert } from '@mui/icons-material';
 import {
   Box,
-  FormControlLabel,
-  Grid2,
   IconButton,
   Paper,
-  Switch,
   SxProps,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from '@mui/material';
 import { ReactNode, useState } from 'react';
-import { defaultPerPageOptions } from '../../helpers/constants';
 import { TSortOrder } from '../../helpers/types';
+import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
 import TableSkeleton from '../skeleton/TableSkeleton';
-import TablePaginationActions from './TablePaginationActions';
 
 const fieldSortingIconMap: Record<TSortOrder, ReactNode> = {
   asc: <ArrowUpward fontSize="small" />,
@@ -59,19 +54,13 @@ export interface IDataTableColumn<T> {
   select?: boolean;
 }
 
-export interface IDataTableProps<T> {
+export interface IDataTableProps<T> extends IDataTableFooterProps {
   columns: IDataTableColumn<T>[];
   rows: T[];
   keyField: keyof T;
   sortBy: string;
   sortOrder: TSortOrder;
   onSort: (sortBy: string, sortDirection: TSortOrder) => void;
-  page: number;
-  perPage: number;
-  totalRecords: number;
-  onPageChange: (nextPage: number) => void;
-  onPerPageChange: (perPage: number) => void;
-  perPageOptions?: ReadonlyArray<number | { value: number; label: string }>;
   isLoading: boolean;
   hoverable?: boolean;
 }
@@ -80,6 +69,8 @@ function DataTable<T>({
   columns,
   rows,
   keyField,
+  isLoading,
+  hoverable = false,
   sortBy,
   sortOrder,
   onSort,
@@ -87,10 +78,8 @@ function DataTable<T>({
   perPage,
   onPageChange,
   onPerPageChange,
-  perPageOptions = defaultPerPageOptions,
+  perPageOptions,
   totalRecords,
-  isLoading,
-  hoverable = false,
 }: IDataTableProps<T>) {
   const [isDense, setIsDense] = useState(false);
 
@@ -183,7 +172,7 @@ function DataTable<T>({
                   <TableRow style={{ height: 53 * emptyRows - 1 }}>
                     <TableCell colSpan={columns.length}>
                       <Typography sx={{ textAlign: 'center' }} color="textDisabled">
-                        No data found
+                        {rows.length ? 'No more data' : 'No data found'}
                       </Typography>
                     </TableCell>
                   </TableRow>
@@ -194,42 +183,17 @@ function DataTable<T>({
         </Table>
       </TableContainer>
 
-      <Grid2 container sx={{ pl: 3, pr: 1, py: 0.25, alignItems: 'center' }}>
-        <Grid2 size={{ xs: 12, md: 2 }}>
-          <FormControlLabel
-            sx={{ mt: { xs: 1.5, md: 0 } }}
-            control={
-              <Switch
-                size="small"
-                checked={isDense}
-                onChange={(e) => setIsDense(e.target.checked)}
-                name="dense"
-              />
-            }
-            label="Dense"
-          />
-        </Grid2>
-
-        <Grid2 size={{ xs: 12, md: 10 }}>
-          <TablePagination
-            component="div"
-            sx={{ borderBottom: 'none' }}
-            rowsPerPageOptions={perPageOptions}
-            count={totalRecords}
-            rowsPerPage={perPage}
-            page={!totalRecords || totalRecords <= 0 ? 0 : page}
-            slotProps={{
-              select: {
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              },
-            }}
-            onPageChange={(_, newPage) => onPageChange(newPage)}
-            onRowsPerPageChange={(e) => onPerPageChange(parseInt(e.target.value, 10))}
-            ActionsComponent={TablePaginationActions}
-          />
-        </Grid2>
-      </Grid2>
+      <DataTableFooter
+        page={page}
+        perPage={perPage}
+        totalRecords={totalRecords}
+        onPageChange={onPageChange}
+        onPerPageChange={onPerPageChange}
+        perPageOptions={perPageOptions}
+        isDense={isDense}
+        onDensityChange={setIsDense}
+        isLoading={isLoading}
+      />
     </Paper>
   );
 }

@@ -93,6 +93,7 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
           }}
           sx={{
             cursor: active || disabled ? 'not-allowed' : 'pointer',
+            fontSize: { xs: '0.875rem', md: '1rem' },
           }}
         >
           {label}
