@@ -7,7 +7,7 @@ import ButtonMenu from '../../../components/button-menu/ButtonMenu';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import { TListingFilterValue } from '../../../helpers/types';
 import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
-import { AppRoute } from '../../../router/routes';
+import { AppRoute } from '../../../router/helpers';
 import { userRoleOptions, userStatusOptions } from '../constants';
 import { TUserColumns, TUserRecord } from '../types';
 

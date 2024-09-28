@@ -2,13 +2,12 @@ import axios, { CreateAxiosDefaults } from 'axios';
 
 // Default configuration
 const config: CreateAxiosDefaults = {
+  withCredentials: true,
   baseURL: `${import.meta.env.VITE_API_URL}`,
   timeout: 10000, // 10 seconds
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
-    Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVyYWRtaW4iLCJzdWIiOjEsImlhdCI6MTcyNjQ4MDM1NiwiZXhwIjoxNzI2OTEyMzU2fQ.rCOVgnwDxPmGCdpVNX_w91n43XxaSn47EsS7LiFuUwE',
   },
 };
 

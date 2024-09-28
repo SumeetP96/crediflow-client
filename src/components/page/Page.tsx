@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { ReactNode, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { useLayout } from '../../layouts/hooks/use-layout';
+import { LayoutProvider } from '../../layouts/LayoutProvider';
 import Breadcrumbs, { IBreadcrumb } from '../breadcrumbs/Breadcrumbs';
 
 export interface IPageProps {
@@ -11,7 +12,7 @@ export interface IPageProps {
   children: ReactNode;
 }
 
-function Page({ children, title, breadcrumbs, header }: IPageProps) {
+function PageComponent({ children, title, breadcrumbs, header }: IPageProps) {
   const layout = useLayout();
 
   const location = useLocation();
@@ -54,4 +55,10 @@ function Page({ children, title, breadcrumbs, header }: IPageProps) {
   );
 }
 
-export default Page;
+export default function Page({ children, ...props }: IPageProps) {
+  return (
+    <LayoutProvider>
+      <PageComponent {...props}>{children}</PageComponent>
+    </LayoutProvider>
+  );
+}

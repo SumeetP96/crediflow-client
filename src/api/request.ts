@@ -44,20 +44,28 @@ export const axiosGet = async <T>(
   return response.data;
 };
 
-export const axiosPost = async <T, I>(
+export const axiosPost = async <T, I = Record<string, unknown>>(
   url: string,
-  data?: I | Record<string, unknown>,
+  data?: I,
   config?: AxiosRequestConfig,
 ): Promise<IApiResponse<T>> => {
   const response = await axiosClient.post(url, data, config);
   return response.data;
 };
 
-export const axiosPatch = async <T, I>(
+export const axiosPatch = async <T, I = Record<string, unknown>>(
   url: string,
-  data?: I | Record<string, unknown>,
+  data?: I,
   config?: AxiosRequestConfig,
 ): Promise<IApiResponse<T>> => {
   const response = await axiosClient.patch(url, data, config);
+  return response.data;
+};
+
+export const axiosDelete = async <T>(
+  url: string,
+  config?: AxiosRequestConfig,
+): Promise<IApiResponse<T>> => {
+  const response = await axiosClient.delete(url, config);
   return response.data;
 };

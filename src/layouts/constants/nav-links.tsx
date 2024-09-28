@@ -19,7 +19,7 @@ import {
   SpaceDashboardOutlined,
 } from '@mui/icons-material';
 import { ReactNode } from 'react';
-import { AppRoute } from '../../router/routes';
+import { AppRoute } from '../../router/helpers';
 
 export interface INavLink {
   id: string;

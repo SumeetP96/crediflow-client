@@ -2,8 +2,8 @@ import { Link, Breadcrumbs as MuiBreadCrumbs } from '@mui/material';
 import { AgnosticDataRouteObject } from '@remix-run/router';
 import { useCallback, useMemo } from 'react';
 import { matchPath, useLocation, useNavigate } from 'react-router-dom';
-import { AppRoutes, EAppRoutes, IRouteMetaMap } from '../../router/constants';
 import { router } from '../../router/router';
+import { AppRoutesForBreadcrumbs, EAppRoutes, IRouteMetaMap } from '../../router/routes';
 
 export interface IBreadcrumb {
   label: string;
@@ -26,7 +26,7 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
       return EAppRoutes[r as keyof typeof EAppRoutes] === path;
     });
 
-    return AppRoutes[appRouteKey as keyof typeof EAppRoutes];
+    return AppRoutesForBreadcrumbs[appRouteKey as keyof typeof EAppRoutes];
   }, []);
 
   const generateBreadcrumbs = useCallback(() => {
@@ -41,7 +41,6 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
           matchPath(String(route.path), location.pathname)
         ) {
           let appRoute = getAppRoute(String(route.path));
-
           if (appRoute && appRoute.isPlaceholder && appRoute.redirectRoute) {
             appRoute = getAppRoute(appRoute.redirectRoute);
           }
@@ -64,7 +63,9 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
 
     extractRoutes(router.routes[0].children as AgnosticDataRouteObject[]);
 
-    crumbs[crumbs.length - 1].active = true;
+    if (crumbs.length) {
+      crumbs[crumbs.length - 1].active = true;
+    }
 
     return crumbs;
   }, [getAppRoute, location.pathname]);

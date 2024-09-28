@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
-import { LayoutProvider } from './layouts/LayoutProvider';
+import AuthProvider from './auth/AuthProvider';
 
 const queryClient = new QueryClient();
 
@@ -37,19 +37,17 @@ function App() {
   });
 
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
 
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <LayoutProvider>
-            <QueryClientProvider client={queryClient}>
-              <Outlet />
-            </QueryClientProvider>
-          </LayoutProvider>
-        </LocalizationProvider>
-      </ThemeProvider>
-    </>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Outlet />
+          </AuthProvider>
+        </QueryClientProvider>
+      </LocalizationProvider>
+    </ThemeProvider>
   );
 }
 

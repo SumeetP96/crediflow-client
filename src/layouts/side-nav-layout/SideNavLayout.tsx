@@ -15,11 +15,15 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { MouseEvent, ReactNode, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { axiosPost } from '../../api/request';
+import { ApiRoutes } from '../../api/routes';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
-import { AppRoute } from '../../router/routes';
+import ConfirmationDialog from '../../components/confirmation-dialog/ConfirmationDialog';
+import { AppRoute } from '../../router/helpers';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import NestedNav from './NestedNav';
@@ -44,9 +48,19 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
 
   const [isClosing, setIsClosing] = useState(false);
 
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(menuAnchorEl);
+
+  const logoutQuery = useMutation({
+    mutationKey: ['user-logout'],
+    mutationFn: () => axiosPost(ApiRoutes.AUTH_LOGOUT),
+    onSuccess: () => {
+      window.location.reload();
+    },
+  });
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -73,6 +87,14 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
 
   return (
     <>
+      <ConfirmationDialog
+        title="Logout"
+        body="Are you sure you want to logout?"
+        open={isLogoutDialogOpen}
+        onClose={() => setIsLogoutDialogOpen(false)}
+        onAccept={() => logoutQuery.mutate()}
+      />
+
       <Box sx={{ display: 'flex' }}>
         <AppBar
           elevation={0}
@@ -144,6 +166,9 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
                           navigate(item.to);
                         }
                         handleMenuClose();
+                        if (item.id === 'logout') {
+                          setIsLogoutDialogOpen(true);
+                        }
                       }}
                     >
                       <ListItemIcon>{item.icon}</ListItemIcon>

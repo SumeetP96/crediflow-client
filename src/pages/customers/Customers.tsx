@@ -1,5 +1,5 @@
 import Page from '../../components/page/Page';
-import { AppRoute } from '../../router/routes';
+import { AppRoute } from '../../router/helpers';
 
 function Customers() {
   return (

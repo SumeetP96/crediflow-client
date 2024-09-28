@@ -17,7 +17,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
-import { AppRoute } from '../../router/routes';
+import { AppRoute } from '../../router/helpers';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
 import { IDataTableColumn } from '../data-table/DataTable';

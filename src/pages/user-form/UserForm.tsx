@@ -21,7 +21,7 @@ import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import Page from '../../components/page/Page';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
-import { AppRoute } from '../../router/routes';
+import { AppRoute } from '../../router/helpers';
 import { userRoles, userStatus } from './constants';
 import { IFormUser } from './interfaces';
 import { confirmPasswordSchema, passwordSchema } from './validations';

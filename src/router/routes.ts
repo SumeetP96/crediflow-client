@@ -2,6 +2,8 @@
 export enum EAppRoutes {
   APP = '/',
 
+  LOGIN = '/login',
+
   SETTINGS = '/settings',
 
   PROFILE = '/profile',
@@ -38,10 +40,14 @@ export interface IRouteMetaMap {
 
 export type TAppRoutesMap = Record<keyof typeof EAppRoutes, IRouteMetaMap>;
 
-export const AppRoutes: TAppRoutesMap = {
+export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
   APP: {
     isPlaceholder: true,
     path: EAppRoutes.APP,
+  },
+
+  LOGIN: {
+    path: EAppRoutes.LOGIN,
   },
 
   SETTINGS: {
