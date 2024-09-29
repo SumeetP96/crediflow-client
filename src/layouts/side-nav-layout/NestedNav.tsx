@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { produce } from 'immer';
 import { Fragment, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { matchPath, useLocation, useNavigate } from 'react-router';
 import { INavLink } from '../constants/nav-links';
 
 export interface INavList {
@@ -49,6 +49,10 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
           const isOpen = openIds.includes(link.id);
           const isActive = isLinkActive(String(link.to));
           const toggleCollapse = () => {
+            const preventCollapse = isOpen && !matchPath(location.pathname, link.to as string);
+            if (preventCollapse) {
+              return;
+            }
             setOpenIds(
               produce((draft) => {
                 if (isOpen) {
@@ -62,7 +66,7 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
           };
 
           return (
-            <Fragment key={link.label}>
+            <Fragment key={link.id || link.label}>
               <ListItemButton
                 selected={isActive}
                 sx={{
@@ -73,7 +77,7 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
                 }}
                 onClick={() => {
                   toggleCollapse();
-                  if (link.to) {
+                  if (link.to && !matchPath(location.pathname, link.to)) {
                     navigate(link.to);
                   }
                   if (!hasChildren) {

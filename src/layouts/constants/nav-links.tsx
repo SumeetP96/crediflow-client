@@ -13,8 +13,6 @@ import {
   PeopleAltOutlined,
   ReceiptLong,
   ReceiptLongOutlined,
-  Settings,
-  SettingsOutlined,
   SpaceDashboard,
   SpaceDashboardOutlined,
 } from '@mui/icons-material';
@@ -44,14 +42,14 @@ export const mainMenuLinks: INavLink[] = [
     icon: <FolderOpenOutlined />,
     activeIcon: <FolderOpen />,
     label: 'Masters',
-    to: AppRoute('MASTERS'),
+    to: AppRoute('MASTERS_HOME'),
     children: [
       {
         id: 'users',
         icon: <AccountCircleOutlined />,
         activeIcon: <AccountCircle />,
         label: 'Users',
-        to: AppRoute('USERS'),
+        to: AppRoute('USERS_LIST'),
         description: 'Manage system users',
       },
       {
@@ -111,12 +109,12 @@ export const mainMenuLinks: INavLink[] = [
   },
 ];
 
-export const bottomNavLinks: INavLink[] = [
-  {
-    id: 'settings',
-    icon: <SettingsOutlined />,
-    activeIcon: <Settings />,
-    label: 'Settings',
-    to: AppRoute('DASHBOARD'),
-  },
-];
+// export const bottomNavLinks: INavLink[] = [
+//   {
+//     id: 'settings',
+//     icon: <SettingsOutlined />,
+//     activeIcon: <Settings />,
+//     label: 'Settings',
+//     to: AppRoute('DASHBOARD'),
+//   },
+// ];

@@ -1,6 +1,7 @@
 import { ArrowDownward, ArrowUpward, SwapVert } from '@mui/icons-material';
 import {
   Box,
+  Fade,
   IconButton,
   Paper,
   SxProps,
@@ -54,7 +55,8 @@ export interface IDataTableColumn<T> {
   select?: boolean;
 }
 
-export interface IDataTableProps<T> extends IDataTableFooterProps {
+export interface IDataTableProps<T>
+  extends Omit<IDataTableFooterProps, 'isDense' | 'onDensityChange'> {
   columns: IDataTableColumn<T>[];
   rows: T[];
   keyField: keyof T;
@@ -147,7 +149,7 @@ function DataTable<T>({
           {isLoading ? (
             <TableSkeleton rowCount={perPage} colCount={columns.length} hasFooter />
           ) : (
-            <>
+            <Fade in>
               <TableBody>
                 {rows.map((row) => (
                   <TableRow
@@ -178,7 +180,7 @@ function DataTable<T>({
                   </TableRow>
                 )}
               </TableBody>
-            </>
+            </Fade>
           )}
         </Table>
       </TableContainer>

@@ -46,7 +46,6 @@ export default function ListingHeader<Col>({
   const theme = useTheme();
 
   const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
-  console.log('🚀 ~ isTablet:', isTablet);
 
   const [openFilterField, setOpenFilterField] = useState<keyof Col>();
 

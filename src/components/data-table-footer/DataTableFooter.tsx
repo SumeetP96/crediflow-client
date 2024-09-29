@@ -29,7 +29,7 @@ export default function DataTableFooter({
 
   const [startRange, endRange] = useMemo(() => {
     if (totalRecords > 0) {
-      const start = (page - 1) * perPage;
+      const start = page === 0 ? 0 : (page - 1) * perPage;
       const end = start + perPage;
       return [start + 1, end];
     }
