@@ -29,8 +29,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     queryFn: async ({ signal }) => {
       return await axiosGet<IUser>(ApiRoutes.AUTH_PROFILE, { signal });
     },
-    retry: false,
-    enabled: !location.pathname.includes(AppRoute('LOGIN')), // disabled for login route
+    retry: 4,
+    retryDelay: 2000,
   });
 
   const state: IAuthContextState = {

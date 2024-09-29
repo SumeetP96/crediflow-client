@@ -1,4 +1,4 @@
-import { IDataTableFilter } from '../components/data-table/DataTable';
+import { IDataTableFilter } from '../components/data-table/types';
 
 export type TSortOrder = 'asc' | 'desc' | 'none';
 

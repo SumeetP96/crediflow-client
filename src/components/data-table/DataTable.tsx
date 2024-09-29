@@ -4,7 +4,6 @@ import {
   Fade,
   IconButton,
   Paper,
-  SxProps,
   Table,
   TableBody,
   TableCell,
@@ -17,43 +16,13 @@ import { ReactNode, useState } from 'react';
 import { TSortOrder } from '../../helpers/types';
 import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
 import TableSkeleton from '../skeleton/TableSkeleton';
+import { IDataTableColumn } from './types';
 
 const fieldSortingIconMap: Record<TSortOrder, ReactNode> = {
   asc: <ArrowUpward fontSize="small" />,
   desc: <ArrowDownward fontSize="small" />,
   none: <SwapVert fontSize="small" />,
 };
-
-export interface IDataTableExtraColumns {
-  actions: string;
-}
-
-export type TDataTableFilterType = 'text' | 'select' | 'multiselect' | 'date' | 'daterange';
-
-export interface IDataTableFilterSelectOption {
-  label: string | null;
-  value: string | number;
-  [key: string]: unknown;
-}
-
-export interface IDataTableFilter {
-  type: TDataTableFilterType;
-  label: string;
-  icon?: ReactNode;
-  isExactMatch?: boolean;
-  selectOptions?: IDataTableFilterSelectOption[];
-  render?: (filter: IDataTableFilter, value?: string | number) => string | number;
-}
-
-export interface IDataTableColumn<T> {
-  field: keyof T;
-  title: string;
-  sx?: SxProps;
-  render?: (params: T) => ReactNode;
-  sort?: boolean;
-  filter?: IDataTableFilter;
-  select?: boolean;
-}
 
 export interface IDataTableProps<T>
   extends Omit<IDataTableFooterProps, 'isDense' | 'onDensityChange'> {

@@ -2,7 +2,7 @@ import { Box, Chip, ClickAwayListener, Fade, Paper, Popper, Typography } from '@
 import { useEffect, useRef, useState } from 'react';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter, TListingFilterValue } from '../../helpers/types';
-import { TDataTableFilterType } from '../data-table/DataTable';
+import { TDataTableFilterType } from '../data-table/types';
 import ListingDateFilter from '../listing-date-filter/ListingDateFilter';
 import ListingDateRangeFilter from '../listing-date-range-filter/ListingDateRangeFilter';
 import ListingSelectFilter from '../listing-select-filter/ListingSelectFilter';
@@ -66,7 +66,9 @@ export default function ListingFilterChip<Col>({
 
   const renderFilterByType = (type: TDataTableFilterType) => {
     switch (type) {
-      case 'text':
+      case 'text-exact':
+      case 'text-fuzzy':
+      case 'number':
         return <ListingTextFilter {...filterTypeProps} />;
       case 'select':
         return <ListingSelectFilter {...filterTypeProps} />;

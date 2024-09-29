@@ -20,7 +20,8 @@ import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
-import { IDataTableColumn } from '../data-table/DataTable';
+import { IDataTableColumn } from '../data-table/types';
+import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
 import ListingFilterChip from '../listing-filter-chip/ListingFilterChip';
 import ListingFilterIcon from '../listing-filter-icon/ListingFilterIcon';
 
@@ -118,6 +119,16 @@ export default function ListingHeader<Col>({
               gap: 1.25,
             }}
           >
+            <DebouncedSearchField
+              size="small"
+              variant="outlined"
+              placeholder="Search"
+              debounceTime={1000}
+              minInputLength={1}
+              value={allParams.search ?? ''}
+              onChange={(value) => setSearchParams({ search: value })}
+            />
+
             <ButtonMenu
               label="Add Filters"
               tooltip="Add Filters to Table"

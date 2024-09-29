@@ -23,9 +23,8 @@ export default function useUserListingColumns() {
         sort: true,
         filter: {
           label: 'User ID',
-          type: 'text',
+          type: 'number',
           Icon: <Tag />,
-          isExactMatch: true,
         },
       },
       {
@@ -34,7 +33,7 @@ export default function useUserListingColumns() {
         sort: true,
         filter: {
           label: 'Name',
-          type: 'text',
+          type: 'text-fuzzy',
         },
       },
       {
@@ -44,7 +43,7 @@ export default function useUserListingColumns() {
         sx: { width: '200px', textAlign: 'center' },
         filter: {
           label: 'Username',
-          type: 'text',
+          type: 'text-fuzzy',
         },
       },
       {

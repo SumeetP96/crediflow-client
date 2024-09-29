@@ -7,11 +7,12 @@ export interface IDebouncedSearchFieldProps {
   size?: TextFieldProps['size'];
   sx?: SxProps;
   disabled?: boolean;
+  type?: TextFieldProps['type'];
   value: string;
-  onChange: (search: string) => void;
+  onChange: (value: string) => void;
   variant: TextFieldProps['variant'];
   placeholder: string;
-  debouncedTime: number;
+  debounceTime: number;
   minInputLength: number;
   autoFocus?: boolean;
   hasSearchIcon?: boolean;
@@ -21,11 +22,12 @@ export default function DebouncedSearchField({
   size,
   sx,
   disabled = false,
+  type = 'text',
   value,
   onChange,
   variant,
   placeholder,
-  debouncedTime,
+  debounceTime,
   minInputLength,
   autoFocus = false,
   hasSearchIcon = true,
@@ -43,7 +45,7 @@ export default function DebouncedSearchField({
     } else {
       onChange('');
     }
-  }, debouncedTime);
+  }, debounceTime);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setSearch(e.target.value);
@@ -53,6 +55,7 @@ export default function DebouncedSearchField({
   return (
     <TextField
       size={size}
+      type={type}
       autoComplete="off"
       autoFocus={autoFocus}
       disabled={disabled}

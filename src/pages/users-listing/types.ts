@@ -1,4 +1,4 @@
-import { IDataTableColumn, IDataTableExtraColumns } from '../../components/data-table/DataTable';
+import { IDataTableColumn, IDataTableExtraColumns } from '../../components/data-table/types';
 import { IUser } from '../../helpers/types';
 
 export type TUserRecord = IUser & IDataTableExtraColumns;

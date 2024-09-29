@@ -13,19 +13,22 @@ export default function ListingTextFilter<Col>({
   value,
   onChange,
 }: IListingTextFilter<Col>) {
+  const isExactMatch = filter.type === 'number' || filter.type === 'text-exact';
+
   return (
     <Box sx={{ px: 2, pt: 1, pb: 2 }}>
       <Typography variant="subtitle2">
-        {filter.label} {filter.isExactMatch === true ? 'is' : 'contains'}:
+        {filter.label} {isExactMatch ? 'is' : 'contains'}:
       </Typography>
 
       <DebouncedSearchField
+        type={filter.type === 'number' ? 'number' : 'text'}
         hasSearchIcon={false}
         size="small"
         autoFocus
         variant="outlined"
         placeholder={`Filter by ${filter.field as string}`}
-        debouncedTime={1000}
+        debounceTime={1000}
         minInputLength={1}
         value={value}
         onChange={onChange}
