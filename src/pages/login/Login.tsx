@@ -12,17 +12,20 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import useAuth from '../../auth/use-auth';
 import { IUser } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
+import { AppRoute } from '../../router/helpers';
 import { IFormLogin } from './types';
 
 export default function Login() {
-  const { navigateTo } = useNavigateTo();
+  const { navigateTo, navigateToPrev } = useNavigateTo(AppRoute('APP'));
+
+  const { authUser } = useAuth();
 
   const { redirectRoute, setAuthUser } = useAuth();
 
@@ -56,6 +59,16 @@ export default function Login() {
     e.stopPropagation();
     form.handleSubmit();
   };
+
+  useEffect(() => {
+    if (authUser) {
+      navigateToPrev();
+    }
+  }, [authUser, navigateToPrev]);
+
+  if (authUser) {
+    return null;
+  }
 
   return (
     <Container maxWidth="xs" sx={{ pt: 20 }}>

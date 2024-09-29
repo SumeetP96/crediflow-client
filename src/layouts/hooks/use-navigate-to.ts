@@ -1,4 +1,5 @@
 import { NavigateOptions, To, useLocation, useNavigate } from 'react-router';
+import { AppRoute } from '../../router/helpers';
 import { EAppRoutes } from '../../router/routes';
 
 export default function useNavigateTo(fallbackPrevRoute?: EAppRoutes | To) {
@@ -6,9 +7,11 @@ export default function useNavigateTo(fallbackPrevRoute?: EAppRoutes | To) {
 
   const prevLocation = location.state?.prevLocation;
 
-  const prevRoute = prevLocation
-    ? `${prevLocation.pathname}${prevLocation.search}`
-    : ((fallbackPrevRoute || -1) as To);
+  let prevRoute = (fallbackPrevRoute || -1) as To;
+
+  if (prevLocation && prevLocation.pathname !== AppRoute('LOGIN')) {
+    prevRoute = `${prevLocation.pathname}${prevLocation.search}`;
+  }
 
   const navigate = useNavigate();
 

@@ -6,6 +6,7 @@ import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
 import Customers from '../pages/customers/Customers';
 import Dashboard from '../pages/dashboard/Dashboard';
+import Error from '../pages/error/Error';
 import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
 import Invoices from '../pages/invoices/Invoices';
 import Login from '../pages/login/Login';
@@ -23,10 +24,15 @@ export const router = createBrowserRouter([
   {
     path: EAppRoutes.APP,
     element: <App />,
+    errorElement: <Error />,
     children: [
       {
         path: EAppRoutes.LOGIN,
         element: <Login />,
+      },
+      {
+        path: EAppRoutes.ERROR,
+        element: <Error />,
       },
       {
         id: breadcrumbRoutesId, // required for bradcrumb rendering

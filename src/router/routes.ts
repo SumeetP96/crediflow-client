@@ -29,6 +29,8 @@ export enum EAppRoutes {
 
   REPORTS = '/reports',
   REPORTS_HOME = '/reports/home',
+
+  ERROR = '/error/:code',
 }
 
 export interface IRouteMetaMap {
@@ -132,4 +134,9 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: EAppRoutes.REPORTS,
   },
   REPORTS_HOME: { label: 'Home', path: EAppRoutes.REPORTS_HOME },
+
+  ERROR: {
+    label: 'Error',
+    path: (code: number) => EAppRoutes.ERROR.replace(':code', String(code)),
+  },
 };

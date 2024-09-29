@@ -1,3 +1,4 @@
+import { Block, Save } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -101,6 +102,7 @@ export default function UserForm() {
                     <FormControl fullWidth>
                       <TextField
                         id="name"
+                        autoFocus
                         label="Name"
                         variant="outlined"
                         value={state.value}
@@ -136,6 +138,7 @@ export default function UserForm() {
                         value={state.value}
                         onChange={(e) => handleChange(e.target.value)}
                         onBlur={handleBlur}
+                        autoComplete="off"
                         placeholder="Enter username for user"
                         helperText={state.meta.errors.join(', ')}
                         error={Boolean(state.meta.errors.length)}
@@ -291,7 +294,13 @@ export default function UserForm() {
                   flexDirection: 'row-reverse',
                 }}
               >
-                <Button disabled={!canSubmit} variant="contained" type="submit" disableElevation>
+                <Button
+                  disabled={!canSubmit}
+                  variant="contained"
+                  type="submit"
+                  disableElevation
+                  startIcon={<Save />}
+                >
                   {isSubmitting
                     ? isUpdateMode
                       ? 'Updating...'
@@ -305,6 +314,7 @@ export default function UserForm() {
                   variant="outlined"
                   color="error"
                   type="reset"
+                  startIcon={<Block />}
                   onClick={() => {
                     form.reset();
                     navigateToPrev();

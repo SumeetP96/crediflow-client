@@ -1,11 +1,11 @@
-import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import AuthProvider from './auth/AuthProvider';
+import { theme } from './helpers/theme';
 import useNavigateTo from './layouts/hooks/use-navigate-to';
 
 const queryClient = new QueryClient();
@@ -20,22 +20,6 @@ function App() {
       navigateTo('/dashboard');
     }
   }, [location, navigateTo]);
-
-  const theme = createTheme({
-    colorSchemes: {
-      dark: true,
-      light: {
-        palette: {
-          background: {
-            default: blueGrey[50],
-          },
-        },
-      },
-    },
-    shape: {
-      borderRadius: 12,
-    },
-  });
 
   return (
     <ThemeProvider theme={theme}>

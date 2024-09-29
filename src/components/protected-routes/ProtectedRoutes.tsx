@@ -6,10 +6,20 @@ import { AppRoute } from '../../router/helpers';
 export default function ProtectedRoutes() {
   const location = useLocation();
 
-  const { authUser } = useAuth();
+  const { authUser, authError } = useAuth();
 
   if (authUser === undefined) {
     return 'Loading...';
+  }
+
+  if (authError) {
+    return (
+      <Navigate
+        to={AppRoute('ERROR', authError.status)}
+        replace
+        state={{ prevLocation: location }}
+      />
+    );
   }
 
   return authUser ? (
