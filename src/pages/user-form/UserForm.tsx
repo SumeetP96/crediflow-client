@@ -17,7 +17,6 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
-import { useState } from 'react';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
@@ -42,7 +41,7 @@ export default function UserForm() {
 
   const isUpdateMode = Boolean(id);
 
-  const { data } = useQuery({
+  const findQuery = useQuery({
     queryKey: ['USER_BY_ID'],
     queryFn: async () => {
       return await axiosGet<IUser>(ApiRoutes.USER_BY_ID(id!));
@@ -51,7 +50,7 @@ export default function UserForm() {
     retry: false,
   });
 
-  const user = data?.data;
+  const user = findQuery.data?.data;
 
   const form = useForm<IFormUser, ZodValidator>({
     defaultValues: {
@@ -78,16 +77,13 @@ export default function UserForm() {
     form.handleSubmit();
   };
 
-  const [apiError, setApiError] = useState('');
-
   const handleApiSuccess = () => {
     navigateToPrev();
   };
 
   const handleApiError = (error: AxiosError) => {
-    const { message, fieldErrors = [] } = parseApiErrorResponse(error);
+    const { fieldErrors = [] } = parseApiErrorResponse(error);
     setFormFieldErrors(form, fieldErrors);
-    setApiError(message);
   };
 
   const createQuery = useMutation({
@@ -108,6 +104,8 @@ export default function UserForm() {
     onError: handleApiError,
   });
 
+  const apiError = findQuery.error || createQuery.error || updateQuery.error;
+
   return (
     <Page title={isUpdateMode ? 'Update User' : 'Create New User'}>
       <Paper sx={{ p: 3, width: { xs: '100%', md: '860px' }, mx: 'auto' }} variant="outlined">
@@ -120,7 +118,7 @@ export default function UserForm() {
             <Divider />
           </Box>
 
-          {apiError ? <ApiErrorAlert error={createQuery.error} sx={{ mb: 3 }} /> : null}
+          {apiError ? <ApiErrorAlert error={apiError} sx={{ mb: 3 }} /> : null}
 
           <Grid2 container spacing={3}>
             {/* Name */}
