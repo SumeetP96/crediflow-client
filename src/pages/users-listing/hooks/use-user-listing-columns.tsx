@@ -2,17 +2,17 @@ import { Edit, MoreVert, Tag } from '@mui/icons-material';
 import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 import ButtonMenu from '../../../components/button-menu/ButtonMenu';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import { TListingFilterValue } from '../../../helpers/types';
 import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
+import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
 import { userRoleOptions, userStatusOptions } from '../constants';
 import { TUserColumns, TUserRecord } from '../types';
 
 export default function useUserListingColumns() {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const columns: TUserColumns = useMemo(
     () => [
@@ -97,7 +97,7 @@ export default function useUserListingColumns() {
         sx: { width: '200px', textAlign: 'center' },
         filter: {
           label: 'Created At',
-          type: 'daterange',
+          type: 'date',
           render: (_, value) => (value ? dayjs(value).format(defaultDateVisibleFormat) : ''),
         },
         render: ({ createdAt }) => dayjs(createdAt).format('DD/MM/YYYY HH:mm'),
@@ -109,7 +109,7 @@ export default function useUserListingColumns() {
         sx: { width: '50px' },
         render: ({ id }) => (
           <ButtonMenu size="small" tooltip="Actions" isIconButton icon={<MoreVert />}>
-            <MenuItem onClick={() => navigate(AppRoute('USERS_UPDATE', id))}>
+            <MenuItem onClick={() => navigateTo(AppRoute('USERS_UPDATE', id))}>
               <ListItemIcon>
                 <Edit />
               </ListItemIcon>
@@ -119,7 +119,7 @@ export default function useUserListingColumns() {
         ),
       },
     ],
-    [navigate],
+    [navigateTo],
   );
 
   const [selectedColumnFields, setSelectedColumnsFields] = useState(

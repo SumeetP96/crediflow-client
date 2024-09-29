@@ -44,7 +44,7 @@ export default function ConfirmationDialog({
 
       <DialogActions>
         <Button
-          autoFocus={autofocusOn && autofocusOn === 'reject'}
+          autoFocus={autofocusOn === 'reject'}
           color="error"
           disableElevation
           onClick={() => {
@@ -60,7 +60,7 @@ export default function ConfirmationDialog({
         <Button
           variant="contained"
           disableElevation
-          autoFocus={autofocusOn && autofocusOn === 'accept'}
+          autoFocus={autofocusOn === 'accept'}
           onClick={() => {
             onAccept?.();
             if (closeOnAccept) {

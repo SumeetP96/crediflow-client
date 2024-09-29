@@ -19,8 +19,10 @@ export default function ListingDateRangeFilter<Col>({
 
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
+  const safeValue = value.filter(Boolean);
+
   const [range, setRange] = useState<DateRange<Dayjs> | undefined>(
-    value ? (value.map((v) => dayjs(v)) as DateRange<Dayjs>) : undefined,
+    safeValue ? (safeValue.map((v) => dayjs(v)) as DateRange<Dayjs>) : undefined,
   );
 
   useEffect(() => {

@@ -2,13 +2,14 @@
 import { produce } from 'immer';
 import queryString from 'query-string';
 import { useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
+import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { defaultQueryParamsArraySeparator } from '../constants';
 
 export default function useQueryParams() {
   const location = useLocation();
 
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const getSearchParams = useCallback(<T = any>() => {
     return queryString.parse(location.search, {
@@ -26,9 +27,9 @@ export default function useQueryParams() {
         arrayFormatSeparator: defaultQueryParamsArraySeparator,
         skipNull: true,
       });
-      navigate({ search: newSearch }, { replace: true });
+      navigateTo({ search: newSearch }, { replace: true });
     },
-    [navigate],
+    [navigateTo],
   );
 
   const setSearchParams = useCallback(

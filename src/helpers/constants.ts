@@ -1,5 +1,7 @@
 import { TSortOrder } from './types';
 
+export const breadcrumbRoutesId = 'breadcrumb-pages';
+
 export const defaultQueryParamsArraySeparator = '|';
 
 export const defaultPage = 0;

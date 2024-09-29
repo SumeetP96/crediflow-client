@@ -14,9 +14,9 @@ import {
   useTheme,
 } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
+import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
 import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
@@ -41,7 +41,7 @@ export default function ListingHeader<Col>({
   selectedColumns,
   onToggleColumn,
 }: IListingHeaderProps<Col>) {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const theme = useTheme();
 
@@ -181,7 +181,7 @@ export default function ListingHeader<Col>({
             <Button
               startIcon={<AddCircleOutline />}
               variant="contained"
-              onClick={() => navigate(AppRoute('USERS_CREATE'))}
+              onClick={() => navigateTo(AppRoute('USERS_CREATE'))}
               disableElevation
               sx={{ width: { xs: '100%', sm: 'unset' } }}
             >

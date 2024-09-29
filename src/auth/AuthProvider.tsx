@@ -35,7 +35,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   const state: IAuthContextState = {
     authUser: query.data?.data || authUser,
-    redirectRoute: location.state?.from || AppRoute('APP'),
+    redirectRoute: location.state?.prevLocation?.pathname || AppRoute('APP'),
   };
 
   const actions: IAuthContextActions = {

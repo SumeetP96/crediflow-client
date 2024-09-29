@@ -4,21 +4,22 @@ import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 import AuthProvider from './auth/AuthProvider';
+import useNavigateTo from './layouts/hooks/use-navigate-to';
 
 const queryClient = new QueryClient();
 
 function App() {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const location = useLocation();
 
   useEffect(() => {
     if (location.pathname === '/') {
-      navigate('/dashboard');
+      navigateTo('/dashboard');
     }
-  }, [location, navigate]);
+  }, [location, navigateTo]);
 
   const theme = createTheme({
     colorSchemes: {

@@ -11,8 +11,9 @@ import {
 } from '@mui/material';
 import { produce } from 'immer';
 import { Fragment, useState } from 'react';
-import { matchPath, useLocation, useNavigate } from 'react-router';
+import { matchPath, useLocation } from 'react-router';
 import { INavLink } from '../constants/nav-links';
+import useNavigateTo from '../hooks/use-navigate-to';
 
 export interface INavList {
   onClick: () => void;
@@ -25,7 +26,7 @@ export interface INavList {
 function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHeader }: INavList) {
   const location = useLocation();
 
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const isLinkActive = (link: string): boolean => {
     return location.pathname.startsWith(link);
@@ -78,7 +79,7 @@ function NestedNav({ onClick, navLinks = [], isNested = false, listProps, subHea
                 onClick={() => {
                   toggleCollapse();
                   if (link.to && !matchPath(location.pathname, link.to)) {
-                    navigate(link.to);
+                    navigateTo(link.to);
                   }
                   if (!hasChildren) {
                     onClick();

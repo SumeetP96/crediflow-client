@@ -1,7 +1,9 @@
 import { Link, Breadcrumbs as MuiBreadCrumbs } from '@mui/material';
 import { AgnosticDataRouteObject } from '@remix-run/router';
 import { useCallback, useMemo } from 'react';
-import { matchPath, useLocation, useNavigate } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
+import { breadcrumbRoutesId } from '../../helpers/constants';
+import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { router } from '../../router/router';
 import { AppRoutesForBreadcrumbs, EAppRoutes, IRouteMetaMap } from '../../router/routes';
 
@@ -17,7 +19,7 @@ export interface IBreadcrumbsProps {
 }
 
 export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const location = useLocation();
 
@@ -61,7 +63,10 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
       });
     };
 
-    extractRoutes(router.routes[0].children as AgnosticDataRouteObject[]);
+    const routes = router.routes[0].children?.find((r) => r.id === breadcrumbRoutesId)
+      ?.children as AgnosticDataRouteObject[];
+
+    extractRoutes(routes);
 
     if (crumbs.length) {
       crumbs[crumbs.length - 1].active = true;
@@ -90,7 +95,7 @@ export default function Breadcrumbs({ breadcrumbs }: IBreadcrumbsProps) {
           fontWeight={400}
           onClick={() => {
             if (active || disabled || !to) return;
-            navigate(to);
+            navigateTo(to);
           }}
           sx={{
             cursor: active || disabled ? 'not-allowed' : 'pointer',

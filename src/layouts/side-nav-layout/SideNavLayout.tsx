@@ -17,15 +17,15 @@ import {
 } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { MouseEvent, ReactNode, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
-import ConfirmationDialog from '../../components/confirmation-dialog/ConfirmationDialog';
 import { AppRoute } from '../../router/helpers';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
+import useNavigateTo from '../hooks/use-navigate-to';
 import NestedNav from './NestedNav';
 
 export interface ISideNavAppBarLayout {
@@ -38,7 +38,7 @@ const drawerWidth = 240;
 const appName = import.meta.env.VITE_APP_NAME;
 
 function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBarLayout) {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const theme = useTheme();
 
@@ -47,8 +47,6 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [isClosing, setIsClosing] = useState(false);
-
-  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -87,14 +85,6 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
 
   return (
     <>
-      <ConfirmationDialog
-        title="Logout"
-        body="Are you sure you want to logout?"
-        open={isLogoutDialogOpen}
-        onClose={() => setIsLogoutDialogOpen(false)}
-        onAccept={() => logoutQuery.mutate()}
-      />
-
       <Box sx={{ display: 'flex' }}>
         <AppBar
           elevation={0}
@@ -132,7 +122,7 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
               <IconButton
                 size="small"
                 sx={{ ml: 1, display: { xs: 'none', md: 'inline-flex' } }}
-                onClick={() => navigate(AppRoute('SETTINGS'))}
+                onClick={() => navigateTo(AppRoute('SETTINGS'))}
               >
                 <SettingsOutlined />
               </IconButton>
@@ -163,11 +153,11 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
                       key={item.id}
                       onClick={() => {
                         if (item.to) {
-                          navigate(item.to);
+                          navigateTo(item.to);
                         }
                         handleMenuClose();
                         if (item.id === 'logout') {
-                          setIsLogoutDialogOpen(true);
+                          logoutQuery.mutate();
                         }
                       }}
                     >

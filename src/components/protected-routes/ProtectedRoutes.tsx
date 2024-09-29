@@ -17,6 +17,6 @@ export default function ProtectedRoutes() {
       <Outlet />
     </LayoutProvider>
   ) : (
-    <Navigate to={AppRoute('LOGIN')} replace state={{ from: location.pathname }} />
+    <Navigate to={AppRoute('LOGIN')} replace state={{ prevLocation: location }} />
   );
 }

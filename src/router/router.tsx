@@ -2,6 +2,7 @@ import { createBrowserRouter, Outlet } from 'react-router-dom';
 import App from '../App';
 import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
+import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
 import Customers from '../pages/customers/Customers';
 import Dashboard from '../pages/dashboard/Dashboard';
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
+        id: breadcrumbRoutesId, // required for bradcrumb rendering
         element: <ProtectedRoutes />,
         children: [
           {

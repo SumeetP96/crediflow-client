@@ -13,16 +13,16 @@ import { useMutation } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { z } from 'zod';
 import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import useAuth from '../../auth/use-auth';
 import { IUser } from '../../helpers/types';
+import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { IFormLogin } from './types';
 
 export default function Login() {
-  const navigate = useNavigate();
+  const { navigateTo } = useNavigateTo();
 
   const { redirectRoute, setAuthUser } = useAuth();
 
@@ -38,7 +38,7 @@ export default function Login() {
     },
     onSuccess: ({ data }) => {
       setAuthUser(data);
-      navigate(redirectRoute);
+      navigateTo(redirectRoute);
     },
   });
 
