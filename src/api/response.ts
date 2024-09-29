@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IApiErrorResponse, IParsedApiError } from './types';
+import { IApiErrorResponse, IFieldError, IParsedApiError } from './types';
 
 export const parseApiErrorObject = (error: any): IApiErrorResponse => {
   return error?.response?.data || { message: 'Something went wrong' };
@@ -12,14 +12,18 @@ export const parseZodValidationErrors = (error: any): IParsedApiError => {
   const message = errorObj.message || error.message || 'Something went wrong';
 
   if (errorObj.issues?.length) {
-    const errors = errorObj.issues.map((issue) => {
-      return `${issue.path}: ${issue.message}`;
+    const errors: string[] = [];
+    const fieldErrors: IFieldError[] = [];
+
+    errorObj.issues.forEach((issue) => {
+      errors.push(`${issue.path}: ${issue.message}`);
+      fieldErrors.push({ field: String(issue.path[0]), error: issue.message });
     });
 
-    return { message, errors };
+    return { message, errors, fieldErrors };
   }
 
-  return { message, errors: [] };
+  return { message, errors: [], fieldErrors: [] };
 };
 
 export const parseApiErrorResponse = (error: any): IParsedApiError => {
@@ -31,5 +35,5 @@ export const parseApiErrorResponse = (error: any): IParsedApiError => {
     return parseZodValidationErrors(error);
   }
 
-  return { message, errors: [] };
+  return { message, errors: [], fieldErrors: [] };
 };

@@ -20,7 +20,7 @@ import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
-import ListingApiErrorAlert from '../alerts/ListingApiErrorAlert';
+import ApiErrorAlert from '../alerts/ApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
 import { IDataTableColumn } from '../data-table/types';
 import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
@@ -236,7 +236,7 @@ export default function ListingHeader<Col>({
       </Collapse>
 
       <Collapse in={Boolean(apiError)}>
-        <ListingApiErrorAlert error={apiError} sx={{ mt: 2 }} />
+        <ApiErrorAlert error={apiError} sx={{ mt: 2 }} />
       </Collapse>
     </Box>
   );

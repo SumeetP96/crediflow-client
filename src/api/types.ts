@@ -18,7 +18,13 @@ export interface IApiErrorResponse {
   timestamp?: string;
 }
 
+export interface IFieldError {
+  field: string;
+  error: string;
+}
+
 export interface IParsedApiError {
   message: string;
   errors: string[];
+  fieldErrors: IFieldError[];
 }

@@ -2,12 +2,12 @@ import { Alert, AlertTitle, Box, SxProps } from '@mui/material';
 import { parseApiErrorResponse } from '../../api/response';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface IListingApiErrorAlertProps {
+export interface IApiErrorAlertProps {
   error: any;
   sx?: SxProps;
 }
 
-export default function ListingApiErrorAlert({ error, sx }: IListingApiErrorAlertProps) {
+export default function ApiErrorAlert({ error, sx }: IApiErrorAlertProps) {
   const parsedError = error ? parseApiErrorResponse(error) : null;
 
   if (!parsedError) {

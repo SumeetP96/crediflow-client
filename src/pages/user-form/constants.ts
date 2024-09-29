@@ -1,5 +1,5 @@
 import { IUserRoleFilterOption } from '../users-listing/types';
-import { IUserStatusSelectOption } from './interfaces';
+import { IUserStatusSelectOption } from './types';
 
 export const userRoles: IUserRoleFilterOption[] = [
   { label: 'Super Admin', value: 'super_admin' },

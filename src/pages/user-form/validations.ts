@@ -1,7 +1,7 @@
 import { FormApi } from '@tanstack/react-form';
 import { ZodValidator } from '@tanstack/zod-form-adapter';
 import { z } from 'zod';
-import { IFormUser } from './interfaces';
+import { IFormUser } from './types';
 
 type TForm = FormApi<IFormUser, ZodValidator>;
 

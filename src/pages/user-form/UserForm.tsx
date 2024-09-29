@@ -14,18 +14,23 @@ import {
   Typography,
 } from '@mui/material';
 import { useForm } from '@tanstack/react-form';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
+import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
+import { parseApiErrorResponse } from '../../api/response';
 import { ApiRoutes } from '../../api/routes';
+import ApiErrorAlert from '../../components/alerts/ApiErrorAlert';
 import Page from '../../components/page/Page';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
+import { setFormFieldErrors } from '../../helpers/utils/tanstack-form';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
 import { userRoles, userStatus } from './constants';
-import { IFormUser } from './interfaces';
+import { IFormUser } from './types';
 import { confirmPasswordSchema, passwordSchema } from './validations';
 
 export default function UserForm() {
@@ -57,13 +62,12 @@ export default function UserForm() {
       password: '',
       confirmPassword: '',
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       if (isUpdateMode) {
-        await axiosPatch(ApiRoutes.USER_UPDATE(id as number), value);
+        updateQuery.mutate(value);
       } else {
-        await axiosPost(ApiRoutes.USER_CREATE, value);
+        createQuery.mutate(value);
       }
-      navigateToPrev();
     },
     validatorAdapter: zodValidator(),
   });
@@ -73,6 +77,36 @@ export default function UserForm() {
     e.stopPropagation();
     form.handleSubmit();
   };
+
+  const [apiError, setApiError] = useState('');
+
+  const handleApiSuccess = () => {
+    navigateToPrev();
+  };
+
+  const handleApiError = (error: AxiosError) => {
+    const { message, fieldErrors = [] } = parseApiErrorResponse(error);
+    setFormFieldErrors(form, fieldErrors);
+    setApiError(message);
+  };
+
+  const createQuery = useMutation({
+    mutationKey: ['user-create'],
+    mutationFn: async (data: IFormUser) => {
+      return await axiosPost(ApiRoutes.USER_CREATE, data);
+    },
+    onSuccess: handleApiSuccess,
+    onError: handleApiError,
+  });
+
+  const updateQuery = useMutation({
+    mutationKey: ['user-update'],
+    mutationFn: async (data: IFormUser) => {
+      return await axiosPatch(ApiRoutes.USER_UPDATE(id as number), data);
+    },
+    onSuccess: handleApiSuccess,
+    onError: handleApiError,
+  });
 
   return (
     <Page title={isUpdateMode ? 'Update User' : 'Create New User'}>
@@ -85,6 +119,8 @@ export default function UserForm() {
 
             <Divider />
           </Box>
+
+          {apiError ? <ApiErrorAlert error={createQuery.error} sx={{ mb: 3 }} /> : null}
 
           <Grid2 container spacing={3}>
             {/* Name */}
