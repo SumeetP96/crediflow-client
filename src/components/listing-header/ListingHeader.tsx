@@ -9,11 +9,13 @@ import {
   ListItemText,
   MenuItem,
   MenuList,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import { useHotkeys } from 'react-hotkeys-hook';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
@@ -46,7 +48,19 @@ export default function ListingHeader<Col>({
 
   const theme = useTheme();
 
-  const isTablet = useMediaQuery(theme.breakpoints.up('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  useHotkeys(
+    '/',
+    () => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    },
+    { preventDefault: true },
+  );
 
   const [openFilterField, setOpenFilterField] = useState<keyof Col>();
 
@@ -91,7 +105,8 @@ export default function ListingHeader<Col>({
       <Grid2
         container
         spacing={2}
-        sx={{ alignItems: 'end', mb: selectedFilters.length > 0 ? 0 : 0.5 }}
+        sx={{ mb: selectedFilters.length > 0 ? 0 : 0.5 }}
+        alignItems="flex-start"
       >
         <Grid2 size={{ xs: 12, md: 4 }}>
           <Typography variant="h6" fontWeight={500} noWrap>
@@ -99,41 +114,36 @@ export default function ListingHeader<Col>({
           </Typography>
         </Grid2>
 
-        <Grid2
-          size={{ xs: 12, md: 8 }}
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-          }}
-        >
+        <Grid2 size={{ xs: 12, md: 8 }}>
           <Box
             sx={{
               mt: { xs: 1, md: 0 },
               width: '100%',
               display: 'flex',
-              flexWrap: { xs: 'no-wrap', md: 'wrap' },
+              flexWrap: 'wrap',
               flexDirection: 'row',
               justifyContent: { xs: 'space-between', sm: 'flex-end' },
-              alignItems: 'top',
+              alignItems: { xs: 'flex-start', lg: 'center' },
               gap: 1.25,
             }}
           >
             <DebouncedSearchField
+              ref={searchInputRef}
               size="small"
               variant="outlined"
-              placeholder="Search"
+              placeholder={`Press "/" to search`}
               debounceTime={1000}
               minInputLength={1}
               value={allParams.search ?? ''}
               onChange={(value) => setSearchParams({ search: value })}
+              sx={{ width: { xs: '100%', md: '250px', lg: '300px' }, mb: { xs: 1, md: 0 } }}
             />
 
             <ButtonMenu
               label="Add Filters"
               tooltip="Add Filters to Table"
               icon={<FilterList />}
-              isIconButton={!isTablet}
+              isIconButton={isTablet}
             >
               {({ closeMenu }) => (
                 <MenuList>
@@ -167,7 +177,7 @@ export default function ListingHeader<Col>({
               label="Columns"
               tooltip="Select Columns"
               icon={<ViewWeekTwoTone />}
-              isIconButton={!isTablet}
+              isIconButton={isTablet}
             >
               <MenuList>
                 {selectableColumns.map((col) => (
@@ -189,15 +199,17 @@ export default function ListingHeader<Col>({
               </MenuList>
             </ButtonMenu>
 
-            <Button
-              startIcon={<AddCircleOutline />}
-              variant="contained"
-              onClick={() => navigateTo(AppRoute('USERS_CREATE'))}
-              disableElevation
-              sx={{ width: { xs: '100%', sm: 'unset' } }}
-            >
-              Create New
-            </Button>
+            <Tooltip title="Create a new record">
+              <Button
+                startIcon={<AddCircleOutline />}
+                variant="contained"
+                onClick={() => navigateTo(AppRoute('USERS_CREATE'))}
+                disableElevation
+                sx={{ flexGrow: { xs: 1, md: 0 } }}
+              >
+                Create New
+              </Button>
+            </Tooltip>
           </Box>
         </Grid2>
       </Grid2>

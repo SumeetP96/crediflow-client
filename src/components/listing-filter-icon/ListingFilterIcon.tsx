@@ -1,4 +1,4 @@
-import { TDataTableFilterType } from '../data-table/DataTable';
+import { TDataTableFilterType } from '../data-table/types';
 import { listingFilterIconMap } from './constants';
 
 export interface IListingFilterIconProps {

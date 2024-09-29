@@ -76,7 +76,7 @@ function DataTable<T>({
         borderTopLeftRadius: 0,
       }}
     >
-      <TableContainer sx={{ maxHeight: { xs: '55vh', sm: '62vh', lg: '60vh' } }}>
+      <TableContainer sx={{ maxHeight: { xs: '55vh', sm: '60vh', md: '65vh', lg: '60vh' } }}>
         <Table size={isDense ? 'small' : 'medium'} stickyHeader sx={{ borderRadius: 0 }}>
           <TableHead>
             <TableRow>

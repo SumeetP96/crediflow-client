@@ -1,4 +1,5 @@
-import { Box, FormControlLabel, Pagination, Switch, Typography } from '@mui/material';
+import { ChevronLeft, ChevronRight, FirstPage, LastPage } from '@mui/icons-material';
+import { Box, FormControlLabel, IconButton, Pagination, Switch, Typography } from '@mui/material';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { defaultPerPageOptions } from '../../helpers/constants';
 import DataTableFooterPerPageSelect, {
@@ -35,6 +36,10 @@ export default function DataTableFooter({
     }
     return [0, 0];
   }, [page, perPage, totalRecords]);
+
+  const isFirstPage = page === 0;
+
+  const isLastPage = pageCount === page;
 
   return (
     <Box
@@ -92,7 +97,9 @@ export default function DataTableFooter({
         />
 
         <Typography sx={{ pl: 1 }}>
-          {startRange}-{endRange} of {totalRecords}
+          {startRange}
+          <small> to </small>
+          {endRange} <small>of</small> {totalRecords}
         </Typography>
 
         <Box sx={{ py: { xs: 1, md: 0 } }}>
@@ -101,10 +108,42 @@ export default function DataTableFooter({
             count={pageCount}
             page={page}
             onChange={(_, newPage) => onPageChange(newPage)}
-            siblingCount={0}
+            siblingCount={1}
             showFirstButton
             showLastButton
+            sx={{ display: { xs: 'none', sm: 'flex' } }}
           />
+
+          <Box
+            sx={{
+              width: '160px',
+              display: { xs: 'flex', sm: 'none' },
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <IconButton disabled={isFirstPage} onClick={() => onPageChange(0)}>
+              <FirstPage />
+            </IconButton>
+
+            <IconButton
+              disabled={isFirstPage}
+              onClick={() => onPageChange(page > 1 ? page - 1 : 0)}
+            >
+              <ChevronLeft />
+            </IconButton>
+
+            <IconButton
+              disabled={isLastPage}
+              onClick={() => onPageChange(page < pageCount ? page + 1 : pageCount)}
+            >
+              <ChevronRight />
+            </IconButton>
+
+            <IconButton disabled={isLastPage} onClick={() => onPageChange(pageCount)}>
+              <LastPage />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
     </Box>
