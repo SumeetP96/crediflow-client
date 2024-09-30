@@ -1,6 +1,7 @@
 import { ArrowDownward, ArrowUpward, SwapVert } from '@mui/icons-material';
 import {
   Box,
+  Checkbox,
   Fade,
   IconButton,
   Paper,
@@ -11,8 +12,9 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useTheme,
 } from '@mui/material';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useMemo, useState } from 'react';
 import { TSortOrder } from '../../helpers/types';
 import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
 import TableSkeleton from '../skeleton/TableSkeleton';
@@ -34,14 +36,20 @@ export interface IDataTableProps<T>
   onSort: (sortBy: string, sortDirection: TSortOrder) => void;
   isLoading: boolean;
   hoverable?: boolean;
+  selectable?: boolean;
+  selectOnRowClick?: boolean;
+  onRowsSelection?: (row: T[]) => void;
 }
 
-function DataTable<T>({
+export default function DataTable<T>({
   columns,
   rows,
   keyField,
   isLoading,
   hoverable = false,
+  selectable = false,
+  selectOnRowClick = false,
+  onRowsSelection,
   sortBy,
   sortOrder,
   onSort,
@@ -52,7 +60,11 @@ function DataTable<T>({
   perPageOptions,
   totalRecords,
 }: IDataTableProps<T>) {
+  const theme = useTheme();
+
   const [isDense, setIsDense] = useState(false);
+
+  const [selectedRows, setSelectedRows] = useState<T[]>([]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = perPage - rows.length;
@@ -67,6 +79,38 @@ function DataTable<T>({
     }
   };
 
+  const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let selection: T[] = [];
+    if (event.target.checked) {
+      selection = rows;
+    }
+    setSelectedRows(selection);
+    onRowsSelection?.(selection);
+  };
+
+  const handleSelectRow = (checked: boolean, row: T) => {
+    let selection: T[] = [];
+    if (checked) {
+      selection = selectedRows.concat([row]);
+    } else {
+      selection = selectedRows.filter((r) => r[keyField] !== row[keyField]);
+    }
+    console.log('🚀 ~ handleSelectRow ~ selection:', selection);
+    setSelectedRows(selection);
+    onRowsSelection?.(selection);
+  };
+
+  const selectedRowKeys = useMemo(() => {
+    return selectedRows.map((row) => row[keyField]);
+  }, [keyField, selectedRows]);
+
+  const handleTableRowClick = (row: T) => {
+    if (selectable && selectOnRowClick) {
+      const isRowSelected = Boolean(selectedRows.find((r) => r[keyField] === row[keyField]));
+      handleSelectRow(!isRowSelected, row);
+    }
+  };
+
   return (
     <Paper
       elevation={0}
@@ -76,10 +120,38 @@ function DataTable<T>({
         borderTopLeftRadius: 0,
       }}
     >
+      {selectedRows.length ? (
+        <Box
+          sx={{
+            mx: { xs: 2, md: 5 },
+            mt: { xs: 1, md: 0 },
+            mb: 1,
+            p: 1,
+            border: `1px dashed ${theme.palette.text.primary}`,
+            borderRadius: '12px',
+          }}
+        >
+          <Typography align="center">
+            Selected {selectedRows.length} of {rows.length} rows on this page
+          </Typography>
+        </Box>
+      ) : null}
+
       <TableContainer sx={{ maxHeight: { xs: '55vh', sm: '60vh', md: '65vh', lg: '60vh' } }}>
         <Table size={isDense ? 'small' : 'medium'} stickyHeader sx={{ borderRadius: 0 }}>
           <TableHead>
             <TableRow>
+              {selectable ? (
+                <TableCell
+                  sx={{ width: '50px', borderBottom: 'none', '& .MuiCheckbox-root': { py: 0 } }}
+                >
+                  <Checkbox
+                    checked={selectedRowKeys.length === rows.length}
+                    onChange={handleSelectAll}
+                  />
+                </TableCell>
+              ) : null}
+
               {columns.map((col) => (
                 <TableCell key={col.field as string} sx={{ borderBottom: 'none', ...col.sx }}>
                   <Box
@@ -124,8 +196,23 @@ function DataTable<T>({
                   <TableRow
                     hover={hoverable}
                     key={row[keyField as keyof T] as string}
-                    sx={{ cursor: hoverable ? 'pointer' : 'default' }}
+                    sx={{
+                      cursor: hoverable ? 'pointer' : 'default',
+                      bgcolor: selectedRowKeys.includes(row[keyField])
+                        ? theme.palette.action.selected
+                        : 'inherit',
+                    }}
+                    onClick={() => handleTableRowClick(row)}
                   >
+                    {selectable ? (
+                      <TableCell sx={{ borderBottomStyle: 'dashed' }}>
+                        <Checkbox
+                          checked={selectedRowKeys.includes(row[keyField])}
+                          onChange={(e) => handleSelectRow(e.target.checked, row)}
+                        />
+                      </TableCell>
+                    ) : null}
+
                     {columns.map((col) => (
                       <TableCell
                         key={col.field as string}
@@ -168,5 +255,3 @@ function DataTable<T>({
     </Paper>
   );
 }
-
-export default DataTable;
