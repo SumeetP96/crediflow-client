@@ -16,12 +16,14 @@ export interface IDataTableFilterSelectOption {
   [key: string]: unknown;
 }
 
-export interface IDataTableFilter {
+export interface IDataTableFilter<T> {
+  field?: keyof T;
+  title?: string;
   type: TDataTableFilterType;
   label: string;
   icon?: ReactNode;
   selectOptions?: IDataTableFilterSelectOption[];
-  render?: (filter: IDataTableFilter, value?: string | number) => string | number;
+  render?: (filter: IDataTableFilter<T>, value?: string | number) => string | number;
 }
 
 export interface IDataTableColumn<T> {
@@ -30,8 +32,9 @@ export interface IDataTableColumn<T> {
   sx?: SxProps;
   render?: (params: T) => ReactNode;
   sort?: boolean;
-  filter?: IDataTableFilter;
+  filter?: IDataTableFilter<T>;
   select?: boolean;
+  isHidden?: boolean;
 }
 
 export interface IDataTableExtraColumns {

@@ -1,20 +1,38 @@
-import { Edit, MoreVert, Tag } from '@mui/icons-material';
-import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
+import { Edit, Restore, Tag } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
-import ButtonMenu from '../../../components/button-menu/ButtonMenu';
+import { axiosPost } from '../../../api/request';
+import { ApiRoutes } from '../../../api/routes';
+import { EQueryKeys } from '../../../api/types';
+import ConfirmationDialog from '../../../components/confirmation-dialog/ConfirmationDialog';
+import { IDataTableColumn } from '../../../components/data-table/types';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
+import useListingColumns from '../../../helpers/hooks/use-listing-columns';
 import { TListingFilterValue } from '../../../helpers/types';
 import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
 import { userRoleOptions, userStatusOptions } from '../constants';
-import { TUserColumns, TUserRecord } from '../types';
+import { TUserRecord } from '../types';
 
 export default function useUserListingColumns() {
   const { navigateTo } = useNavigateTo();
 
-  const columns: TUserColumns = useMemo(
+  const queryClient = useQueryClient();
+
+  // TODO: use global error notification on error
+  const restoreQuery = useMutation({
+    mutationKey: ['user-restore'],
+    mutationFn: async (id: number) => {
+      return await axiosPost(ApiRoutes.USER_RESTORE(id));
+    },
+  });
+
+  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
+
+  const columns: IDataTableColumn<TUserRecord>[] = useMemo(
     () => [
       {
         field: 'id',
@@ -102,42 +120,72 @@ export default function useUserListingColumns() {
         render: ({ createdAt }) => dayjs(createdAt).format('DD/MM/YYYY HH:mm'),
       },
       {
+        field: 'updatedAt',
+        title: 'Updated At',
+        sort: true,
+        sx: { width: '200px', textAlign: 'center' },
+        isHidden: true,
+        filter: {
+          label: 'Updated At',
+          type: 'date',
+          render: (_, value) => (value ? dayjs(value).format(defaultDateVisibleFormat) : ''),
+        },
+        render: ({ updatedAt }) => dayjs(updatedAt).format('DD/MM/YYYY HH:mm'),
+      },
+      {
+        field: 'deletedAt',
+        title: 'Deleted At',
+        sort: true,
+        sx: { width: '200px', textAlign: 'center' },
+        isHidden: true,
+        filter: {
+          label: 'Deleted At',
+          type: 'date',
+          render: (_, value) => (value ? dayjs(value).format(defaultDateVisibleFormat) : ''),
+        },
+        render: ({ deletedAt }) => (deletedAt ? dayjs(deletedAt).format('DD/MM/YYYY HH:mm') : '-'),
+      },
+      {
         field: 'actions',
         title: '',
         select: false,
         sx: { width: '50px' },
-        render: ({ id }) => (
-          <ButtonMenu size="small" tooltip="Actions" isIconButton icon={<MoreVert />}>
-            <MenuItem onClick={() => navigateTo(AppRoute('USERS_UPDATE', id))}>
-              <ListItemIcon>
-                <Edit />
-              </ListItemIcon>
-              <ListItemText>Edit</ListItemText>
-            </MenuItem>
-          </ButtonMenu>
+        render: ({ id, deletedAt }) => (
+          <>
+            {deletedAt ? (
+              <>
+                <ConfirmationDialog
+                  open={isRestoreDialogOpen}
+                  onClose={() => setIsRestoreDialogOpen(false)}
+                  title="Restore User"
+                  body="Do you want to restore this user?"
+                  onAccept={() => {
+                    restoreQuery.mutate(id);
+                    queryClient.invalidateQueries({ queryKey: [EQueryKeys.USERS_LISTING] });
+                  }}
+                />
+
+                <Tooltip title="Restore Deleted User">
+                  <IconButton size="small" onClick={() => setIsRestoreDialogOpen(true)}>
+                    <Restore />
+                  </IconButton>
+                </Tooltip>
+              </>
+            ) : (
+              <Tooltip title="Edit User">
+                <IconButton size="small" onClick={() => navigateTo(AppRoute('USERS_UPDATE', id))}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
         ),
       },
     ],
-    [navigateTo],
+    [isRestoreDialogOpen, navigateTo, queryClient, restoreQuery],
   );
 
-  const [selectedColumnFields, setSelectedColumnsFields] = useState(
-    columns.map((col) => col.field),
-  );
-
-  const activeColumns = useMemo(
-    () => columns.filter((col) => selectedColumnFields.includes(col.field)),
-    [columns, selectedColumnFields],
-  );
-
-  const toggleColumn = (field: keyof TUserRecord) => {
-    const isVisible = selectedColumnFields.includes(field);
-    if (isVisible) {
-      setSelectedColumnsFields(selectedColumnFields.filter((f) => f !== field));
-    } else {
-      setSelectedColumnsFields((prev) => [...prev, field]);
-    }
-  };
+  const { activeColumns, toggleColumn } = useListingColumns<TUserRecord>(columns);
 
   return {
     allColumns: columns,

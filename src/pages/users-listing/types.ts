@@ -1,9 +1,11 @@
-import { IDataTableColumn, IDataTableExtraColumns } from '../../components/data-table/types';
+import { IDataTableExtraColumns } from '../../components/data-table/types';
 import { IUser } from '../../helpers/types';
 
-export type TUserRecord = IUser & IDataTableExtraColumns;
+export interface IUserListingAdditionalFilters {
+  isDeletedShown?: boolean;
+}
 
-export type TUserColumns = IDataTableColumn<TUserRecord>[];
+export type TUserRecord = IUser & IDataTableExtraColumns & IUserListingAdditionalFilters;
 
 export interface IUsersWithCount {
   count: number;

@@ -18,7 +18,8 @@ export interface IUser {
 
 export type TListingFilterValue = string | number | boolean;
 
-export interface IListingSelectedFilter<Col> extends IDataTableFilter {
+export interface IListingSelectedFilter<Col> extends IDataTableFilter<Col> {
   field: keyof Col;
+  title: string;
   value: string;
 }

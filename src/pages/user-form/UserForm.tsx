@@ -1,4 +1,4 @@
-import { Block, Save } from '@mui/icons-material';
+import { Block, Delete, Save } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -17,12 +17,14 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import { z } from 'zod';
-import { axiosGet, axiosPatch, axiosPost } from '../../api/request';
+import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../../api/request';
 import { parseApiErrorResponse } from '../../api/response';
 import { ApiRoutes } from '../../api/routes';
 import ApiErrorAlert from '../../components/alerts/ApiErrorAlert';
+import ConfirmationDialog from '../../components/confirmation-dialog/ConfirmationDialog';
 import Page from '../../components/page/Page';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
 import { setFormFieldErrors } from '../../helpers/utils/tanstack-form';
@@ -40,6 +42,8 @@ export default function UserForm() {
   const id = params.id ? parseInt(params.id, 10) : undefined;
 
   const isUpdateMode = Boolean(id);
+
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const findQuery = useQuery({
     queryKey: ['USER_BY_ID'],
@@ -102,6 +106,14 @@ export default function UserForm() {
     },
     onSuccess: handleApiSuccess,
     onError: handleApiError,
+  });
+
+  const deleteQuery = useMutation({
+    mutationKey: ['user-delete'],
+    mutationFn: async () => {
+      return await axiosDelete(ApiRoutes.USER_DELETE(id as number));
+    },
+    onSuccess: handleApiSuccess,
   });
 
   const apiError = findQuery.error || createQuery.error || updateQuery.error;
@@ -316,49 +328,80 @@ export default function UserForm() {
             </Grid2>
           </Grid2>
 
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <Box
-                sx={{
-                  mt: 4,
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  gap: 1,
-                  flexDirection: 'row-reverse',
-                }}
-              >
-                <Button
-                  disabled={!canSubmit}
-                  variant="contained"
-                  type="submit"
-                  disableElevation
-                  startIcon={<Save />}
-                >
-                  {isSubmitting
-                    ? isUpdateMode
-                      ? 'Updating...'
-                      : 'Creating...'
-                    : isUpdateMode
-                      ? 'Update'
-                      : 'Create'}
-                </Button>
+          <Box
+            sx={{
+              mt: 4,
+              display: 'flex',
+              justifyContent: isUpdateMode ? 'space-between' : 'flex-end',
+            }}
+          >
+            {isUpdateMode ? (
+              <>
+                <ConfirmationDialog
+                  open={isDeleteDialogOpen}
+                  title="Delete User"
+                  body="Are you sure you want to delete this user?"
+                  onAccept={() => deleteQuery.mutate()}
+                  onClose={() => setIsDeleteDialogOpen(false)}
+                />
 
                 <Button
                   variant="outlined"
+                  tabIndex={-1}
                   color="error"
-                  type="reset"
-                  startIcon={<Block />}
-                  onClick={() => {
-                    form.reset();
-                    navigateToPrev();
+                  startIcon={<Delete />}
+                  disableElevation
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  Delete
+                </Button>
+              </>
+            ) : null}
+
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    gap: 1,
+                    flexDirection: 'row-reverse',
                   }}
                 >
-                  Cancel
-                </Button>
-              </Box>
-            )}
-          />
+                  <Button
+                    disabled={!canSubmit}
+                    variant="contained"
+                    type="submit"
+                    disableElevation
+                    startIcon={<Save />}
+                  >
+                    {isSubmitting
+                      ? isUpdateMode
+                        ? 'Updating...'
+                        : 'Creating...'
+                      : isUpdateMode
+                        ? 'Update'
+                        : 'Create'}
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    type="reset"
+                    startIcon={<Block />}
+                    disableElevation
+                    onClick={() => {
+                      form.reset();
+                      navigateToPrev();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              )}
+            />
+          </Box>
         </form>
       </Paper>
     </Page>

@@ -6,10 +6,11 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import { ReactNode } from 'react';
 
 export interface IConfirmationDialogProps {
   title: string;
-  body: string;
+  body: ReactNode;
   open: boolean;
   onClose: () => void;
   acceptLabel?: string;

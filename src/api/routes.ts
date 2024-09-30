@@ -7,4 +7,6 @@ export const ApiRoutes = {
   USER_BY_ID: (id: number | string) => `/users/${String(id)}`,
   USER_CREATE: '/users',
   USER_UPDATE: (id: number | string) => `/users/${String(id)}`,
+  USER_DELETE: (id: number | string) => `/users/${String(id)}`,
+  USER_RESTORE: (id: number | string) => `/users/restore/${String(id)}`,
 };

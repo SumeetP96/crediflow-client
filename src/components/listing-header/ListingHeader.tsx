@@ -22,7 +22,7 @@ import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
 import ApiErrorAlert from '../alerts/ApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
-import { IDataTableColumn } from '../data-table/types';
+import { IDataTableColumn, IDataTableFilter } from '../data-table/types';
 import DebouncedSearchField from '../debounced-search-field/DebouncedTextField';
 import ListingFilterChip from '../listing-filter-chip/ListingFilterChip';
 import ListingFilterIcon from '../listing-filter-icon/ListingFilterIcon';
@@ -32,6 +32,7 @@ export interface IListingHeaderProps<Col> {
   isApiLoading: boolean;
   apiError: unknown;
   columns: Array<IDataTableColumn<Col>>;
+  filters?: IDataTableFilter<Col>[];
   selectedColumns: Array<IDataTableColumn<Col>>;
   onToggleColumn: (field: keyof Col) => void;
 }
@@ -41,6 +42,7 @@ export default function ListingHeader<Col>({
   isApiLoading,
   apiError,
   columns,
+  filters,
   selectedColumns,
   onToggleColumn,
 }: IListingHeaderProps<Col>) {
@@ -72,33 +74,46 @@ export default function ListingHeader<Col>({
     return columns.filter((col) => col.select !== false);
   }, [columns]);
 
-  const filterableColumns = useMemo(() => {
-    return columns.filter((col) => Boolean(col.filter?.type));
-  }, [columns]);
+  const availableFilters = useMemo(() => {
+    let allFilters = columns
+      .filter((col) => Boolean(col.filter?.type))
+      .map((col) => {
+        return {
+          ...col.filter,
+          field: col.field,
+          title: col.title,
+        } as IDataTableFilter<Col>;
+      });
+
+    if (filters?.length) {
+      allFilters = allFilters.concat(filters);
+    }
+
+    return (allFilters || []) as IDataTableFilter<Col>[];
+  }, [columns, filters]);
 
   const selectedFilters = useMemo(() => {
     const selected: IListingSelectedFilter<Col>[] = [];
 
-    filterableColumns
-      .filter((col) => Object.keys(allParams).includes(col.field as string))
-      .forEach((col) => {
-        if (col.filter) {
-          selected.push({
-            ...col.filter,
-            field: col.field,
-            value: allParams[col.field],
-          });
-        }
+    availableFilters
+      .filter((f) => Object.keys(allParams).includes(f.field as string))
+      .forEach((f) => {
+        selected.push({
+          ...f,
+          field: f.field as keyof Col,
+          title: f.title as string,
+          value: allParams[f.field],
+        });
       });
 
     return selected;
-  }, [allParams, filterableColumns]);
+  }, [allParams, availableFilters]);
 
   const filterMenuOptions = useMemo(() => {
-    return filterableColumns.filter((col) => {
+    return availableFilters.filter((col) => {
       return !selectedFilters.find((f) => f.field === col.field);
     });
-  }, [filterableColumns, selectedFilters]);
+  }, [availableFilters, selectedFilters]);
 
   return (
     <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -147,26 +162,26 @@ export default function ListingHeader<Col>({
             >
               {({ closeMenu }) => (
                 <MenuList>
-                  {filterMenuOptions.map((col) => (
+                  {filterMenuOptions.map((opt) => (
                     <MenuItem
-                      key={col.field as string}
+                      key={opt.field as string}
                       onClick={() => {
-                        setSearchParams({ [col.field]: '' });
-                        setOpenFilterField(col.field);
+                        setSearchParams({ [opt.field as string]: '' });
+                        setOpenFilterField(opt.field);
                         closeMenu();
                       }}
                       sx={{ py: 1 }}
                     >
                       <ListItemIcon>
-                        {col.filter?.type ? (
-                          col.filter.icon ? (
-                            col.filter.icon
+                        {opt.type ? (
+                          opt.icon ? (
+                            opt.icon
                           ) : (
-                            <ListingFilterIcon type={col.filter.type} />
+                            <ListingFilterIcon type={opt.type} />
                           )
                         ) : null}
                       </ListItemIcon>
-                      <ListItemText>{col.title}</ListItemText>
+                      <ListItemText>{opt.title}</ListItemText>
                     </MenuItem>
                   ))}
                 </MenuList>

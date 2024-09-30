@@ -28,3 +28,8 @@ export interface IParsedApiError {
   errors: string[];
   fieldErrors: IFieldError[];
 }
+
+export enum EQueryKeys {
+  // Users
+  USERS_LISTING = 'users:listing',
+}

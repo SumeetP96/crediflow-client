@@ -1,14 +1,32 @@
+import { AutoDelete } from '@mui/icons-material';
 import { Paper } from '@mui/material';
 import DataTable from '../../components/data-table/DataTable';
+import { IDataTableFilter } from '../../components/data-table/types';
 import ListingHeader from '../../components/listing-header/ListingHeader';
 import Page from '../../components/page/Page';
 import { defaultPage } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
+import { showDeletedOptions } from './constants';
 import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
+import { TUserRecord } from './types';
 
 const pageTitle = 'Users Listing';
+
+const additionalFilters: IDataTableFilter<TUserRecord>[] = [
+  {
+    field: 'isDeletedShown',
+    title: 'Show Deleted',
+    type: 'select',
+    label: 'Show Deleted',
+    icon: <AutoDelete />,
+    selectOptions: showDeletedOptions,
+    render: (_, value) => {
+      return value ? (value === 'yes' ? 'Yes' : 'No') : '';
+    },
+  },
+];
 
 export default function UsersListing() {
   const { setSearchParams } = useQueryParams();
@@ -27,6 +45,7 @@ export default function UsersListing() {
           isApiLoading={query.isLoading}
           apiError={query.error}
           columns={allColumns}
+          filters={additionalFilters}
           selectedColumns={activeColumns}
           onToggleColumn={toggleColumn}
         />
