@@ -4,7 +4,7 @@ export const breadcrumbRoutesId = 'breadcrumb-pages';
 
 export const defaultQueryParamsArraySeparator = '|';
 
-export const defaultPage = 0;
+export const defaultPage = 1;
 
 export const defaultPerPage = 5;
 

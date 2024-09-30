@@ -26,18 +26,18 @@ export default function DataTableFooter({
   onDensityChange,
   isLoading,
 }: IDataTableFooterProps) {
-  const pageCount = Math.floor(totalRecords / perPage);
+  const pageCount = Math.ceil(totalRecords / perPage);
 
   const [startRange, endRange] = useMemo(() => {
     if (totalRecords > 0) {
-      const start = page === 0 ? 0 : (page - 1) * perPage;
+      const start = page === 1 ? 1 : (page - 1) * perPage;
       const end = start + perPage;
-      return [start + 1, end];
+      return [start, end];
     }
     return [0, 0];
   }, [page, perPage, totalRecords]);
 
-  const isFirstPage = page === 0;
+  const isFirstPage = page === 1;
 
   const isLastPage = pageCount === page;
 
@@ -102,7 +102,7 @@ export default function DataTableFooter({
           {endRange} <small>of</small> {totalRecords}
         </Typography>
 
-        <Box sx={{ py: { xs: 1, md: 0 } }}>
+        <Box>
           <Pagination
             disabled={isLoading}
             count={pageCount}
@@ -122,13 +122,13 @@ export default function DataTableFooter({
               justifyContent: 'space-between',
             }}
           >
-            <IconButton disabled={isFirstPage} onClick={() => onPageChange(0)}>
+            <IconButton disabled={isFirstPage} onClick={() => onPageChange(1)}>
               <FirstPage />
             </IconButton>
 
             <IconButton
               disabled={isFirstPage}
-              onClick={() => onPageChange(page > 1 ? page - 1 : 0)}
+              onClick={() => onPageChange(page > 1 ? page - 1 : 1)}
             >
               <ChevronLeft />
             </IconButton>

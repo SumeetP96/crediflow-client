@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  useMediaQuery,
   useTheme,
 } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
@@ -62,12 +63,17 @@ export default function DataTable<T>({
 }: IDataTableProps<T>) {
   const theme = useTheme();
 
+  const isMobile = useMediaQuery(theme.breakpoints.only('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.only('md'));
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const rowCount = isMobile ? 7 : isTablet ? 11 : 5;
+  const emptyRows = rows.length < rowCount ? rowCount - rows.length : 0;
+  const rowHeight = 77 * emptyRows - 1;
+
   const [isDense, setIsDense] = useState(false);
 
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = perPage - rows.length;
 
   const handleSorting = (sortByField: string, sortFieldOrder: string) => {
     if (sortByField !== sortBy) {
@@ -95,7 +101,6 @@ export default function DataTable<T>({
     } else {
       selection = selectedRows.filter((r) => r[keyField] !== row[keyField]);
     }
-    console.log('🚀 ~ handleSelectRow ~ selection:', selection);
     setSelectedRows(selection);
     onRowsSelection?.(selection);
   };
@@ -227,7 +232,7 @@ export default function DataTable<T>({
                 ))}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows - 1 }}>
+                  <TableRow style={{ height: rowHeight }}>
                     <TableCell colSpan={columns.length}>
                       <Typography sx={{ textAlign: 'center' }} color="textDisabled">
                         {rows.length ? 'No more data' : 'No data found'}
