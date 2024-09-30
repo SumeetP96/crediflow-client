@@ -27,7 +27,7 @@ export default function Login() {
 
   const { authUser } = useAuth();
 
-  const { redirectRoute, setAuthUser } = useAuth();
+  const { redirectRoute, updateAuthUser } = useAuth();
 
   const [serverError, setServerError] = useState('');
 
@@ -40,7 +40,7 @@ export default function Login() {
       setServerError(error.response?.data.message ?? '');
     },
     onSuccess: ({ data }) => {
-      setAuthUser(data);
+      updateAuthUser(data);
       navigateTo(redirectRoute);
     },
   });

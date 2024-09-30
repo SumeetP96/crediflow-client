@@ -16,6 +16,12 @@ export interface IUser {
   deletedAt: string | null;
 }
 
+export interface IAuthUser extends Pick<IUser, 'id' | 'name' | 'username'> {
+  id: number;
+  name: string;
+  username: string;
+}
+
 export type TListingFilterValue = string | number | boolean;
 
 export interface IListingSelectedFilter<Col> extends IDataTableFilter<Col> {

@@ -1,5 +1,7 @@
 import { TSortOrder } from './types';
 
+export const authUserStorageKey = 'user-details';
+
 export const breadcrumbRoutesId = 'breadcrumb-pages';
 
 export const defaultQueryParamsArraySeparator = '|';

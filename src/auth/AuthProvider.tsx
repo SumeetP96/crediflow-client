@@ -1,45 +1,43 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { axiosGet } from '../api/request';
 import { ApiRoutes } from '../api/routes';
-import { IUser } from '../helpers/types';
+import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
+import { authUserStorageKey } from '../helpers/constants';
+import { IAuthUser, IUser } from '../helpers/types';
 import { AppRoute } from '../router/helpers';
 
-export interface IAuthError {
-  status: number;
-  message: string;
-}
-
 export interface IAuthContextState {
-  authUser: IUser | null;
-  authError: IAuthError | null;
+  authUser: IAuthUser | null;
   redirectRoute: string;
 }
 
 export interface IAuthContextActions {
-  setAuthUser: Dispatch<SetStateAction<IUser | null>>;
+  updateAuthUser: (user: IUser) => void;
 }
 
 export type TAuthContext = IAuthContextState & IAuthContextActions;
 
 export const AuthContext = createContext<TAuthContext | null>(null);
 
+const transformUserToAuthUser = (user: IUser): IAuthUser => {
+  return {
+    id: user.id,
+    name: user.name,
+    username: user.username,
+  };
+};
+
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
 
-  const [authUser, setAuthUser] = useState<IUser | null>(null);
+  const storageUser = localStorage.getItem(authUserStorageKey)
+    ? (JSON.parse(localStorage.getItem(authUserStorageKey) as string) as IAuthUser)
+    : null;
 
-  const [authError, setAuthError] = useState<IAuthError | null>(null);
+  const [authUser, setAuthUser] = useState<IAuthUser | null>(storageUser);
 
   const query = useQuery({
     queryKey: ['auth-user'],
@@ -47,45 +45,39 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return await axiosGet<IUser>(ApiRoutes.AUTH_PROFILE, { signal });
     },
     retry: false,
+    refetchInterval: 1000 * 60 * 30, // 30 minutes
   });
 
-  const getAuthError = useCallback((): IAuthError | null => {
-    if (!query.error) {
-      return null;
-    }
-    const error = query.error as AxiosError<{ message: string; statusCode: number }>;
-    const { statusCode = 401, message = 'Something went wrong' } = error.response?.data || {};
-    return { status: statusCode, message };
-  }, [query.error]);
+  const user = query.data?.data;
 
   useEffect(() => {
-    if (query.isSuccess) {
-      setAuthUser(query.data?.data);
-      setAuthError(null);
+    if (query.isSuccess && user) {
+      const transformed = transformUserToAuthUser(user);
+      setAuthUser(transformed);
+      localStorage.setItem(authUserStorageKey, JSON.stringify(transformed));
     }
     if (query.error) {
-      const error = getAuthError();
-      if (error?.status === 401) {
+      const error = query.error as AxiosError;
+      if (error.status === 401) {
         setAuthUser(null);
-        setAuthError(error);
-      } else {
-        setAuthError(error);
       }
     }
-  }, [getAuthError, query.data?.data, query.error, query.isSuccess]);
+  }, [query.error, query.isSuccess, user]);
 
   const state: IAuthContextState = {
-    authUser: query.data?.data || authUser,
-    authError: authError || getAuthError(),
+    authUser: user || authUser,
     redirectRoute: location.state?.prevLocation?.pathname || AppRoute('APP'),
   };
 
   const actions: IAuthContextActions = {
-    setAuthUser,
+    updateAuthUser: (user: IUser) => {
+      const transformed = transformUserToAuthUser(user);
+      setAuthUser(transformed);
+    },
   };
 
   if (query.isLoading) {
-    return null;
+    return <LoaderFullscreen />;
   }
 
   return <AuthContext.Provider value={{ ...state, ...actions }}>{children}</AuthContext.Provider>;
