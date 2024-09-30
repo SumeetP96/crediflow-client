@@ -1,8 +1,8 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import App from '../App';
 import ErrorBoundary from '../components/error-boundary/ErrorBoundary';
+import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
 import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
-import RouterLoader from '../components/router-loader/RouterLoader';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
   {
     path: EAppRoutes.APP,
     element: <App />,
-    loader: RouterLoader,
+    loader: LoaderFullscreen,
     errorElement: <ErrorBoundary />,
     children: [
       {

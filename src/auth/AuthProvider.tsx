@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { axiosGet } from '../api/request';
 import { ApiRoutes } from '../api/routes';
 import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
-import { authUserStorageKey } from '../helpers/constants';
+import { authUserRefetchInterval, authUserStorageKey } from '../helpers/constants';
 import { IAuthUser, IUser } from '../helpers/types';
 import { AppRoute } from '../router/helpers';
 
@@ -45,7 +45,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return await axiosGet<IUser>(ApiRoutes.AUTH_PROFILE, { signal });
     },
     retry: false,
-    refetchInterval: 1000 * 60 * 30, // 30 minutes
+    refetchInterval: authUserRefetchInterval,
   });
 
   const user = query.data?.data;

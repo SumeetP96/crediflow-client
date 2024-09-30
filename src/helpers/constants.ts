@@ -2,6 +2,8 @@ import { TSortOrder } from './types';
 
 export const authUserStorageKey = 'user-details';
 
+export const authUserRefetchInterval = 1000 * 60 * 30; // 30 minutes
+
 export const breadcrumbRoutesId = 'breadcrumb-pages';
 
 export const defaultQueryParamsArraySeparator = '|';

@@ -1,8 +1,9 @@
 import { Box, Fade, useTheme } from '@mui/material';
 import { ThreeDots } from 'react-loader-spinner';
+import ThemeProviderWrapper from '../theme-provider-wrapper/ThemeProviderWrapper';
 import './LoaderFullscreen.css';
 
-export default function LoaderFullscreen() {
+function LoaderFullscreenComponent() {
   const theme = useTheme();
 
   const color = theme.palette.primary.main;
@@ -22,5 +23,13 @@ export default function LoaderFullscreen() {
         </Box>
       </Box>
     </Fade>
+  );
+}
+
+export default function LoaderFullscreen() {
+  return (
+    <ThemeProviderWrapper>
+      <LoaderFullscreenComponent />
+    </ThemeProviderWrapper>
   );
 }

@@ -1,7 +1,8 @@
 import { Home as HomeIcon } from '@mui/icons-material';
 import { Box, Button, Typography, useMediaQuery, useTheme } from '@mui/material';
+import ThemeProviderWrapper from '../../components/theme-provider-wrapper/ThemeProviderWrapper';
 
-const NotFound = () => {
+function NotFoundComponent() {
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -73,13 +74,11 @@ const NotFound = () => {
           size="large"
           startIcon={<HomeIcon />}
           sx={{
-            borderRadius: '4px',
             padding: '10px 30px',
             fontSize: '1rem',
             textTransform: 'none',
           }}
           onClick={() => {
-            // Navigate to home page
             window.location.href = '/';
           }}
         >
@@ -99,6 +98,12 @@ const NotFound = () => {
       </Box>
     </Box>
   );
-};
+}
 
-export default NotFound;
+export default function NotFound() {
+  return (
+    <ThemeProviderWrapper>
+      <NotFoundComponent />
+    </ThemeProviderWrapper>
+  );
+}

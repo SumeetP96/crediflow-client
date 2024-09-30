@@ -1,11 +1,10 @@
-import { CssBaseline, ThemeProvider } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import AuthProvider from './auth/AuthProvider';
-import { theme } from './helpers/theme';
+import ThemeProviderWrapper from './components/theme-provider-wrapper/ThemeProviderWrapper';
 import useNavigateTo from './layouts/hooks/use-navigate-to';
 
 const queryClient = new QueryClient();
@@ -22,9 +21,7 @@ function App() {
   }, [location, navigateTo]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-
+    <ThemeProviderWrapper>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
@@ -32,7 +29,7 @@ function App() {
           </AuthProvider>
         </QueryClientProvider>
       </LocalizationProvider>
-    </ThemeProvider>
+    </ThemeProviderWrapper>
   );
 }
 
