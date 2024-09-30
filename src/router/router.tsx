@@ -1,16 +1,18 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import App from '../App';
+import ErrorBoundary from '../components/error-boundary/ErrorBoundary';
 import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
+import RouterLoader from '../components/router-loader/RouterLoader';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
 import Customers from '../pages/customers/Customers';
 import Dashboard from '../pages/dashboard/Dashboard';
-import Error from '../pages/error/Error';
 import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
 import Invoices from '../pages/invoices/Invoices';
 import Login from '../pages/login/Login';
 import Masters from '../pages/masters/Masters';
+import NotFound from '../pages/not-found/NotFound';
 import Profile from '../pages/profile/Profile';
 import Reports from '../pages/reports/Reports';
 import Settings from '../pages/settings/Settings';
@@ -24,15 +26,12 @@ export const router = createBrowserRouter([
   {
     path: EAppRoutes.APP,
     element: <App />,
-    errorElement: <Error />,
+    loader: RouterLoader,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: EAppRoutes.LOGIN,
         element: <Login />,
-      },
-      {
-        path: EAppRoutes.ERROR,
-        element: <Error />,
       },
       {
         id: breadcrumbRoutesId, // required for bradcrumb rendering
@@ -115,5 +114,9 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ]);
