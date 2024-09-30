@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { produce } from 'immer';
+import LZString from 'lz-string';
 import queryString from 'query-string';
 import { useCallback } from 'react';
 import { useLocation } from 'react-router';
@@ -12,7 +12,9 @@ export default function useQueryParams() {
   const { navigateTo } = useNavigateTo();
 
   const getSearchParams = useCallback(<T = any>() => {
-    return queryString.parse(location.search, {
+    const compressed = queryString.parse(location.search);
+    const decompressed = LZString.decompressFromEncodedURIComponent(compressed.q as string);
+    return queryString.parse(decompressed, {
       parseBooleans: true,
       parseNumbers: true,
       arrayFormat: 'separator',
@@ -27,7 +29,8 @@ export default function useQueryParams() {
         arrayFormatSeparator: defaultQueryParamsArraySeparator,
         skipNull: true,
       });
-      navigateTo({ search: newSearch }, { replace: true });
+      const compressed = LZString.compressToEncodedURIComponent(newSearch);
+      navigateTo({ search: queryString.stringify({ q: compressed }) }, { replace: true });
     },
     [navigateTo],
   );
