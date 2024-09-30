@@ -173,13 +173,7 @@ export default function ListingHeader<Col>({
                       sx={{ py: 1 }}
                     >
                       <ListItemIcon>
-                        {opt.type ? (
-                          opt.icon ? (
-                            opt.icon
-                          ) : (
-                            <ListingFilterIcon type={opt.type} />
-                          )
-                        ) : null}
+                        {opt.icon ? opt.icon : <ListingFilterIcon type={opt.type} />}
                       </ListItemIcon>
                       <ListItemText>{opt.title}</ListItemText>
                     </MenuItem>
