@@ -22,7 +22,6 @@ import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
-import { AppRoute } from '../../router/helpers';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import useNavigateTo from '../hooks/use-navigate-to';
@@ -31,13 +30,18 @@ import NestedNav from './NestedNav';
 export interface ISideNavAppBarLayout {
   children: ReactNode;
   appBarHeaderComponent: ReactNode;
+  openSettingsDrawer: () => void;
 }
 
 const drawerWidth = 240;
 
 const appName = import.meta.env.VITE_APP_NAME;
 
-function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBarLayout) {
+function SideNavAppBarLayout({
+  children,
+  appBarHeaderComponent,
+  openSettingsDrawer,
+}: ISideNavAppBarLayout) {
   const { navigateTo } = useNavigateTo();
 
   const theme = useTheme();
@@ -119,15 +123,11 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
                 <HelpOutlineOutlined />
               </IconButton>
 
-              <IconButton
-                size="small"
-                sx={{ ml: 1, display: { xs: 'none', md: 'inline-flex' } }}
-                onClick={() => navigateTo(AppRoute('SETTINGS'))}
-              >
+              <IconButton size="small" sx={{ ml: { xs: 0, md: 1 } }} onClick={openSettingsDrawer}>
                 <SettingsOutlined />
               </IconButton>
 
-              <IconButton onClick={handleProfileClick} sx={{ padding: 1, ml: 2 }}>
+              <IconButton onClick={handleProfileClick} sx={{ padding: 1, ml: { xs: 1, md: 2 } }}>
                 <Avatar alt="User" src={UserAvatar} />
               </IconButton>
 

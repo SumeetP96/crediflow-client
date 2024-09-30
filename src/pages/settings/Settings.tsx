@@ -1,6 +1,6 @@
 import { Box, Paper, Typography } from '@mui/material';
+import ColorSchemeSettingButtons from '../../components/color-scheme-setting-buttons/ColorSchemeSettingButtons';
 import Page from '../../components/page/Page';
-import ColorSchemeSettings from './components/ColorSchemeSettings';
 
 function Settings() {
   return (
@@ -12,7 +12,7 @@ function Settings() {
             Color Scheme
           </Typography>
 
-          <ColorSchemeSettings />
+          <ColorSchemeSettingButtons size="large" />
         </Box>
       </Paper>
     </Page>

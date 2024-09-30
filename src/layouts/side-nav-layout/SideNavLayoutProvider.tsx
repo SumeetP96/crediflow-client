@@ -7,6 +7,7 @@ export interface ISideNavLayoutContextState {
 
 export interface ISideNavLayoutContextActions {
   setAppBarHeaderComponent: Dispatch<SetStateAction<ReactNode>>;
+  openSettingsDrawer: () => void;
 }
 
 export interface ISideNavLayoutContext {
@@ -16,7 +17,15 @@ export interface ISideNavLayoutContext {
 
 export const SideNavLayoutContext = createContext<ISideNavLayoutContext | null>(null);
 
-export const SideNavLayoutProvider = ({ children }: { children: ReactNode }) => {
+export interface ISideNavLayoutProviderProps {
+  children: ReactNode;
+  openSettingsDrawer: () => void;
+}
+
+export const SideNavLayoutProvider = ({
+  children,
+  openSettingsDrawer,
+}: ISideNavLayoutProviderProps) => {
   const [appBarHeaderComponent, setAppBarHeaderComponent] = useState<ReactNode>();
 
   const state = {
@@ -25,11 +34,15 @@ export const SideNavLayoutProvider = ({ children }: { children: ReactNode }) => 
 
   const actions = {
     setAppBarHeaderComponent,
+    openSettingsDrawer,
   };
 
   return (
     <SideNavLayoutContext.Provider value={{ state, actions }}>
-      <SideNavAppBarLayout appBarHeaderComponent={appBarHeaderComponent}>
+      <SideNavAppBarLayout
+        appBarHeaderComponent={appBarHeaderComponent}
+        openSettingsDrawer={openSettingsDrawer}
+      >
         {children}
       </SideNavAppBarLayout>
     </SideNavLayoutContext.Provider>

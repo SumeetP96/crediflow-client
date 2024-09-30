@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
+import SettingsDrawer from '../components/settings-drawer/SettingsDrawer';
 import { useCurrentLayout } from './hooks/use-current-layout';
 
 export interface ILayoutProviderProps {
@@ -6,6 +7,8 @@ export interface ILayoutProviderProps {
 }
 
 export const LayoutProvider = ({ children }: ILayoutProviderProps) => {
+  const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+
   const currentLayout = useCurrentLayout();
 
   const Provider = currentLayout.provider;
@@ -13,5 +16,11 @@ export const LayoutProvider = ({ children }: ILayoutProviderProps) => {
   // For debugging purposes
   // console.log('🚀 ~ LayoutProvider ~ Provider:', Provider.name);
 
-  return <Provider>{children}</Provider>;
+  return (
+    <Provider openSettingsDrawer={() => setIsSettingsDrawerOpen(true)}>
+      <SettingsDrawer open={isSettingsDrawerOpen} onClose={() => setIsSettingsDrawerOpen(false)} />
+
+      {children}
+    </Provider>
+  );
 };
