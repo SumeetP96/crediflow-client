@@ -3,14 +3,14 @@ import {
   SideNavLayoutProvider,
 } from '../side-nav-layout/SideNavLayoutProvider';
 
-export enum Layouts {
+export enum ELayouts {
   SIDE_NAV = 'side-nav',
 }
 
-export const defaultLayout = Layouts.SIDE_NAV;
+export const defaultLayout = ELayouts.SIDE_NAV;
 
 export const layoutContextProviders = {
-  [Layouts.SIDE_NAV]: {
+  [ELayouts.SIDE_NAV]: {
     context: SideNavLayoutContext,
     provider: SideNavLayoutProvider,
   },

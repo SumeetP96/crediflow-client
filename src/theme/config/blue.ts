@@ -1,7 +1,11 @@
 import { createTheme } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
+import { themeSettings } from '../contstants';
 
-export const theme = createTheme({
+export const blueTheme = createTheme({
+  shape: {
+    borderRadius: themeSettings.borderRadius,
+  },
   colorSchemes: {
     dark: true,
     light: {
@@ -11,8 +15,5 @@ export const theme = createTheme({
         },
       },
     },
-  },
-  shape: {
-    borderRadius: 12,
   },
 });

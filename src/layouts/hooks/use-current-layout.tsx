@@ -1,10 +1,10 @@
-import { Layouts, defaultLayout, layoutContextProviders } from '../constants/layout';
+import { ELayouts, defaultLayout, layoutContextProviders } from '../constants/layout';
 
 export const useCurrentLayout = () => {
-  const lsLayoutKey = (localStorage.getItem('layout') as Layouts) || undefined;
+  const lsLayoutKey = (localStorage.getItem('layout') as ELayouts) || undefined;
 
   const layoutKey =
-    lsLayoutKey && Object.values(Layouts).includes(lsLayoutKey) ? lsLayoutKey : defaultLayout;
+    lsLayoutKey && Object.values(ELayouts).includes(lsLayoutKey) ? lsLayoutKey : defaultLayout;
 
   localStorage.setItem('layout', layoutKey);
 

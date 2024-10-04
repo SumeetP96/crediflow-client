@@ -45,6 +45,7 @@ export default function ColorSchemeSettingButtons({
       <ButtonGroup size={size}>
         {colorSchemes.map((scheme) => (
           <Button
+            key={scheme.mode}
             variant={scheme.mode === mode ? 'contained' : 'outlined'}
             startIcon={scheme.icon}
             onClick={() => setMode(scheme.mode)}

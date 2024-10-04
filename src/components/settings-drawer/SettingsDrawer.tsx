@@ -14,6 +14,8 @@ import {
 import { useState } from 'react';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
+import { EThemeNames } from '../../theme/contstants';
+import useDynamicTheme from '../../theme/use-dynamic-theme';
 import ColorSchemeSettingButtons from '../color-scheme-setting-buttons/ColorSchemeSettingButtons';
 
 export interface ISettingsDrawer {
@@ -22,6 +24,10 @@ export interface ISettingsDrawer {
 }
 
 export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
+  const {
+    actions: { changeTheme },
+  } = useDynamicTheme();
+
   const { navigateTo } = useNavigateTo();
 
   const [isFullScreen, setIsFullscreen] = useState(document.fullscreenElement !== null);
@@ -88,8 +94,15 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
           <Paper variant="outlined" sx={{ p: 2, bgcolor: 'transparent' }}>
             <Grid2 container spacing={1}>
               {['primary', 'success', 'warning', 'secondary', 'error', 'info'].map((color) => (
-                <Grid2 size={4}>
+                <Grid2 size={4} key={color}>
                   <Button
+                    onClick={() => {
+                      if (color === 'primary') {
+                        changeTheme(EThemeNames.BLUE);
+                      } else if (color === 'success') {
+                        changeTheme(EThemeNames.GREEN);
+                      }
+                    }}
                     color={color as ButtonProps['color']}
                     startIcon={<Dvr />}
                     sx={{ width: '100%', height: '60px', '& .MuiButton-startIcon': { mr: 0 } }}
