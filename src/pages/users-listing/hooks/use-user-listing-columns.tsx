@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import { useMemo, useState } from 'react';
 import { axiosPost } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
-import { EQueryKeys } from '../../../api/types';
+import { QueryKeys } from '../../../api/types';
 import ConfirmationDialog from '../../../components/confirmation-dialog/ConfirmationDialog';
 import { IDataTableColumn } from '../../../components/data-table/types';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
@@ -24,9 +24,12 @@ export default function useUserListingColumns() {
 
   // TODO: use global error notification on error
   const restoreQuery = useMutation({
-    mutationKey: ['user-restore'],
+    mutationKey: [QueryKeys.USERS_RESTORE],
     mutationFn: async (id: number) => {
       return await axiosPost(ApiRoutes.USER_RESTORE(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
     },
   });
 
@@ -58,7 +61,7 @@ export default function useUserListingColumns() {
         field: 'username',
         title: 'Username',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        sx: { width: '200px' },
         filter: {
           label: 'Username',
           type: 'text-fuzzy',
@@ -159,10 +162,7 @@ export default function useUserListingColumns() {
                   onClose={() => setIsRestoreDialogOpen(false)}
                   title="Restore User"
                   body="Do you want to restore this user?"
-                  onAccept={() => {
-                    restoreQuery.mutate(id);
-                    queryClient.invalidateQueries({ queryKey: [EQueryKeys.USERS_LISTING] });
-                  }}
+                  onAccept={() => restoreQuery.mutate(id)}
                 />
 
                 <Tooltip title="Restore Deleted User">

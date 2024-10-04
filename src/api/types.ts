@@ -29,7 +29,17 @@ export interface IParsedApiError {
   fieldErrors: IFieldError[];
 }
 
-export enum EQueryKeys {
+export enum QueryKeys {
+  // Auth
+  AUTH_LOGIN = 'auth:login',
+  AUTH_LOGOUT = 'auth:logout',
+  AUTH_PROFILE = 'auth:profile',
+
   // Users
   USERS_LISTING = 'users:listing',
+  USERS_BY_ID = 'users:by_id',
+  USERS_CREATE = 'users:create',
+  USERS_UPDATE = 'users:update',
+  USERS_DELETE = 'users:delete',
+  USERS_RESTORE = 'users:restore',
 }

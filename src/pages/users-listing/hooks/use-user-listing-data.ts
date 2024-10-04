@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { axiosGet, TQueryParams } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
-import { EQueryKeys } from '../../../api/types';
+import { QueryKeys } from '../../../api/types';
 import useCommonListingParams from '../../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../../helpers/hooks/use-query-params';
 import {
@@ -33,7 +33,7 @@ export default function useUserListingData() {
   };
 
   const queryKey = [
-    EQueryKeys.USERS_LISTING,
+    QueryKeys.USERS_LISTING,
     page,
     perPage,
     sortBy,

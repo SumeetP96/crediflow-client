@@ -20,6 +20,7 @@ import { MouseEvent, ReactNode, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
+import { QueryKeys } from '../../api/types';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
 import { mainMenuLinks } from '../constants/nav-links';
@@ -57,7 +58,7 @@ function SideNavAppBarLayout({
   const isMenuOpen = Boolean(menuAnchorEl);
 
   const logoutQuery = useMutation({
-    mutationKey: ['user-logout'],
+    mutationKey: [QueryKeys.AUTH_LOGOUT],
     mutationFn: () => axiosPost(ApiRoutes.AUTH_LOGOUT),
     onSuccess: () => {
       window.location.reload();

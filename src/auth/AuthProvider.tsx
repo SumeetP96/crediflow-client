@@ -4,6 +4,7 @@ import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { axiosGet } from '../api/request';
 import { ApiRoutes } from '../api/routes';
+import { QueryKeys } from '../api/types';
 import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
 import { authUserRefetchInterval, authUserStorageKey } from '../helpers/constants';
 import { IAuthUser, IUser } from '../helpers/types';
@@ -40,7 +41,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [authUser, setAuthUser] = useState<IAuthUser | null>(storageUser);
 
   const query = useQuery({
-    queryKey: ['auth-user'],
+    queryKey: [QueryKeys.AUTH_PROFILE],
     queryFn: async ({ signal }) => {
       return await axiosGet<IUser>(ApiRoutes.AUTH_PROFILE, { signal });
     },

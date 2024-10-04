@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
@@ -23,6 +23,7 @@ import { z } from 'zod';
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../../api/request';
 import { parseApiErrorResponse } from '../../api/response';
 import { ApiRoutes } from '../../api/routes';
+import { QueryKeys } from '../../api/types';
 import ApiErrorAlert from '../../components/alerts/ApiErrorAlert';
 import ConfirmationDialog from '../../components/confirmation-dialog/ConfirmationDialog';
 import Page from '../../components/page/Page';
@@ -46,7 +47,7 @@ export default function UserForm() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const findQuery = useQuery({
-    queryKey: ['USER_BY_ID'],
+    queryKey: [QueryKeys.USERS_BY_ID],
     queryFn: async () => {
       return await axiosGet<IUser>(ApiRoutes.USER_BY_ID(id!));
     },
@@ -81,7 +82,10 @@ export default function UserForm() {
     form.handleSubmit();
   };
 
-  const handleApiSuccess = () => {
+  const queryClient = useQueryClient();
+
+  const handleCUDApiSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
     navigateToPrev();
   };
 
@@ -91,29 +95,29 @@ export default function UserForm() {
   };
 
   const createQuery = useMutation({
-    mutationKey: ['user-create'],
+    mutationKey: [QueryKeys.USERS_CREATE],
     mutationFn: async (data: IFormUser) => {
       return await axiosPost(ApiRoutes.USER_CREATE, data);
     },
-    onSuccess: handleApiSuccess,
+    onSuccess: handleCUDApiSuccess,
     onError: handleApiError,
   });
 
   const updateQuery = useMutation({
-    mutationKey: ['user-update'],
+    mutationKey: [QueryKeys.USERS_UPDATE],
     mutationFn: async (data: IFormUser) => {
       return await axiosPatch(ApiRoutes.USER_UPDATE(id as number), data);
     },
-    onSuccess: handleApiSuccess,
+    onSuccess: handleCUDApiSuccess,
     onError: handleApiError,
   });
 
   const deleteQuery = useMutation({
-    mutationKey: ['user-delete'],
+    mutationKey: [QueryKeys.USERS_DELETE],
     mutationFn: async () => {
       return await axiosDelete(ApiRoutes.USER_DELETE(id as number));
     },
-    onSuccess: handleApiSuccess,
+    onSuccess: handleCUDApiSuccess,
   });
 
   const apiError = findQuery.error || createQuery.error || updateQuery.error;

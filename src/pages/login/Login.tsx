@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { axiosPost } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
+import { QueryKeys } from '../../api/types';
 import useAuth from '../../auth/use-auth';
 import { IUser } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
@@ -32,7 +33,7 @@ export default function Login() {
   const [serverError, setServerError] = useState('');
 
   const query = useMutation({
-    mutationKey: ['user-login'],
+    mutationKey: [QueryKeys.AUTH_LOGIN],
     mutationFn: async (data: IFormLogin) => {
       return await axiosPost<IUser, IFormLogin>(ApiRoutes.AUTH_LOGIN, data);
     },
