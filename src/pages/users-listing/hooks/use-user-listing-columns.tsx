@@ -182,7 +182,7 @@ export default function useUserListingColumns() {
         ),
       },
     ],
-    [isRestoreDialogOpen, navigateTo, queryClient, restoreQuery],
+    [isRestoreDialogOpen, navigateTo, restoreQuery],
   );
 
   const { activeColumns, toggleColumn } = useListingColumns<TUserRecord>(columns);
