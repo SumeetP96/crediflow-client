@@ -17,7 +17,7 @@ export default function DataTableFooterPerPageSelect({
   sx,
 }: IDataTableFooterPerPageSelectProps) {
   return (
-    <Box sx={{ alignItems: 'center', display: 'flex', ...sx }}>
+    <Box display="flex" alignItems="center" sx={sx}>
       <Typography sx={{ mr: 1 }}>Per page:</Typography>
 
       <Select

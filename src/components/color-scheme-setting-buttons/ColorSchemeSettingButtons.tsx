@@ -41,7 +41,7 @@ export default function ColorSchemeSettingButtons({
   const { mode, setMode } = useDarkMode();
 
   return (
-    <Box sx={{ display: 'flex', gap: 1, ...sx }}>
+    <Box display="flex" gap={1} sx={sx}>
       <ButtonGroup size={size}>
         {colorSchemes.map((scheme) => (
           <Button

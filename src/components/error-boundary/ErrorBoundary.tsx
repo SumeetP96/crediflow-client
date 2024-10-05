@@ -29,13 +29,13 @@ export default function ErrorBoundary() {
 
   return (
     <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
       sx={{
         height: '100%',
         minHeight: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
         backgroundColor: theme.palette.error.light,
         padding: { xs: 5, md: 2 },
         position: 'fixed',

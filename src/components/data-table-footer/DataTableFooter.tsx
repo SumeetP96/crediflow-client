@@ -44,19 +44,13 @@ export default function DataTableFooter({
 
   return (
     <Box
-      sx={{
-        px: 2,
-        py: 1,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        width: '100%',
-      }}
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      flexWrap="wrap"
+      sx={{ px: 2, py: 1, width: '100%' }}
     >
-      <Box
-        sx={{ width: { xs: '100%', md: 'auto' }, display: 'flex', justifyContent: 'space-between' }}
-      >
+      <Box display="flex" justifyContent="space-between" sx={{ width: { xs: '100%', md: 'auto' } }}>
         <FormControlLabel
           sx={{ pl: 1.5 }}
           control={
@@ -82,14 +76,11 @@ export default function DataTableFooter({
       </Box>
 
       <Box
-        sx={{
-          width: { xs: '100%', md: 'auto' },
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 3,
-          mt: { xs: 1, md: 0 },
-        }}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        gap={3}
+        sx={{ width: { xs: '100%', md: 'auto' }, mt: { xs: 1, md: 0 } }}
       >
         <DataTableFooterPerPageSelect
           disabled={isLoading}
