@@ -16,6 +16,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
+import { EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { TSortOrder } from '../../helpers/types';
 import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
@@ -72,11 +73,9 @@ export default function DataTable<T>({
   const emptyRows = rows.length < rowCount ? rowCount - rows.length : 0;
   const rowHeight = 77 * emptyRows - 1;
 
-  const { getSearchParams } = useQueryParams();
+  const { getSingleSearchParam } = useQueryParams();
 
-  const allParams = getSearchParams();
-
-  const isDense = allParams?.isDense === true;
+  const isDense = getSingleSearchParam(EQueryParamKeys.IS_DENSE) === true;
 
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
 

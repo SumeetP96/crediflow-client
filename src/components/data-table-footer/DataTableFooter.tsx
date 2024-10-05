@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight, FirstPage, LastPage } from '@mui/icons-material';
 import { Box, FormControlLabel, IconButton, Pagination, Switch, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { defaultPerPageOptions } from '../../helpers/constants';
+import { defaultPerPageOptions, EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import DataTableFooterPerPageSelect, {
   IDataTableFooterPerPageSelectProps,
@@ -63,7 +63,9 @@ export default function DataTableFooter({
             <Switch
               size="small"
               checked={isDense}
-              onChange={(e) => setSearchParams({ isDense: e.target.checked || null })}
+              onChange={(e) =>
+                setSearchParams({ [EQueryParamKeys.IS_DENSE]: e.target.checked || null })
+              }
               name="dense"
             />
           }

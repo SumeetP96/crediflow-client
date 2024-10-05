@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import DialogProvider from '../components/dialog-provider/DialogProvider';
 import SettingsDrawer from '../components/settings-drawer/SettingsDrawer';
+import { EQueryParamKeys } from '../helpers/constants';
 import useQueryParams from '../helpers/hooks/use-query-params';
 import { useCurrentLayout } from './hooks/use-current-layout';
 
@@ -9,11 +10,9 @@ export interface ILayoutProviderProps {
 }
 
 export const LayoutProvider = ({ children }: ILayoutProviderProps) => {
-  const { getSearchParams, setSearchParams } = useQueryParams();
+  const { getSingleSearchParam, setSearchParams } = useQueryParams();
 
-  const allParams = getSearchParams();
-
-  const isSettingsDrawerOpen = allParams.settingsDrawer === true;
+  const isSettingsDrawerOpen = getSingleSearchParam(EQueryParamKeys.SETTINGS_DRAWER) === true;
 
   const currentLayout = useCurrentLayout();
 
@@ -23,7 +22,7 @@ export const LayoutProvider = ({ children }: ILayoutProviderProps) => {
     <Provider>
       <SettingsDrawer
         open={isSettingsDrawerOpen}
-        onClose={() => setSearchParams({ settingsDrawer: null })}
+        onClose={() => setSearchParams({ [EQueryParamKeys.SETTINGS_DRAWER]: null })}
       />
 
       <DialogProvider>{children}</DialogProvider>

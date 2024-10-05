@@ -19,6 +19,14 @@ export default function useQueryParams() {
     }) as T;
   }, [location.search]);
 
+  const getSingleSearchParam = useCallback(
+    (key: string) => {
+      const allParams = getSearchParams();
+      return allParams?.[key] || undefined;
+    },
+    [getSearchParams],
+  );
+
   const replaceSearchParams = useCallback(
     (params: Record<string, any>) => {
       const newSearch = queryString.stringify(params, {
@@ -47,5 +55,6 @@ export default function useQueryParams() {
   return {
     getSearchParams,
     setSearchParams,
+    getSingleSearchParam,
   };
 }

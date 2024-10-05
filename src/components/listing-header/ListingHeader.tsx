@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
@@ -150,7 +151,7 @@ export default function ListingHeader<Col>({
               debounceTime={1000}
               minInputLength={1}
               value={allParams.search ?? ''}
-              onChange={(value) => setSearchParams({ search: value })}
+              onChange={(value) => setSearchParams({ [EQueryParamKeys.SEARCH]: value })}
               sx={{ width: { xs: '100%', md: '250px', lg: '300px' }, mb: { xs: 1, md: 0 } }}
             />
 

@@ -23,7 +23,7 @@ import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
-import { ELocalStorageKeys } from '../../helpers/constants';
+import { ELocalStorageKeys, EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
@@ -127,7 +127,7 @@ function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBar
               <IconButton
                 size="small"
                 sx={{ ml: { xs: 0, md: 1 } }}
-                onClick={() => setSearchParams({ settingsDrawer: true })}
+                onClick={() => setSearchParams({ [EQueryParamKeys.SETTINGS_DRAWER]: true })}
               >
                 <SettingsOutlined />
               </IconButton>

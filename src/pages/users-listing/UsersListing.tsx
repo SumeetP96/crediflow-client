@@ -4,7 +4,7 @@ import DataTable from '../../components/data-table/DataTable';
 import { IDataTableFilter } from '../../components/data-table/types';
 import ListingHeader from '../../components/listing-header/ListingHeader';
 import Page from '../../components/page/Page';
-import { defaultPage } from '../../helpers/constants';
+import { defaultPage, EQueryParamKeys } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { showDeletedOptions } from './constants';
@@ -58,11 +58,17 @@ export default function UsersListing() {
           page={page}
           perPage={perPage}
           totalRecords={totalRecords}
-          onPageChange={(nextPage) => setSearchParams({ page: nextPage })}
-          onPerPageChange={(perPage) => setSearchParams({ perPage })}
+          onPageChange={(nextPage) => setSearchParams({ [EQueryParamKeys.PAGE]: nextPage })}
+          onPerPageChange={(perPage) => setSearchParams({ [EQueryParamKeys.PER_PAGE]: perPage })}
           sortBy={sortBy}
           sortOrder={sortOrder}
-          onSort={(sortBy, sortOrder) => setSearchParams({ page: defaultPage, sortBy, sortOrder })}
+          onSort={(sortBy, sortOrder) =>
+            setSearchParams({
+              [EQueryParamKeys.PAGE]: defaultPage,
+              [EQueryParamKeys.SORT_BY]: sortBy,
+              [EQueryParamKeys.SORT_ORDER]: sortOrder,
+            })
+          }
         />
       </Paper>
     </Page>

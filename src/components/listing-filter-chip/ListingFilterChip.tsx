@@ -19,7 +19,7 @@ export default function ListingFilterChip<Col>({
   // isApiLoading = false,
   openFilterField,
 }: IListingFilterChipProps<Col>) {
-  const { getSearchParams, setSearchParams } = useQueryParams();
+  const { getSingleSearchParam, setSearchParams } = useQueryParams();
 
   const chipRef = useRef<HTMLDivElement | null>(null);
 
@@ -52,9 +52,7 @@ export default function ListingFilterChip<Col>({
 
   const open = Boolean(anchorEl);
 
-  const allParams = getSearchParams();
-
-  const fieldValue = (allParams[filter.field] as string) || '';
+  const fieldValue = getSingleSearchParam(filter.field as string) || '';
 
   const filterTypeProps = {
     filter: filter,
