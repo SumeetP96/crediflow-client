@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { axiosGet, TQueryParams } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
 import { QueryKeys } from '../../../api/types';
@@ -11,6 +12,8 @@ import {
 import { IUsersWithCount } from '../types';
 
 export default function useUserListingData() {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { getSearchParams } = useQueryParams();
 
   const { id, name, username, role, status, createdAt = [] } = getSearchParams();
@@ -54,6 +57,10 @@ export default function useUserListingData() {
     },
     retry: false,
   });
+
+  if (query.error) {
+    enqueueSnackbar(query.error.message, { variant: 'error' });
+  }
 
   const { count, rows } = query.data?.data || { count: 0, rows: [] };
 

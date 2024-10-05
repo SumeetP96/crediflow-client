@@ -26,6 +26,7 @@
     "dayjs": "^1.11.13",
     "immer": "^10.1.1",
     "lodash.debounce": "^4.0.8",
+    "notistack": "^3.0.1",
     "query-string": "^9.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

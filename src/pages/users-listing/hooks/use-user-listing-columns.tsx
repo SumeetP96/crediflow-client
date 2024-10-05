@@ -2,6 +2,7 @@ import { Edit, Restore, Tag } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
+import { useSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { axiosPost } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
@@ -23,6 +24,8 @@ export default function useUserListingColumns() {
 
   const queryClient = useQueryClient();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { openDialog, closeDialog } = useDialog();
 
   // TODO: use global error notification on error
@@ -33,6 +36,10 @@ export default function useUserListingColumns() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
+      enqueueSnackbar('User Restored successfully', { variant: 'success' });
+    },
+    onError: ({ message }) => {
+      enqueueSnackbar(message, { variant: 'error' });
     },
   });
 

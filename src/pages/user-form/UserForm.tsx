@@ -17,6 +17,7 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
+import { useSnackbar } from 'notistack';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../../api/request';
@@ -36,6 +37,12 @@ import { IFormUser } from './types';
 import { confirmPasswordSchema, passwordSchema } from './validations';
 
 export default function UserForm() {
+  const { openDialog, closeDialog } = useDialog();
+
+  const queryClient = useQueryClient();
+
+  const { enqueueSnackbar } = useSnackbar();
+
   const { navigateToPrev } = useNavigateTo(AppRoute('USERS_LIST'));
 
   const params = useParams();
@@ -43,8 +50,6 @@ export default function UserForm() {
   const id = params.id ? parseInt(params.id, 10) : undefined;
 
   const isUpdateMode = Boolean(id);
-
-  const { openDialog, closeDialog } = useDialog();
 
   const findQuery = useQuery({
     queryKey: [QueryKeys.USERS_BY_ID],
@@ -82,16 +87,17 @@ export default function UserForm() {
     form.handleSubmit();
   };
 
-  const queryClient = useQueryClient();
-
-  const handleCUDApiSuccess = () => {
+  const handleCUDApiSuccess = (action: 'create' | 'update' | 'delete') => {
     queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
     navigateToPrev();
+    const message = `User ${action.charAt(0).toUpperCase() + action.slice(1)}d successfully`;
+    enqueueSnackbar(message, { variant: 'success' });
   };
 
   const handleApiError = (error: AxiosError) => {
     const { fieldErrors = [] } = parseApiErrorResponse(error);
     setFormFieldErrors(form, fieldErrors);
+    enqueueSnackbar(error.message, { variant: 'error' });
   };
 
   const createQuery = useMutation({
@@ -99,7 +105,7 @@ export default function UserForm() {
     mutationFn: async (data: IFormUser) => {
       return await axiosPost(ApiRoutes.USER_CREATE, data);
     },
-    onSuccess: handleCUDApiSuccess,
+    onSuccess: () => handleCUDApiSuccess('create'),
     onError: handleApiError,
   });
 
@@ -108,7 +114,7 @@ export default function UserForm() {
     mutationFn: async (data: IFormUser) => {
       return await axiosPatch(ApiRoutes.USER_UPDATE(id as number), data);
     },
-    onSuccess: handleCUDApiSuccess,
+    onSuccess: () => handleCUDApiSuccess('update'),
     onError: handleApiError,
   });
 
@@ -117,7 +123,7 @@ export default function UserForm() {
     mutationFn: async () => {
       return await axiosDelete(ApiRoutes.USER_DELETE(id as number));
     },
-    onSuccess: handleCUDApiSuccess,
+    onSuccess: () => handleCUDApiSuccess('delete'),
   });
 
   const apiError = findQuery.error || createQuery.error || updateQuery.error;

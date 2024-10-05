@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import AuthProvider from './auth/AuthProvider';
+import NotistackSnackbarProvider from './components/notistack-snackbar-provider/NotistackSnackbarProvider';
 import ThemeProviderWrapper from './components/theme-provider-wrapper/ThemeProviderWrapper';
 import useNavigateTo from './layouts/hooks/use-navigate-to';
 
@@ -25,7 +26,9 @@ function App() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <Outlet />
+            <NotistackSnackbarProvider>
+              <Outlet />
+            </NotistackSnackbarProvider>
           </AuthProvider>
         </QueryClientProvider>
       </LocalizationProvider>
