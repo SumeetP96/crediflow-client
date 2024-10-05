@@ -63,7 +63,7 @@ export default function DataTableFooter({
             <Switch
               size="small"
               checked={isDense}
-              onChange={(e) => setSearchParams({ isDense: e.target.checked })}
+              onChange={(e) => setSearchParams({ isDense: e.target.checked || null })}
               name="dense"
             />
           }

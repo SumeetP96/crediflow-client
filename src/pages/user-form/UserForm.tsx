@@ -17,7 +17,6 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
-import { useState } from 'react';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../../api/request';
@@ -25,7 +24,8 @@ import { parseApiErrorResponse } from '../../api/response';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
 import ApiErrorAlert from '../../components/alerts/ApiErrorAlert';
-import ConfirmationDialog from '../../components/confirmation-dialog/ConfirmationDialog';
+import { EDialogIds } from '../../components/dialog-provider/constants';
+import useDialog from '../../components/dialog-provider/use-dialog';
 import Page from '../../components/page/Page';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
 import { setFormFieldErrors } from '../../helpers/utils/tanstack-form';
@@ -44,7 +44,7 @@ export default function UserForm() {
 
   const isUpdateMode = Boolean(id);
 
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { openDialog, closeDialog } = useDialog();
 
   const findQuery = useQuery({
     queryKey: [QueryKeys.USERS_BY_ID],
@@ -341,21 +341,20 @@ export default function UserForm() {
           >
             {isUpdateMode ? (
               <>
-                <ConfirmationDialog
-                  open={isDeleteDialogOpen}
-                  title="Delete User"
-                  body="Are you sure you want to delete this user?"
-                  onAccept={() => deleteQuery.mutate()}
-                  onClose={() => setIsDeleteDialogOpen(false)}
-                />
-
                 <Button
                   variant="outlined"
                   tabIndex={-1}
                   color="error"
                   startIcon={<Delete />}
                   disableElevation
-                  onClick={() => setIsDeleteDialogOpen(true)}
+                  onClick={() =>
+                    openDialog(EDialogIds.CONFIRMATION, {
+                      title: 'Delete User',
+                      body: 'Are you sure you want to delete this user?',
+                      onAccept: () => deleteQuery.mutate(),
+                      onClose: () => closeDialog(),
+                    })
+                  }
                 >
                   Delete
                 </Button>
