@@ -16,6 +16,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
+import useQueryParams from '../../helpers/hooks/use-query-params';
 import { TSortOrder } from '../../helpers/types';
 import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
 import TableSkeleton from '../skeleton/TableSkeleton';
@@ -71,7 +72,11 @@ export default function DataTable<T>({
   const emptyRows = rows.length < rowCount ? rowCount - rows.length : 0;
   const rowHeight = 77 * emptyRows - 1;
 
-  const [isDense, setIsDense] = useState(false);
+  const { getSearchParams } = useQueryParams();
+
+  const allParams = getSearchParams();
+
+  const isDense = allParams?.isDense === true;
 
   const [selectedRows, setSelectedRows] = useState<T[]>([]);
 
@@ -148,7 +153,11 @@ export default function DataTable<T>({
             <TableRow>
               {selectable ? (
                 <TableCell
-                  sx={{ width: '50px', borderBottom: 'none', '& .MuiCheckbox-root': { py: 0 } }}
+                  sx={{
+                    width: '50px',
+                    borderBottom: 'none',
+                    '& .MuiCheckbox-root': { py: 0 },
+                  }}
                 >
                   <Checkbox
                     checked={selectedRowKeys.length === rows.length}
@@ -254,7 +263,6 @@ export default function DataTable<T>({
         onPerPageChange={onPerPageChange}
         perPageOptions={perPageOptions}
         isDense={isDense}
-        onDensityChange={setIsDense}
         isLoading={isLoading}
       />
     </Paper>

@@ -1,7 +1,8 @@
 import { ChevronLeft, ChevronRight, FirstPage, LastPage } from '@mui/icons-material';
 import { Box, FormControlLabel, IconButton, Pagination, Switch, Typography } from '@mui/material';
-import { Dispatch, SetStateAction, useMemo } from 'react';
+import { useMemo } from 'react';
 import { defaultPerPageOptions } from '../../helpers/constants';
+import useQueryParams from '../../helpers/hooks/use-query-params';
 import DataTableFooterPerPageSelect, {
   IDataTableFooterPerPageSelectProps,
 } from '../data-table-footer-per-page-select/DataTableFooterPerPageSelect';
@@ -11,7 +12,6 @@ export interface IDataTableFooterProps extends IDataTableFooterPerPageSelectProp
   totalRecords: number;
   onPageChange: (nextPage: number) => void;
   isDense: boolean;
-  onDensityChange: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
 }
 
@@ -23,9 +23,10 @@ export default function DataTableFooter({
   perPageOptions = defaultPerPageOptions,
   totalRecords,
   isDense,
-  onDensityChange,
   isLoading,
 }: IDataTableFooterProps) {
+  const { setSearchParams } = useQueryParams();
+
   const pageCount = Math.ceil(totalRecords / perPage);
 
   const [startRange, endRange] = useMemo(() => {
@@ -62,7 +63,7 @@ export default function DataTableFooter({
             <Switch
               size="small"
               checked={isDense}
-              onChange={(e) => onDensityChange(e.target.checked)}
+              onChange={(e) => setSearchParams({ isDense: e.target.checked })}
               name="dense"
             />
           }
