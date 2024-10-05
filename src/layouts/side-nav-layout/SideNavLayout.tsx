@@ -23,6 +23,7 @@ import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
+import { ELocalStorageKeys } from '../../helpers/constants';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import useNavigateTo from '../hooks/use-navigate-to';
@@ -61,6 +62,7 @@ function SideNavAppBarLayout({
     mutationKey: [QueryKeys.AUTH_LOGOUT],
     mutationFn: () => axiosPost(ApiRoutes.AUTH_LOGOUT),
     onSuccess: () => {
+      localStorage.removeItem(ELocalStorageKeys.AUTH_USER);
       window.location.reload();
     },
   });

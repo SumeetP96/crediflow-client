@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { themeSettings } from '../contstants';
+import { themeSettings } from '../constants/defaults';
 
 export const blueTheme = createTheme({
   shape: {

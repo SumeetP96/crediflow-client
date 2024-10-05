@@ -1,8 +1,7 @@
 import { Theme } from '@emotion/react';
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { blueTheme } from './config/blue';
-import { greenTheme } from './config/green';
-import { defaultThemeName, EThemeNames, themeStorageKey } from './contstants';
+import { ELocalStorageKeys } from '../helpers/constants';
+import { defaultThemeName, EThemeNames, themeConfigMap } from './constants/contstants';
 
 export interface IDynamicThemeContextState {
   theme: Theme;
@@ -24,34 +23,31 @@ export interface IDynamicThemeProviderProps {
   children: ReactNode;
 }
 
-const themeConfigMap = {
-  [EThemeNames.BLUE]: blueTheme,
-  [EThemeNames.GREEN]: greenTheme,
-};
-
 export default function DynamicThemeProvider({ children }: IDynamicThemeProviderProps) {
-  let storedThemeName = localStorage.getItem(themeStorageKey) as EThemeNames;
+  const [theme, setTheme] = useState<Theme>(themeConfigMap[defaultThemeName]?.config);
 
-  if (storedThemeName && !Object.values(EThemeNames).includes(storedThemeName)) {
-    storedThemeName = defaultThemeName;
-  }
-
-  const [theme, setTheme] = useState<Theme>(themeConfigMap[storedThemeName]);
-
-  const [themeName, setThemeName] = useState<EThemeNames>(storedThemeName);
+  const [themeName, setThemeName] = useState<EThemeNames>(defaultThemeName);
 
   const changeTheme = (name: EThemeNames) => {
     setThemeName(name);
-    setTheme(themeConfigMap[name]);
+
+    setTheme(themeConfigMap[name].config);
+
+    localStorage.setItem(ELocalStorageKeys.THEME, name);
   };
 
   useEffect(() => {
-    const savedThemeName = localStorage.getItem('themeName');
+    let storedThemeName = localStorage.getItem(ELocalStorageKeys.THEME) as EThemeNames;
 
-    if (savedThemeName) {
-      setThemeName(savedThemeName as EThemeNames);
-      setTheme(themeConfigMap[savedThemeName as EThemeNames]);
+    if (!storedThemeName || !Object.values(EThemeNames).includes(storedThemeName)) {
+      storedThemeName = defaultThemeName;
     }
+
+    setThemeName(storedThemeName as EThemeNames);
+
+    setTheme(themeConfigMap[storedThemeName].config);
+
+    localStorage.setItem(ELocalStorageKeys.THEME, storedThemeName);
   }, []);
 
   const state = {

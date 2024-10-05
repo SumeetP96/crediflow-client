@@ -1,6 +1,9 @@
 import { TSortOrder } from './types';
 
-export const authUserStorageKey = 'user-details';
+export enum ELocalStorageKeys {
+  AUTH_USER = 'user-details',
+  THEME = 'mui-theme',
+}
 
 export const authUserRefetchInterval = 1000 * 60 * 30; // 30 minutes
 

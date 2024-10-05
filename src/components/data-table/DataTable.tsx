@@ -167,7 +167,14 @@ export default function DataTable<T>({
               ) : null}
 
               {columns.map((col) => (
-                <TableCell key={col.field as string} sx={{ borderBottom: 'none', ...col.sx }}>
+                <TableCell
+                  key={col.field as string}
+                  sx={{
+                    bgcolor: `${theme.palette.background.default}66`,
+                    borderBottom: 'none',
+                    ...col.sx,
+                  }}
+                >
                   <Box
                     sx={{
                       position: 'relative',
