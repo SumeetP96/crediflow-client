@@ -27,10 +27,7 @@ export interface ISettingsDrawer {
 }
 
 export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
-  const {
-    state: { themeName },
-    actions: { changeTheme, resetToDefaultTheme },
-  } = useDynamicTheme();
+  const { themeName, changeTheme, resetToDefaultTheme } = useDynamicTheme();
 
   const isDefault = themeName === defaultThemeName;
 

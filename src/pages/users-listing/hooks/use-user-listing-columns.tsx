@@ -2,12 +2,13 @@ import { Edit, Restore, Tag } from '@mui/icons-material';
 import { IconButton, Tooltip } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { axiosPost } from '../../../api/request';
 import { ApiRoutes } from '../../../api/routes';
 import { QueryKeys } from '../../../api/types';
-import ConfirmationDialog from '../../../components/confirmation-dialog/ConfirmationDialog';
 import { IDataTableColumn } from '../../../components/data-table/types';
+import { EDialogIds } from '../../../components/dialog-provider/constants';
+import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import useListingColumns from '../../../helpers/hooks/use-listing-columns';
 import { TListingFilterValue } from '../../../helpers/types';
@@ -22,6 +23,8 @@ export default function useUserListingColumns() {
 
   const queryClient = useQueryClient();
 
+  const { openDialog, closeDialog } = useDialog();
+
   // TODO: use global error notification on error
   const restoreQuery = useMutation({
     mutationKey: [QueryKeys.USERS_RESTORE],
@@ -32,8 +35,6 @@ export default function useUserListingColumns() {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
     },
   });
-
-  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
 
   const columns: IDataTableColumn<TUserRecord>[] = useMemo(
     () => [
@@ -157,16 +158,18 @@ export default function useUserListingColumns() {
           <>
             {deletedAt ? (
               <>
-                <ConfirmationDialog
-                  open={isRestoreDialogOpen}
-                  onClose={() => setIsRestoreDialogOpen(false)}
-                  title="Restore User"
-                  body="Do you want to restore this user?"
-                  onAccept={() => restoreQuery.mutate(id)}
-                />
-
                 <Tooltip title="Restore Deleted User">
-                  <IconButton size="small" onClick={() => setIsRestoreDialogOpen(true)}>
+                  <IconButton
+                    size="small"
+                    onClick={() =>
+                      openDialog(EDialogIds.CONFIRMATION, {
+                        title: 'Restore Deleted User',
+                        body: 'Are you sure you want to restore this user?',
+                        onAccept: () => restoreQuery.mutate(id),
+                        onClose: () => closeDialog(),
+                      })
+                    }
+                  >
                     <Restore />
                   </IconButton>
                 </Tooltip>
@@ -182,7 +185,7 @@ export default function useUserListingColumns() {
         ),
       },
     ],
-    [isRestoreDialogOpen, navigateTo, restoreQuery],
+    [closeDialog, navigateTo, openDialog, restoreQuery],
   );
 
   const { activeColumns, toggleColumn } = useListingColumns<TUserRecord>(columns);

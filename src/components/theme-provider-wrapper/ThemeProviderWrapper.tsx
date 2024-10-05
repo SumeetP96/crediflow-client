@@ -4,9 +4,7 @@ import DynamicThemeProvider from '../../theme/DynamicThemeProvider';
 import useDynamicTheme from '../../theme/use-dynamic-theme';
 
 function ThemeProviderWrapperComponent({ children }: { children: ReactNode }) {
-  const {
-    state: { theme },
-  } = useDynamicTheme();
+  const { theme } = useDynamicTheme();
 
   return (
     <ThemeProvider theme={theme}>

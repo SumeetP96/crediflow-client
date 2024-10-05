@@ -13,12 +13,9 @@ export interface IDynamicThemeContextActions {
   resetToDefaultTheme: () => void;
 }
 
-export interface IDynamicThemeContext {
-  state: IDynamicThemeContextState;
-  actions: IDynamicThemeContextActions;
-}
+export type TDynamicThemeContext = IDynamicThemeContextState & IDynamicThemeContextActions;
 
-export const DynamicthemeContext = createContext<IDynamicThemeContext | null>(null);
+export const DynamicthemeContext = createContext<TDynamicThemeContext | null>(null);
 
 export interface IDynamicThemeProviderProps {
   children: ReactNode;
@@ -59,18 +56,18 @@ export default function DynamicThemeProvider({ children }: IDynamicThemeProvider
     localStorage.setItem(ELocalStorageKeys.THEME, storedThemeName);
   }, []);
 
-  const state = {
+  const state: IDynamicThemeContextState = {
     theme,
     themeName,
   };
 
-  const actions = {
+  const actions: IDynamicThemeContextActions = {
     changeTheme,
     resetToDefaultTheme,
   };
 
   return (
-    <DynamicthemeContext.Provider value={{ state, actions }}>
+    <DynamicthemeContext.Provider value={{ ...state, ...actions }}>
       {children}
     </DynamicthemeContext.Provider>
   );

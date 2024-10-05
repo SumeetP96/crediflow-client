@@ -24,6 +24,7 @@ import { QueryKeys } from '../../api/types';
 import UserAvatar from '../../assets/avatar-1.jpg';
 import bankImage from '../../assets/bank.png';
 import { ELocalStorageKeys } from '../../helpers/constants';
+import useQueryParams from '../../helpers/hooks/use-query-params';
 import { mainMenuLinks } from '../constants/nav-links';
 import { profileMenuItems } from '../constants/profile-menu-items';
 import useNavigateTo from '../hooks/use-navigate-to';
@@ -32,18 +33,15 @@ import NestedNav from './NestedNav';
 export interface ISideNavAppBarLayout {
   children: ReactNode;
   appBarHeaderComponent: ReactNode;
-  openSettingsDrawer: () => void;
 }
 
 const drawerWidth = 240;
 
 const appName = import.meta.env.VITE_APP_NAME;
 
-function SideNavAppBarLayout({
-  children,
-  appBarHeaderComponent,
-  openSettingsDrawer,
-}: ISideNavAppBarLayout) {
+function SideNavAppBarLayout({ children, appBarHeaderComponent }: ISideNavAppBarLayout) {
+  const { setSearchParams } = useQueryParams();
+
   const { navigateTo } = useNavigateTo();
 
   const theme = useTheme();
@@ -126,7 +124,11 @@ function SideNavAppBarLayout({
                 <HelpOutlineOutlined />
               </IconButton>
 
-              <IconButton size="small" sx={{ ml: { xs: 0, md: 1 } }} onClick={openSettingsDrawer}>
+              <IconButton
+                size="small"
+                sx={{ ml: { xs: 0, md: 1 } }}
+                onClick={() => setSearchParams({ settingsDrawer: true })}
+              >
                 <SettingsOutlined />
               </IconButton>
 
