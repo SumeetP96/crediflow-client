@@ -1,7 +1,6 @@
 import { Alert, AlertTitle, Box, SxProps } from '@mui/material';
 import { parseApiErrorResponse } from '../../api/response';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IApiErrorAlertProps {
   error: any;
   sx?: SxProps;

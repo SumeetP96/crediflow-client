@@ -10,6 +10,7 @@ export interface IDynamicThemeContextState {
 
 export interface IDynamicThemeContextActions {
   changeTheme: (name: EThemeNames) => void;
+  resetToDefaultTheme: () => void;
 }
 
 export interface IDynamicThemeContext {
@@ -36,6 +37,14 @@ export default function DynamicThemeProvider({ children }: IDynamicThemeProvider
     localStorage.setItem(ELocalStorageKeys.THEME, name);
   };
 
+  const resetToDefaultTheme = () => {
+    setThemeName(defaultThemeName);
+
+    setTheme(themeConfigMap[defaultThemeName].config);
+
+    localStorage.setItem(ELocalStorageKeys.THEME, defaultThemeName);
+  };
+
   useEffect(() => {
     let storedThemeName = localStorage.getItem(ELocalStorageKeys.THEME) as EThemeNames;
 
@@ -57,6 +66,7 @@ export default function DynamicThemeProvider({ children }: IDynamicThemeProvider
 
   const actions = {
     changeTheme,
+    resetToDefaultTheme,
   };
 
   return (

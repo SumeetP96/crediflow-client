@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import { useDarkMode } from '../../helpers/hooks/use-dark-mode';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
 import { themeConfigOptions } from '../../theme/constants/contstants';
@@ -27,8 +28,10 @@ export interface ISettingsDrawer {
 export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
   const {
     state: { themeName },
-    actions: { changeTheme },
+    actions: { changeTheme, resetToDefaultTheme },
   } = useDynamicTheme();
+
+  const { isDarkMode } = useDarkMode();
 
   const { navigateTo } = useNavigateTo();
 
@@ -50,7 +53,11 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
         display="flex"
         justifyContent="space-between"
         flexDirection="column"
-        sx={{ width: '100%', height: '100%', bgcolor: 'background.default' }}
+        sx={{
+          width: '100%',
+          height: '100%',
+          bgcolor: isDarkMode ? 'background.default' : 'inherit',
+        }}
       >
         <Box
           display="flex"
@@ -68,7 +75,7 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
             </Tooltip>
 
             <Tooltip title="Reset to default">
-              <IconButton size="small">
+              <IconButton size="small" onClick={resetToDefaultTheme}>
                 <Replay />
               </IconButton>
             </Tooltip>
@@ -107,14 +114,15 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
             <Grid2 container spacing={1}>
               {themeConfigOptions.map((opt) => {
                 const isActive = themeName === opt.value;
+                const primaryColor = isDarkMode ? opt.primaryDark : opt.primaryLight;
 
                 return (
                   <Grid2 size={6} key={opt.value}>
                     <Card
                       elevation={0}
                       sx={{
-                        bgcolor: isActive ? `${opt.primaryColor}33` : 'transparent',
-                        color: isActive ? 'text.primary' : opt.primaryColor,
+                        bgcolor: isActive ? `${primaryColor}33` : 'transparent',
+                        color: isActive ? 'text.primary' : primaryColor,
                       }}
                     >
                       <CardActionArea onClick={() => changeTheme(opt.value)}>
@@ -123,7 +131,7 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
                             align="center"
                             fontFamily="Dancing Script"
                             fontSize="1.75rem"
-                            sx={{ color: isActive ? 'text.primary' : opt.primaryColor }}
+                            sx={{ color: isActive ? 'text.primary' : primaryColor }}
                           >
                             {opt.label}
                           </Typography>
@@ -139,7 +147,7 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
 
         <Button
           size="large"
-          sx={{ mt: 'auto', mb: 1 }}
+          sx={{ mt: 'auto', mb: 2, mx: 3 }}
           endIcon={<ChevronRight />}
           onClick={() => {
             navigateTo(AppRoute('SETTINGS'));
