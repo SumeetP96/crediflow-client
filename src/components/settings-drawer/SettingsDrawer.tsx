@@ -1,5 +1,6 @@
 import { ChevronRight, Close, Fullscreen, FullscreenExit, Replay } from '@mui/icons-material';
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -16,7 +17,7 @@ import { useState } from 'react';
 import { useDarkMode } from '../../helpers/hooks/use-dark-mode';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../router/helpers';
-import { themeConfigOptions } from '../../theme/constants/contstants';
+import { defaultThemeName, themeConfigOptions } from '../../theme/constants/contstants';
 import useDynamicTheme from '../../theme/use-dynamic-theme';
 import ColorSchemeSettingButtons from '../color-scheme-setting-buttons/ColorSchemeSettingButtons';
 
@@ -30,6 +31,8 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
     state: { themeName },
     actions: { changeTheme, resetToDefaultTheme },
   } = useDynamicTheme();
+
+  const isDefault = themeName === defaultThemeName;
 
   const { isDarkMode } = useDarkMode();
 
@@ -76,7 +79,13 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
 
             <Tooltip title="Reset to default">
               <IconButton size="small" onClick={resetToDefaultTheme}>
-                <Replay />
+                {!isDefault ? (
+                  <Badge variant="dot" color="secondary">
+                    <Replay />
+                  </Badge>
+                ) : (
+                  <Replay />
+                )}
               </IconButton>
             </Tooltip>
 
@@ -93,7 +102,7 @@ export default function SettingsDrawer({ open, onClose }: ISettingsDrawer) {
         <Box
           display="flex"
           flexDirection="column"
-          gap={4}
+          gap={6}
           sx={{ p: 3, width: { xs: '100%', md: 350 } }}
         >
           {/* Color Scheme */}

@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { themeSettings } from '../constants/defaults';
 
 export const paletteLight = {
@@ -40,12 +41,18 @@ export const paletteLight = {
   },
   background: {
     paper: '#fefaee',
-    default: '#eee8d5	',
+    default: '#eee8d5',
+  },
+  text: {
+    primary: '#002b36',
   },
 };
 
 export const paletteDark = {
   ...paletteLight,
+  text: {
+    primary: grey[100],
+  },
   background: {
     paper: '#073642',
     default: '#002b36',
@@ -62,6 +69,28 @@ export const solarizedTheme = createTheme({
     },
     dark: {
       palette: paletteDark,
+    },
+  },
+  components: {
+    MuiTableHead: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteDark.background.default}88`
+              : `${paletteLight.background.default}88`,
+        }),
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteLight.background.paper}22`
+              : `${paletteDark.background.paper}22`,
+        }),
+      },
     },
   },
 });

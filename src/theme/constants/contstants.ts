@@ -1,10 +1,10 @@
 import { Theme } from '@emotion/react';
-import { blueTheme } from '../config/blue';
 import {
   paletteDark as catppuccinDark,
   paletteLight as catppuccinLight,
   catppuccinTheme,
 } from '../config/catppuccin';
+import { materialDark, materialLight, materialTheme } from '../config/material';
 import {
   paletteDark as mirageDark,
   paletteLight as mirageLight,
@@ -17,7 +17,7 @@ import {
 } from '../config/solarized';
 
 export enum EThemeNames {
-  MUI = 'mui',
+  MATERIAL = 'material',
   SOLARIZED = 'solarized',
   CATPPUCCIN = 'catppuccin',
   MIRAGE = 'mirage',
@@ -31,11 +31,11 @@ export interface IThemeConfig {
 }
 
 export const themeConfigMap: Record<EThemeNames, IThemeConfig> = {
-  [EThemeNames.MUI]: {
+  [EThemeNames.MATERIAL]: {
     name: 'Material',
-    config: blueTheme,
-    primaryLight: '#1976d2',
-    primaryDark: '#90caf9',
+    config: materialTheme,
+    primaryLight: materialLight,
+    primaryDark: materialDark,
   },
   [EThemeNames.SOLARIZED]: {
     name: 'Solarized',
@@ -57,7 +57,7 @@ export const themeConfigMap: Record<EThemeNames, IThemeConfig> = {
   },
 };
 
-export const defaultThemeName = EThemeNames.MUI;
+export const defaultThemeName = EThemeNames.MATERIAL;
 
 export interface IThemeConfigOption extends Partial<IThemeConfig> {
   value: EThemeNames;

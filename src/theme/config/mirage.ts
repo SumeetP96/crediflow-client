@@ -38,6 +38,9 @@ export const paletteLight = {
     light: '#83c95f',
     contrastText: '#000000',
   },
+  text: {
+    primary: '#252729',
+  },
   background: {
     paper: '#ffffff',
     default: '#F3F4F5',
@@ -81,6 +84,9 @@ export const paletteDark = {
     light: '#9fe088',
     contrastText: '#000000',
   },
+  text: {
+    primary: '#ebeae7',
+  },
   background: {
     paper: '#1F2430',
     default: '#171B24',
@@ -97,6 +103,28 @@ export const mirageTheme = createTheme({
     },
     dark: {
       palette: paletteDark,
+    },
+  },
+  components: {
+    MuiTableHead: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteDark.background.default}88`
+              : `${paletteLight.background.default}99`,
+        }),
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteLight.background.paper}22`
+              : `${paletteDark.background.paper}22`,
+        }),
+      },
     },
   },
 });

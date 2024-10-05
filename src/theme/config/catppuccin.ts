@@ -38,6 +38,9 @@ export const paletteLight = {
     light: '#93b00f',
     contrastText: '#ffffff',
   },
+  text: {
+    primary: '#2e2f3f',
+  },
   background: {
     paper: '#eff1f5',
     default: '#dce0e8',
@@ -46,6 +49,9 @@ export const paletteLight = {
 
 export const paletteDark = {
   ...paletteLight,
+  text: {
+    primary: '#d1d9f7',
+  },
   background: {
     paper: '#1e2030',
     default: '#181926',
@@ -62,6 +68,28 @@ export const catppuccinTheme = createTheme({
     },
     dark: {
       palette: paletteDark,
+    },
+  },
+  components: {
+    MuiTableHead: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteDark.background.default}88`
+              : `${paletteLight.background.default}88`,
+        }),
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          borderColor:
+            theme.palette.mode === 'dark'
+              ? `${paletteLight.background.paper}22`
+              : `${paletteDark.background.paper}22`,
+        }),
+      },
     },
   },
 });

@@ -170,7 +170,7 @@ export default function DataTable<T>({
                 <TableCell
                   key={col.field as string}
                   sx={{
-                    bgcolor: `${theme.palette.background.default}66`,
+                    bgcolor: 'transparent',
                     borderBottom: 'none',
                     ...col.sx,
                   }}
