@@ -47,7 +47,8 @@ export default function useUserListingColumns() {
       {
         field: 'id',
         title: 'ID',
-        sx: { width: '150px', pl: 4 },
+        width: '150px',
+        sx: { pl: 4 },
         sort: true,
         filter: {
           label: 'User ID',
@@ -68,7 +69,7 @@ export default function useUserListingColumns() {
         field: 'username',
         title: 'Username',
         sort: true,
-        sx: { width: '200px' },
+        width: '200px',
         filter: {
           label: 'Username',
           type: 'text-fuzzy',
@@ -78,7 +79,8 @@ export default function useUserListingColumns() {
         field: 'role',
         title: 'Role',
         sort: true,
-        sx: { width: '150px', textAlign: 'center' },
+        width: '150px',
+        textAlign: 'left',
         filter: {
           label: 'Role',
           type: 'multiselect',
@@ -102,7 +104,8 @@ export default function useUserListingColumns() {
         field: 'status',
         title: 'Status',
         sort: true,
-        sx: { width: '150px', textAlign: 'center' },
+        width: '150px',
+        textAlign: 'center',
         filter: {
           label: 'Status',
           type: 'select',
@@ -121,7 +124,8 @@ export default function useUserListingColumns() {
         field: 'createdAt',
         title: 'Created At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         filter: {
           label: 'Created At',
           type: 'date',
@@ -133,7 +137,8 @@ export default function useUserListingColumns() {
         field: 'updatedAt',
         title: 'Updated At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         isHidden: true,
         filter: {
           label: 'Updated At',
@@ -146,7 +151,8 @@ export default function useUserListingColumns() {
         field: 'deletedAt',
         title: 'Deleted At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         isHidden: true,
         filter: {
           label: 'Deleted At',
@@ -159,7 +165,7 @@ export default function useUserListingColumns() {
         field: 'actions',
         title: '',
         select: false,
-        sx: { width: '50px' },
+        width: '50px',
         render: ({ id, deletedAt }) => (
           <>
             {deletedAt ? (

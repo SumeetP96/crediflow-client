@@ -35,6 +35,10 @@ export interface IDataTableColumn<T> {
   filter?: IDataTableFilter<T>;
   select?: boolean;
   isHidden?: boolean;
+  width?: string;
+  minWidth?: string;
+  maxWidth?: string;
+  textAlign?: 'left' | 'right' | 'center' | 'justify';
 }
 
 export interface IDataTableExtraColumns {

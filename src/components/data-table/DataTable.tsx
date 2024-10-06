@@ -120,6 +120,15 @@ export default function DataTable<T>({
     }
   };
 
+  const generateSxProps = (col: IDataTableColumn<T>) => {
+    return {
+      ...(col.width && { width: col.width }),
+      ...(col.minWidth && { minWidth: col.minWidth }),
+      ...(col.maxWidth && { maxWidth: col.maxWidth }),
+      ...(col.textAlign && { textAlign: col.textAlign }),
+    };
+  };
+
   return (
     <Paper
       elevation={0}
@@ -171,6 +180,7 @@ export default function DataTable<T>({
                   sx={{
                     bgcolor: 'transparent',
                     borderBottom: 'none',
+                    ...generateSxProps(col),
                     ...col.sx,
                   }}
                 >
@@ -236,7 +246,11 @@ export default function DataTable<T>({
                     {columns.map((col) => (
                       <TableCell
                         key={col.field as string}
-                        sx={{ borderBottomStyle: 'dashed', ...col.sx }}
+                        sx={{
+                          borderBottomStyle: 'dashed',
+                          ...generateSxProps(col),
+                          ...col.sx,
+                        }}
                       >
                         <Box sx={{ paddingRight: col.sort ? '30px' : '', py: isDense ? 0 : 0.625 }}>
                           {col.render ? col.render(row) : (row[col.field as keyof T] as string)}

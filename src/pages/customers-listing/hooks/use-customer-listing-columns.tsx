@@ -45,7 +45,8 @@ export default function useCustomerListingColumns() {
       {
         field: 'id',
         title: 'ID',
-        sx: { width: '150px', pl: 4 },
+        width: '150px',
+        sx: { pl: 4 },
         sort: true,
         filter: {
           label: 'Customer ID',
@@ -66,7 +67,8 @@ export default function useCustomerListingColumns() {
         field: 'status',
         title: 'Status',
         sort: true,
-        sx: { width: '150px', textAlign: 'center' },
+        textAlign: 'center',
+        width: '150px',
         filter: {
           label: 'Status',
           type: 'select',
@@ -86,7 +88,8 @@ export default function useCustomerListingColumns() {
         field: 'createdAt',
         title: 'Created At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         filter: {
           label: 'Created At',
           type: 'date',
@@ -98,7 +101,8 @@ export default function useCustomerListingColumns() {
         field: 'updatedAt',
         title: 'Updated At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         isHidden: true,
         filter: {
           label: 'Updated At',
@@ -111,7 +115,8 @@ export default function useCustomerListingColumns() {
         field: 'deletedAt',
         title: 'Deleted At',
         sort: true,
-        sx: { width: '200px', textAlign: 'center' },
+        width: '200px',
+        textAlign: 'center',
         isHidden: true,
         filter: {
           label: 'Deleted At',
@@ -124,7 +129,7 @@ export default function useCustomerListingColumns() {
         field: 'actions',
         title: '',
         select: false,
-        sx: { width: '50px' },
+        width: '50px',
         render: ({ id, deletedAt }) => (
           <>
             {deletedAt ? (
