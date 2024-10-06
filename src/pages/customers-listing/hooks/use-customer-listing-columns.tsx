@@ -12,14 +12,12 @@ import { EDialogIds } from '../../../components/dialog-provider/constants';
 import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import useListingColumns from '../../../helpers/hooks/use-listing-columns';
-import { TListingFilterValue } from '../../../helpers/types';
-import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
-import { userRoleOptions, userStatusOptions } from '../constants';
-import { TUserRecord } from '../types';
+import { customerStatusOptions } from '../constants';
+import { TCustomerRecord } from '../types';
 
-export default function useUserListingColumns() {
+export default function useCustomerListingColumns() {
   const { navigateTo } = useNavigateTo();
 
   const queryClient = useQueryClient();
@@ -29,20 +27,20 @@ export default function useUserListingColumns() {
   const { openDialog, closeDialog } = useDialog();
 
   const restoreQuery = useMutation({
-    mutationKey: [QueryKeys.USERS_RESTORE],
+    mutationKey: [QueryKeys.CUSTOMERS_RESTORE],
     mutationFn: async (id: number) => {
-      return await axiosPost(ApiRoutes.USER_RESTORE(id));
+      return await axiosPost(ApiRoutes.CUSTOMER_RESTORE(id));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKeys.USERS_LISTING] });
-      enqueueSnackbar('User Restored successfully', { variant: 'success' });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.CUSTOMERS_LISTING] });
+      enqueueSnackbar('Customer Restored successfully', { variant: 'success' });
     },
     onError: ({ message }) => {
       enqueueSnackbar(message, { variant: 'error' });
     },
   });
 
-  const columns: IDataTableColumn<TUserRecord>[] = useMemo(
+  const columns: IDataTableColumn<TCustomerRecord>[] = useMemo(
     () => [
       {
         field: 'id',
@@ -50,7 +48,7 @@ export default function useUserListingColumns() {
         sx: { width: '150px', pl: 4 },
         sort: true,
         filter: {
-          label: 'User ID',
+          label: 'Customer ID',
           type: 'number',
           Icon: <Tag />,
         },
@@ -65,40 +63,6 @@ export default function useUserListingColumns() {
         },
       },
       {
-        field: 'username',
-        title: 'Username',
-        sort: true,
-        sx: { width: '200px' },
-        filter: {
-          label: 'Username',
-          type: 'text-fuzzy',
-        },
-      },
-      {
-        field: 'role',
-        title: 'Role',
-        sort: true,
-        sx: { width: '150px', textAlign: 'center' },
-        filter: {
-          label: 'Role',
-          type: 'multiselect',
-          selectOptions: userRoleOptions,
-          render: (_, value) => {
-            const selectedValues = transformMultiSelectSelectedValue(value as TListingFilterValue);
-            return selectedValues
-              ? selectedValues
-                  .map((role) => userRoleOptions.find((ur) => ur.value === role)?.label)
-                  .join(', ')
-              : '';
-          },
-        },
-        render: ({ role }) =>
-          role
-            .split('_')
-            .map((c) => c.charAt(0).toUpperCase() + c.slice(1))
-            .join(' '),
-      },
-      {
         field: 'status',
         title: 'Status',
         sort: true,
@@ -106,9 +70,10 @@ export default function useUserListingColumns() {
         filter: {
           label: 'Status',
           type: 'select',
-          selectOptions: userStatusOptions,
+          selectOptions: customerStatusOptions,
           render: (_, value) => {
-            return (userStatusOptions.find((opt) => opt.value === value)?.label || value) as string;
+            return (customerStatusOptions.find((opt) => opt.value === value)?.label ||
+              value) as string;
           },
         },
         render: ({ status }) =>
@@ -164,13 +129,13 @@ export default function useUserListingColumns() {
           <>
             {deletedAt ? (
               <>
-                <Tooltip title="Restore Deleted User">
+                <Tooltip title="Restore Deleted Customer">
                   <IconButton
                     size="small"
                     onClick={() =>
                       openDialog(EDialogIds.CONFIRMATION, {
-                        title: 'Restore Deleted User',
-                        body: 'Are you sure you want to restore this user?',
+                        title: 'Restore Deleted Customer',
+                        body: 'Are you sure you want to restore this customer?',
                         onAccept: () => restoreQuery.mutate(id),
                         onClose: () => closeDialog(),
                       })
@@ -181,8 +146,11 @@ export default function useUserListingColumns() {
                 </Tooltip>
               </>
             ) : (
-              <Tooltip title="Edit User">
-                <IconButton size="small" onClick={() => navigateTo(AppRoute('USERS_UPDATE', id))}>
+              <Tooltip title="Edit Customer">
+                <IconButton
+                  size="small"
+                  onClick={() => navigateTo(AppRoute('CUSTOMERS_UPDATE', id))}
+                >
                   <Edit />
                 </IconButton>
               </Tooltip>
@@ -194,7 +162,7 @@ export default function useUserListingColumns() {
     [closeDialog, navigateTo, openDialog, restoreQuery],
   );
 
-  const { activeColumns, toggleColumn } = useListingColumns<TUserRecord>(columns);
+  const { activeColumns, toggleColumn } = useListingColumns<TCustomerRecord>(columns);
 
   return {
     allColumns: columns,

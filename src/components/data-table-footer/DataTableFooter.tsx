@@ -10,6 +10,7 @@ import DataTableFooterPerPageSelect, {
 export interface IDataTableFooterProps extends IDataTableFooterPerPageSelectProps {
   page: number;
   totalRecords: number;
+  rowCount: number;
   onPageChange: (nextPage: number) => void;
   isDense: boolean;
   isLoading: boolean;
@@ -22,6 +23,7 @@ export default function DataTableFooter({
   onPerPageChange,
   perPageOptions = defaultPerPageOptions,
   totalRecords,
+  rowCount,
   isDense,
   isLoading,
 }: IDataTableFooterProps) {
@@ -32,11 +34,11 @@ export default function DataTableFooter({
   const [startRange, endRange] = useMemo(() => {
     if (totalRecords > 0) {
       const start = page === 1 ? 1 : (page - 1) * perPage;
-      const end = start + perPage;
+      const end = (page === 1 ? start - 1 : start) + (rowCount < perPage ? rowCount : perPage);
       return [start, end];
     }
     return [0, 0];
-  }, [page, perPage, totalRecords]);
+  }, [page, perPage, rowCount, totalRecords]);
 
   const isFirstPage = page === 1;
 

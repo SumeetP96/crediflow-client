@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
 import { IDataTableColumn } from '../../components/data-table/types';
-import { TUserRecord } from '../../pages/users-listing/types';
 import { EQueryParamKeys } from '../constants';
 import useQueryParams from './use-query-params';
 
@@ -33,8 +32,8 @@ export default function useListingColumns<T>(columns: IDataTableColumn<T>[]) {
     [columns, selectedColumnFields],
   );
 
-  const toggleColumn = (field: keyof TUserRecord) => {
-    const isVisible = selectedColumnFields.includes(field);
+  const toggleColumn = (field: keyof T) => {
+    const isVisible = selectedColumnFields.includes(field as string);
     if (isVisible) {
       setSearchParams({ [EQueryParamKeys.COLS]: selectedColumnFields.filter((f) => f !== field) });
     } else {

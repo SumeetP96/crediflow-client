@@ -10,8 +10,3 @@ export const userStatusOptions: IDataTableFilterSelectOption[] = [
   { label: 'Active', value: 'active' },
   { label: 'Inactive', value: 'in_active' },
 ];
-
-export const showDeletedOptions: IDataTableFilterSelectOption[] = [
-  { label: 'Yes', value: 'yes' },
-  { label: 'No', value: 'no' },
-];

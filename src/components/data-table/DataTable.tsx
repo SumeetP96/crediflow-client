@@ -30,7 +30,7 @@ const fieldSortingIconMap: Record<TSortOrder, ReactNode> = {
 };
 
 export interface IDataTableProps<T>
-  extends Omit<IDataTableFooterProps, 'isDense' | 'onDensityChange'> {
+  extends Omit<IDataTableFooterProps, 'isDense' | 'onDensityChange' | 'rowCount'> {
   columns: IDataTableColumn<T>[];
   rows: T[];
   keyField: keyof T;
@@ -264,6 +264,7 @@ export default function DataTable<T>({
       <DataTableFooter
         page={page}
         perPage={perPage}
+        rowCount={rows.length}
         totalRecords={totalRecords}
         onPageChange={onPageChange}
         onPerPageChange={onPerPageChange}

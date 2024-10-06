@@ -42,4 +42,12 @@ export enum QueryKeys {
   USERS_UPDATE = 'users:update',
   USERS_DELETE = 'users:delete',
   USERS_RESTORE = 'users:restore',
+
+  // Customers
+  CUSTOMERS_LISTING = 'customers:listing',
+  CUSTOMERS_BY_ID = 'customers:by_id',
+  CUSTOMERS_CREATE = 'customers:create',
+  CUSTOMERS_UPDATE = 'customers:update',
+  CUSTOMERS_DELETE = 'customers:delete',
+  CUSTOMERS_RESTORE = 'customers:restore',
 }

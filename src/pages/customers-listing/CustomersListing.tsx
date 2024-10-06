@@ -7,20 +7,20 @@ import { defaultPage, EQueryParamKeys } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { showDeletedFilter } from '../../helpers/utils/data-table';
-import useUserListingColumns from './hooks/use-user-listing-columns';
-import useUserListingData from './hooks/use-user-listing-data';
-import { TUserRecord } from './types';
+import useCustomerListingColumns from './hooks/use-customer-listing-columns';
+import useCustomerListingData from './hooks/use-customer-listing-data';
+import { TCustomerRecord } from './types';
 
-const pageTitle = 'Users Listing';
+const pageTitle = 'Customers Listing';
 
-const additionalFilters: IDataTableFilter<TUserRecord>[] = [showDeletedFilter()];
+const additionalFilters: IDataTableFilter<TCustomerRecord>[] = [showDeletedFilter()];
 
-export default function UsersListing() {
+export default function CustomersListing() {
   const { setSearchParams } = useQueryParams();
 
-  const { query, rows, totalRecords } = useUserListingData();
+  const { query, rows, totalRecords } = useCustomerListingData();
 
-  const { allColumns, activeColumns, toggleColumn } = useUserListingColumns();
+  const { allColumns, activeColumns, toggleColumn } = useCustomerListingColumns();
 
   const { page, perPage, sortBy, sortOrder } = useCommonListingParams();
 

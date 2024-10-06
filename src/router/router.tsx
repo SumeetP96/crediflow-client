@@ -6,7 +6,7 @@ import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
-import Customers from '../pages/customers/Customers';
+import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
 import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
 import Invoices from '../pages/invoices/Invoices';
@@ -57,6 +57,8 @@ export const router = createBrowserRouter([
                 path: EAppRoutes.MASTERS_HOME,
                 element: <Masters />,
               },
+
+              // Users
               {
                 path: EAppRoutes.USERS,
                 element: <RouterRedirect from={EAppRoutes.USERS} to={EAppRoutes.USERS_LIST} />,
@@ -75,10 +77,29 @@ export const router = createBrowserRouter([
                   },
                 ],
               },
+
+              // Customers
               {
                 path: EAppRoutes.CUSTOMERS,
-                element: <Customers />,
+                element: (
+                  <RouterRedirect from={EAppRoutes.CUSTOMERS} to={EAppRoutes.CUSTOMERS_LIST} />
+                ),
+                children: [
+                  {
+                    path: EAppRoutes.CUSTOMERS_LIST,
+                    element: <CustomersListing />,
+                  },
+                  {
+                    path: EAppRoutes.CUSTOMERS_CREATE,
+                    element: <UserForm />,
+                  },
+                  {
+                    path: EAppRoutes.CUSTOMERS_UPDATE,
+                    element: <UserForm />,
+                  },
+                ],
               },
+
               {
                 path: EAppRoutes.AGENTS,
                 element: <Agents />,

@@ -9,4 +9,11 @@ export const ApiRoutes = {
   USER_UPDATE: (id: number | string) => `/users/${String(id)}`,
   USER_DELETE: (id: number | string) => `/users/${String(id)}`,
   USER_RESTORE: (id: number | string) => `/users/restore/${String(id)}`,
+
+  CUSTOMER_ALL: '/customers',
+  CUSTOMER_BY_ID: (id: number | string) => `/customers/${String(id)}`,
+  CUSTOMER_CREATE: '/customers',
+  CUSTOMER_UPDATE: (id: number | string) => `/customers/${String(id)}`,
+  CUSTOMER_DELETE: (id: number | string) => `/customers/${String(id)}`,
+  CUSTOMER_RESTORE: (id: number | string) => `/customers/restore/${String(id)}`,
 };

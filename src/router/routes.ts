@@ -19,6 +19,10 @@ export enum EAppRoutes {
   USERS_UPDATE = '/masters/users/update/:id',
 
   CUSTOMERS = '/masters/customers',
+  CUSTOMERS_LIST = '/masters/customers/list',
+  CUSTOMERS_CREATE = '/masters/customers/create',
+  CUSTOMERS_UPDATE = '/masters/customers/update/:id',
+
   AGENTS = '/masters/agents',
   INVOICE_CATEGORIES = '/masters/invoice-categories',
   TRANSACTION_TYPES = '/masters/transaction-types',
@@ -97,9 +101,22 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
 
   CUSTOMERS: {
     isPlaceholder: true,
-    redirectRoute: '',
+    redirectRoute: EAppRoutes.CUSTOMERS_LIST,
     path: EAppRoutes.CUSTOMERS,
   },
+  CUSTOMERS_LIST: {
+    label: 'Customers',
+    path: EAppRoutes.CUSTOMERS_LIST,
+  },
+  CUSTOMERS_CREATE: {
+    label: 'Create',
+    path: EAppRoutes.CUSTOMERS_CREATE,
+  },
+  CUSTOMERS_UPDATE: {
+    label: 'Update',
+    path: (id: string | number) => EAppRoutes.CUSTOMERS_UPDATE.replace(':id', String(id)),
+  },
+
   AGENTS: {
     isPlaceholder: true,
     redirectRoute: '',
