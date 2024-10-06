@@ -1,15 +1,21 @@
 import { Theme } from '@emotion/react';
+import { createTheme } from '@mui/material';
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { ELocalStorageKeys } from '../helpers/constants';
-import { defaultThemeName, EThemeNames, themeConfigMap } from './constants/contstants';
+import { defaultFontName, defaultThemeName } from './helpers/defaults';
+import { fontTypographyMap } from './helpers/font';
+import { themeConfigMap } from './helpers/theme';
+import { EFontNames, EThemeNames } from './helpers/types';
 
 export interface IDynamicThemeContextState {
   theme: Theme;
   themeName: EThemeNames;
+  fontName: EFontNames;
 }
 
 export interface IDynamicThemeContextActions {
   changeTheme: (name: EThemeNames) => void;
+  changeFont: (name: EFontNames) => void;
   resetToDefaultTheme: () => void;
 }
 
@@ -26,20 +32,38 @@ export default function DynamicThemeProvider({ children }: IDynamicThemeProvider
 
   const [themeName, setThemeName] = useState<EThemeNames>(defaultThemeName);
 
+  const [fontName, setFontName] = useState<EFontNames>(defaultFontName);
+
+  const updateTheme = (config: Theme, override?: Theme) => {
+    const themeConfig = createTheme(config, override || {});
+
+    setTheme(themeConfig);
+  };
+
   const changeTheme = (name: EThemeNames) => {
     setThemeName(name);
 
-    setTheme(themeConfigMap[name].config);
-
     localStorage.setItem(ELocalStorageKeys.THEME, name);
+
+    updateTheme(themeConfigMap[name].config);
+  };
+
+  const changeFont = (name: EFontNames) => {
+    setFontName(name);
+
+    localStorage.setItem(ELocalStorageKeys.FONT, name);
+
+    updateTheme(theme, { typography: fontTypographyMap[name] });
   };
 
   const resetToDefaultTheme = () => {
     setThemeName(defaultThemeName);
-
-    setTheme(themeConfigMap[defaultThemeName].config);
-
     localStorage.setItem(ELocalStorageKeys.THEME, defaultThemeName);
+
+    setFontName(defaultFontName);
+    localStorage.setItem(ELocalStorageKeys.FONT, defaultFontName);
+
+    updateTheme(themeConfigMap[defaultThemeName].config);
   };
 
   useEffect(() => {
@@ -49,20 +73,34 @@ export default function DynamicThemeProvider({ children }: IDynamicThemeProvider
       storedThemeName = defaultThemeName;
     }
 
-    setThemeName(storedThemeName as EThemeNames);
-
-    setTheme(themeConfigMap[storedThemeName].config);
+    setThemeName(storedThemeName);
 
     localStorage.setItem(ELocalStorageKeys.THEME, storedThemeName);
+
+    let storedFontName = localStorage.getItem(ELocalStorageKeys.FONT) as EFontNames;
+
+    if (!storedFontName || !Object.values(EFontNames).includes(storedFontName)) {
+      storedFontName = defaultFontName;
+    }
+
+    setFontName(storedFontName);
+
+    localStorage.setItem(ELocalStorageKeys.FONT, storedFontName);
+
+    updateTheme(themeConfigMap[storedThemeName].config, {
+      typography: fontTypographyMap[storedFontName],
+    });
   }, []);
 
   const state: IDynamicThemeContextState = {
     theme,
     themeName,
+    fontName,
   };
 
   const actions: IDynamicThemeContextActions = {
     changeTheme,
+    changeFont,
     resetToDefaultTheme,
   };
 

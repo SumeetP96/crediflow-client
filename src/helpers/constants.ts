@@ -21,6 +21,7 @@ export const defaultDateVisibleFormat = 'DD-MM-YYYY';
 export enum ELocalStorageKeys {
   AUTH_USER = 'user-details',
   THEME = 'mui-theme',
+  FONT = 'mui-font',
 }
 
 export enum EQueryParamKeys {

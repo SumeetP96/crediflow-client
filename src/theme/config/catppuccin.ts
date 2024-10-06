@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material';
-import { themeSettings } from '../constants/defaults';
+import { themeSettings } from '../helpers/defaults';
+import { overrideThemeConfig } from './override';
 
 export const paletteLight = {
   primary: {
@@ -58,38 +59,41 @@ export const paletteDark = {
   },
 };
 
-export const catppuccinTheme = createTheme({
-  shape: {
-    borderRadius: themeSettings.borderRadius,
-  },
-  colorSchemes: {
-    light: {
-      palette: paletteLight,
+export const catppuccinTheme = createTheme(
+  {
+    shape: {
+      borderRadius: themeSettings.borderRadius,
     },
-    dark: {
-      palette: paletteDark,
-    },
-  },
-  components: {
-    MuiTableHead: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          backgroundColor:
-            theme.palette.mode === 'dark'
-              ? `${paletteDark.background.default}88`
-              : `${paletteLight.background.default}88`,
-        }),
+    colorSchemes: {
+      light: {
+        palette: paletteLight,
+      },
+      dark: {
+        palette: paletteDark,
       },
     },
-    MuiTableCell: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          borderColor:
-            theme.palette.mode === 'dark'
-              ? `${paletteLight.background.paper}22`
-              : `${paletteDark.background.paper}22`,
-        }),
+    components: {
+      MuiTableHead: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            backgroundColor:
+              theme.palette.mode === 'dark'
+                ? `${paletteDark.background.default}88`
+                : `${paletteLight.background.default}88`,
+          }),
+        },
+      },
+      MuiTableCell: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            borderColor:
+              theme.palette.mode === 'dark'
+                ? `${paletteLight.background.paper}22`
+                : `${paletteDark.background.paper}22`,
+          }),
+        },
       },
     },
   },
-});
+  overrideThemeConfig,
+);

@@ -1,4 +1,3 @@
-import { Theme } from '@emotion/react';
 import {
   paletteDark as catppuccinDark,
   paletteLight as catppuccinLight,
@@ -15,20 +14,7 @@ import {
   paletteLight as solarizedLight,
   solarizedTheme,
 } from '../config/solarized';
-
-export enum EThemeNames {
-  MATERIAL = 'material',
-  SOLARIZED = 'solarized',
-  CATPPUCCIN = 'catppuccin',
-  MIRAGE = 'mirage',
-}
-
-export interface IThemeConfig {
-  name: string;
-  config: Theme;
-  primaryLight: string;
-  primaryDark: string;
-}
+import { EThemeNames, IThemeConfig, IThemeConfigOption } from './types';
 
 export const themeConfigMap: Record<EThemeNames, IThemeConfig> = {
   [EThemeNames.MATERIAL]: {
@@ -56,13 +42,6 @@ export const themeConfigMap: Record<EThemeNames, IThemeConfig> = {
     primaryDark: mirageDark.primary.main,
   },
 };
-
-export const defaultThemeName = EThemeNames.MATERIAL;
-
-export interface IThemeConfigOption extends Partial<IThemeConfig> {
-  value: EThemeNames;
-  label: string;
-}
 
 export const themeConfigOptions: IThemeConfigOption[] = Object.entries(themeConfigMap).map(
   ([key, value]) => {
