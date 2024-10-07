@@ -76,10 +76,9 @@ export const catppuccinTheme = createTheme(
       MuiTableHead: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundColor:
-              theme.palette.mode === 'dark'
-                ? `${paletteDark.background.default}88`
-                : `${paletteLight.background.default}88`,
+            '& .MuiTableCell-root': {
+              backgroundColor: theme.palette.mode === 'dark' ? '#181a26' : '#e0e3ea',
+            },
           }),
         },
       },

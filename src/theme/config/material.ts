@@ -35,7 +35,9 @@ export const materialTheme = createTheme(
       MuiTableHead: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundColor: theme.palette.mode === 'dark' ? `${grey[800]}55` : grey[100],
+            '& .MuiTableCell-root': {
+              backgroundColor: theme.palette.mode === 'dark' ? '#171717' : grey[100],
+            },
           }),
         },
       },

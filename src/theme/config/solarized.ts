@@ -5,9 +5,9 @@ import { overrideThemeConfig } from './override';
 
 export const paletteLight = {
   primary: {
-    dark: '#0e9085',
-    main: '#2aa197',
-    light: '#4eb2a9',
+    dark: 'hsl(175, 82%, 31%)',
+    main: 'hsl(175, 59%, 40%)',
+    light: 'hsl(175, 39%, 50%)',
     contrastText: '#ffffff',
   },
   secondary: {
@@ -77,10 +77,9 @@ export const solarizedTheme = createTheme(
       MuiTableHead: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundColor:
-              theme.palette.mode === 'dark'
-                ? `${paletteDark.background.default}88`
-                : `${paletteLight.background.default}88`,
+            '& .MuiTableCell-root': {
+              backgroundColor: theme.palette.mode === 'dark' ? '#062b35' : '#f1eddd',
+            },
           }),
         },
       },

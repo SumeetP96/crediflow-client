@@ -129,6 +129,13 @@ export default function DataTable<T>({
     };
   };
 
+  const renderColumn = (row: T, col: IDataTableColumn<T>) => {
+    if (col.render) {
+      return col.render(row);
+    }
+    return row[col.field as keyof T] as string;
+  };
+
   return (
     <Paper
       elevation={0}
@@ -178,19 +185,13 @@ export default function DataTable<T>({
                 <TableCell
                   key={col.field as string}
                   sx={{
-                    bgcolor: 'transparent',
                     borderBottom: 'none',
                     ...generateSxProps(col),
                     ...col.sx,
                   }}
                 >
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      paddingRight: col.sort ? '30px' : '',
-                    }}
-                  >
-                    {col.title}
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography variant="subtitle2">{col.title}</Typography>
 
                     {col.sort ? (
                       <IconButton
@@ -200,13 +201,6 @@ export default function DataTable<T>({
                         disabled={isLoading}
                         onClick={() => handleSorting(col.field as string, sortOrder)}
                         size="small"
-                        sx={{
-                          mr: 1,
-                          position: 'absolute',
-                          right: 0,
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                        }}
                       >
                         {fieldSortingIconMap[col.field === sortBy ? sortOrder : 'none']}
                       </IconButton>
@@ -253,7 +247,7 @@ export default function DataTable<T>({
                         }}
                       >
                         <Box sx={{ paddingRight: col.sort ? '30px' : '', py: isDense ? 0 : 0.625 }}>
-                          {col.render ? col.render(row) : (row[col.field as keyof T] as string)}
+                          {renderColumn(row, col)}
                         </Box>
                       </TableCell>
                     ))}

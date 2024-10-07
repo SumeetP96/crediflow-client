@@ -111,10 +111,9 @@ export const mirageTheme = createTheme(
       MuiTableHead: {
         styleOverrides: {
           root: ({ theme }) => ({
-            backgroundColor:
-              theme.palette.mode === 'dark'
-                ? `${paletteDark.background.default}88`
-                : `${paletteLight.background.default}99`,
+            '& .MuiTableCell-root': {
+              backgroundColor: theme.palette.mode === 'dark' ? '#191d26' : '#f3f4f5',
+            },
           }),
         },
       },
