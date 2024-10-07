@@ -1,10 +1,14 @@
 import { AutoDelete } from '@mui/icons-material';
 import { IDataTableFilter, IDataTableFilterSelectOption } from '../../components/data-table/types';
 
-export const showDeletedOptions: IDataTableFilterSelectOption[] = [
+export const yesNoOptions: IDataTableFilterSelectOption[] = [
   { label: 'Yes', value: 'yes' },
   { label: 'No', value: 'no' },
 ];
+
+export function yesNoRender(value: string) {
+  return value ? (value === 'yes' ? 'Yes' : 'No') : '';
+}
 
 export function showDeletedFilter<T>(): IDataTableFilter<T> {
   return {
@@ -13,9 +17,7 @@ export function showDeletedFilter<T>(): IDataTableFilter<T> {
     type: 'select',
     label: 'Show Deleted',
     icon: <AutoDelete />,
-    selectOptions: showDeletedOptions,
-    render: (_, value) => {
-      return value ? (value === 'yes' ? 'Yes' : 'No') : '';
-    },
+    selectOptions: yesNoOptions,
+    render: (_, value) => yesNoRender(value as string),
   };
 }

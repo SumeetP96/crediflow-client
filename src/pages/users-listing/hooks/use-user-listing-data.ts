@@ -16,7 +16,7 @@ export default function useUserListingData() {
 
   const { getSearchParams } = useQueryParams();
 
-  const { id, name, username, role, status, createdAt = [] } = getSearchParams();
+  const { id, name, username, role, status, createdAt, updatedAt, deletedAt } = getSearchParams();
 
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
@@ -32,6 +32,8 @@ export default function useUserListingData() {
       role: transformMultiSelectValue(role),
       status,
       createdAt,
+      updatedAt,
+      deletedAt,
     }),
   };
 
@@ -48,6 +50,8 @@ export default function useUserListingData() {
     ...[Array.isArray(role) ? role : [role]],
     status,
     createdAt,
+    updatedAt,
+    deletedAt,
   ];
 
   const query = useQuery({

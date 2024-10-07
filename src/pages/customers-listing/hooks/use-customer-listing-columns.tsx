@@ -1,5 +1,5 @@
 import { Edit, Restore, Tag } from '@mui/icons-material';
-import { IconButton, Tooltip } from '@mui/material';
+import { Box, IconButton, Link, Tooltip, Typography } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
@@ -12,6 +12,7 @@ import { EDialogIds } from '../../../components/dialog-provider/constants';
 import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import useListingColumns from '../../../helpers/hooks/use-listing-columns';
+import { yesNoOptions, yesNoRender } from '../../../helpers/utils/data-table';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
 import { customerStatusOptions } from '../constants';
@@ -45,8 +46,7 @@ export default function useCustomerListingColumns() {
       {
         field: 'id',
         title: 'ID',
-        width: '150px',
-        sx: { pl: 4 },
+        textAlign: 'right',
         sort: true,
         filter: {
           label: 'Customer ID',
@@ -58,17 +58,77 @@ export default function useCustomerListingColumns() {
         field: 'name',
         title: 'Name',
         sort: true,
+        width: '200px',
         filter: {
           label: 'Name',
           type: 'text-fuzzy',
         },
       },
       {
+        field: 'parent.name' as keyof TCustomerRecord,
+        title: 'Parent Customer',
+        sort: true,
+        width: '200px',
+        filter: {
+          label: 'Name',
+          type: 'text-fuzzy',
+        },
+        render: ({ parent }) => (parent?.name ? <Link>{parent?.name}</Link> : '-'),
+      },
+      {
+        field: 'contactNumbers',
+        title: 'Contact',
+        textAlign: 'center',
+        filter: {
+          label: 'Contact',
+          type: 'text-fuzzy',
+        },
+        render: ({ contactNumbers }) => (
+          <Box display="flex" flexDirection="column" justifyContent="center">
+            {contactNumbers.map((number) => (
+              <Typography key={number} variant="body2">
+                {number}
+              </Typography>
+            ))}
+          </Box>
+        ),
+      },
+      {
+        field: 'addresses',
+        title: 'Address',
+        width: '200px',
+        filter: {
+          label: 'Address',
+          type: 'text-fuzzy',
+        },
+        render: ({ id, addresses }) => (
+          <Box display="flex" flexDirection="column" justifyContent="center">
+            {addresses.map((address, i) => (
+              <Typography key={`${id}-${i}`} variant="body2">
+                {addresses.length > 1 ? '-' : ''} {address}
+              </Typography>
+            ))}
+          </Box>
+        ),
+      },
+      {
+        field: 'isReseller',
+        title: 'Reseller',
+        textAlign: 'center',
+        sort: true,
+        filter: {
+          label: 'Reseller',
+          type: 'select',
+          selectOptions: yesNoOptions,
+          render: (_, value) => yesNoRender(value as string),
+        },
+        render: ({ isReseller }) => (isReseller ? 'Yes' : 'No'),
+      },
+      {
         field: 'status',
         title: 'Status',
         sort: true,
         textAlign: 'center',
-        width: '150px',
         filter: {
           label: 'Status',
           type: 'select',
@@ -88,7 +148,6 @@ export default function useCustomerListingColumns() {
         field: 'createdAt',
         title: 'Created At',
         sort: true,
-        width: '200px',
         textAlign: 'center',
         filter: {
           label: 'Created At',
@@ -101,7 +160,6 @@ export default function useCustomerListingColumns() {
         field: 'updatedAt',
         title: 'Updated At',
         sort: true,
-        width: '200px',
         textAlign: 'center',
         isHidden: true,
         filter: {
@@ -115,7 +173,6 @@ export default function useCustomerListingColumns() {
         field: 'deletedAt',
         title: 'Deleted At',
         sort: true,
-        width: '200px',
         textAlign: 'center',
         isHidden: true,
         filter: {
@@ -129,7 +186,6 @@ export default function useCustomerListingColumns() {
         field: 'actions',
         title: '',
         select: false,
-        width: '50px',
         render: ({ id, deletedAt }) => (
           <>
             {deletedAt ? (

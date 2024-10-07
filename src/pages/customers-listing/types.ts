@@ -6,7 +6,7 @@ export interface ICustomer {
   id: number;
   parentId: number;
   name: string;
-  constactNumbers: string[];
+  contactNumbers: string[];
   addresses: string[];
   isReseller: boolean;
   balance: number;
@@ -14,6 +14,7 @@ export interface ICustomer {
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
+  parent: ICustomer;
 }
 
 export interface ICustomerListingAdditionalFilters {

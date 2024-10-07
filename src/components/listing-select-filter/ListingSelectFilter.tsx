@@ -1,7 +1,7 @@
 import { Autocomplete, Box, TextField, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import { IListingSelectedFilter, TListingFilterValue } from '../../helpers/types';
-import { IDataTableFilterSelectOption } from '../data-table/DataTable';
+import { IDataTableFilterSelectOption } from '../data-table/types';
 
 export type TSelectedOption =
   | IDataTableFilterSelectOption

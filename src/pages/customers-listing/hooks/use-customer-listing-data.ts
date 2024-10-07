@@ -13,7 +13,20 @@ export default function useCustomerListingData() {
 
   const { getSearchParams } = useQueryParams();
 
-  const { id, name, status, createdAt = [] } = getSearchParams();
+  const {
+    id,
+    name,
+    contactNumbers,
+    addresses,
+    isReseller,
+    status,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    ...rest
+  } = getSearchParams();
+
+  const parentName = rest['parent.name'];
 
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
@@ -25,8 +38,14 @@ export default function useCustomerListingData() {
       search,
       id,
       name,
+      parentName,
+      contactNumbers,
+      addresses,
+      isReseller,
       status,
       createdAt,
+      updatedAt,
+      deletedAt,
     }),
   };
 
@@ -39,8 +58,14 @@ export default function useCustomerListingData() {
     search,
     id,
     name,
+    parentName,
+    addresses,
+    contactNumbers,
+    isReseller,
     status,
     createdAt,
+    updatedAt,
+    deletedAt,
   ];
 
   const query = useQuery({

@@ -28,6 +28,7 @@ export interface IDataTableFilter<T> {
 
 export interface IDataTableColumn<T> {
   field: keyof T;
+  propertyPath?: string;
   title: string;
   sx?: SxProps;
   render?: (params: T) => ReactNode;
