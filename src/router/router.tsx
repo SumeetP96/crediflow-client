@@ -6,6 +6,7 @@ import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import { breadcrumbRoutesId } from '../helpers/constants';
 import Agents from '../pages/agents/Agents';
+import CustomerForm from '../pages/customer-form/CustomerForm';
 import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
 import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
@@ -91,11 +92,11 @@ export const router = createBrowserRouter([
                   },
                   {
                     path: EAppRoutes.CUSTOMERS_CREATE,
-                    element: <UserForm />,
+                    element: <CustomerForm />,
                   },
                   {
                     path: EAppRoutes.CUSTOMERS_UPDATE,
-                    element: <UserForm />,
+                    element: <CustomerForm />,
                   },
                 ],
               },

@@ -7,6 +7,7 @@ import { defaultPage, EQueryParamKeys } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { showDeletedFilter } from '../../helpers/utils/data-table';
+import { AppRoute } from '../../router/helpers';
 import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
 import { TUserRecord } from './types';
@@ -35,6 +36,7 @@ export default function UsersListing() {
           filters={additionalFilters}
           selectedColumns={activeColumns}
           onToggleColumn={toggleColumn}
+          newRecordRoute={AppRoute('USERS_CREATE')}
         />
 
         <DataTable

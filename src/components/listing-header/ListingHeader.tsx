@@ -20,7 +20,6 @@ import { EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { IListingSelectedFilter } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
-import { AppRoute } from '../../router/helpers';
 import ApiErrorAlert from '../alerts/ApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';
 import { IDataTableColumn, IDataTableFilter } from '../data-table/types';
@@ -36,6 +35,7 @@ export interface IListingHeaderProps<Col> {
   filters?: IDataTableFilter<Col>[];
   selectedColumns: Array<IDataTableColumn<Col>>;
   onToggleColumn: (field: keyof Col) => void;
+  newRecordRoute: string;
 }
 
 export default function ListingHeader<Col>({
@@ -46,6 +46,7 @@ export default function ListingHeader<Col>({
   filters,
   selectedColumns,
   onToggleColumn,
+  newRecordRoute,
 }: IListingHeaderProps<Col>) {
   const { navigateTo } = useNavigateTo();
 
@@ -213,7 +214,7 @@ export default function ListingHeader<Col>({
               <Button
                 startIcon={<AddCircleOutline />}
                 variant="contained"
-                onClick={() => navigateTo(AppRoute('USERS_CREATE'))}
+                onClick={() => navigateTo(newRecordRoute)}
                 disableElevation
                 sx={{ flexGrow: { xs: 1, md: 0 } }}
               >

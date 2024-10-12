@@ -7,6 +7,7 @@ import { defaultPage, EQueryParamKeys } from '../../helpers/constants';
 import useCommonListingParams from '../../helpers/hooks/use-common-listing-params';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { showDeletedFilter } from '../../helpers/utils/data-table';
+import { AppRoute } from '../../router/helpers';
 import useCustomerListingColumns from './hooks/use-customer-listing-columns';
 import useCustomerListingData from './hooks/use-customer-listing-data';
 import { TCustomerRecord } from './types';
@@ -35,6 +36,7 @@ export default function CustomersListing() {
           filters={additionalFilters}
           selectedColumns={activeColumns}
           onToggleColumn={toggleColumn}
+          newRecordRoute={AppRoute('CUSTOMERS_CREATE')}
         />
 
         <DataTable

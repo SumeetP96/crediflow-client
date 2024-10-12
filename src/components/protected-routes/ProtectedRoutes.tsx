@@ -14,7 +14,7 @@ export default function ProtectedRoutes() {
   }
 
   if (!authUser) {
-    <Navigate to={AppRoute('LOGIN')} replace state={{ prevLocation: location }} />;
+    return <Navigate to={AppRoute('LOGIN')} replace state={{ prevLocation: location }} />;
   }
 
   return (
