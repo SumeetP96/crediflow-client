@@ -10,6 +10,7 @@ export interface ICustomer {
   addresses: string[];
   isReseller: boolean;
   balance: number;
+  openingBalance: number;
   status: TCustomerStatus;
   createdAt: string;
   updatedAt: string;

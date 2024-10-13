@@ -1,5 +1,5 @@
 import { Block, Delete, Save } from '@mui/icons-material';
-import { Box, Button, Divider, Grid2, Paper, Typography } from '@mui/material';
+import { Box, Button, Divider, Grid2, Grid2Props, Paper, Typography } from '@mui/material';
 import { FieldComponent, FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
@@ -16,6 +16,7 @@ import ApiErrorAlert from '../alerts/ApiErrorAlert';
 import { EDialogIds } from '../dialog-provider/constants';
 import useDialog from '../dialog-provider/use-dialog';
 import Page from '../page/Page';
+import FormSkeleton from '../skeleton/FormSkeleton';
 
 export type TCUDAction = 'create' | 'update' | 'delete';
 
@@ -51,6 +52,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   updateBtnLoadingLabel?: string;
   deleteBtnLabel?: string;
   resetBtnLabel?: string;
+  spacing?: Grid2Props['spacing'];
 }
 
 export default function MastersFormWrapper<Model, FormModel>({
@@ -72,6 +74,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   updateBtnLoadingLabel = 'Updating...',
   deleteBtnLabel = 'Delete',
   resetBtnLabel = 'Cancel',
+  spacing = 3,
 }: IMastersFormWrapperProps<Model, FormModel>) {
   const { openDialog, closeDialog } = useDialog();
 
@@ -171,9 +174,13 @@ export default function MastersFormWrapper<Model, FormModel>({
 
           {apiError ? <ApiErrorAlert error={apiError} sx={{ mb: 3 }} /> : null}
 
-          <Grid2 container spacing={3}>
-            {children?.(form, form.Field)}
-          </Grid2>
+          {isUpdateMode && findQuery.isLoading ? (
+            <FormSkeleton rows={6} />
+          ) : (
+            <Grid2 container spacing={spacing}>
+              {children?.(form, form.Field)}
+            </Grid2>
+          )}
 
           <Box
             sx={{

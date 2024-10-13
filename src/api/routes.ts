@@ -16,4 +16,5 @@ export const ApiRoutes = {
   CUSTOMER_UPDATE: (id: number | string) => `/customers/${String(id)}`,
   CUSTOMER_DELETE: (id: number | string) => `/customers/${String(id)}`,
   CUSTOMER_RESTORE: (id: number | string) => `/customers/restore/${String(id)}`,
+  CUSTOMER_OPTIONS: '/customers/options',
 };

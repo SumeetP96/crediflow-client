@@ -3,6 +3,8 @@ import {
   Box,
   FormControl,
   FormControlProps,
+  Grid2,
+  Grid2Props,
   IconButton,
   Paper,
   TextField,
@@ -13,11 +15,13 @@ import {
 } from '@mui/material';
 import { ValidationError } from '@tanstack/react-form';
 import { produce } from 'immer';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router';
+import { ZodSchema } from 'zod';
 
 export interface IInputValue {
   index: number;
-  value: string;
+  value?: string;
   isManuallyAdded: boolean;
   error?: string | null;
 }
@@ -25,13 +29,14 @@ export interface IInputValue {
 export interface ITextMultiInputProps {
   formControlProps?: FormControlProps;
   textFieldProps?: TextFieldProps;
-  value?: string[];
+  value?: string[] | number[];
   onChange: (value: string[]) => void;
   addButtonTooltip: string;
-  min?: number;
-  max?: number;
-  required?: boolean;
   errors: ValidationError[];
+  validationSchema?: ZodSchema;
+  title: string;
+  girdSize?: Grid2Props['size'];
+  forceTrim?: boolean;
 }
 
 const emptyInputValue: IInputValue = {
@@ -47,39 +52,57 @@ export default function TextMultiInput({
   value,
   onChange,
   addButtonTooltip,
-  min,
-  max,
-  required,
   errors,
+  validationSchema,
+  title,
+  girdSize = 12,
+  forceTrim = false,
 }: ITextMultiInputProps) {
   const theme = useTheme();
 
-  const [inputValues, setInputValues] = useState<IInputValue[]>(() => {
-    const parsedValue = value ? (Array.isArray(value) ? value : [value]) : [];
+  const location = useLocation();
 
-    if (!parsedValue?.length) {
-      return [emptyInputValue];
+  const initRef = useRef<boolean>(false);
+
+  const [inputValues, setInputValues] = useState<IInputValue[]>([emptyInputValue]);
+
+  useLayoutEffect(() => {
+    if (value?.length && initRef.current === false) {
+      initRef.current = true;
+
+      const parsedValues = value ? (Array.isArray(value) ? value : [value]) : [];
+
+      setInputValues(
+        parsedValues.map((value, index) => ({ index, value, error: '' }) as IInputValue),
+      );
     }
+  }, [value]);
 
-    return parsedValue.map((value, index) => ({ index, value, error: '' }) as IInputValue);
-  });
+  useLayoutEffect(() => {
+    initRef.current = false;
+  }, [location.pathname]);
+
+  const emitChange = (draft: IInputValue[]) => {
+    const values = draft.map((d) => d.value).filter(Boolean);
+    onChange(values.length ? (values as string[]) : []);
+  };
 
   const handChange = (value: string, index: number) => {
+    initRef.current = true;
     setInputValues(
       produce((draft) => {
-        draft[index].value = value;
-        if (required && !value.trim().length) {
-          draft[index].error = 'This field is required';
-        } else {
-          if (min && value.trim().length < min) {
-            draft[index].error = `Minimum ${min} characters required`;
-          } else if (max && value.trim().length > max) {
-            draft[index].error = `Value cannot exceed ${max} characters`;
+        const transformedValue = forceTrim ? value.trim() : value;
+        const safeValue = transformedValue.length ? transformedValue : undefined;
+        draft[index].value = safeValue;
+        if (validationSchema) {
+          const validated = validationSchema.safeParse(safeValue);
+          if (!validated.success) {
+            draft[index].error = validated.error.issues[0].message;
           } else {
             draft[index].error = '';
           }
         }
-        onChange(draft.map((d) => d.value));
+        emitChange(draft);
       }),
     );
   };
@@ -97,13 +120,11 @@ export default function TextMultiInput({
       produce((draft) => {
         if (draft.length > 1) {
           draft.splice(index, 1);
-          onChange(draft.map((d) => d.value));
+          emitChange(draft);
         }
       }),
     );
   };
-
-  const hasParentError = errors.length > 0;
 
   return (
     <Box>
@@ -112,51 +133,50 @@ export default function TextMultiInput({
           pl: { xs: 1.5, md: 2 },
           pr: 1,
           py: { xs: 1.5, md: 2 },
-          border: hasParentError ? `1px solid ${theme.palette.error.main}` : 'auto',
+          border: errors.length ? `1px solid ${theme.palette.error.main}` : 'auto',
         }}
         variant="outlined"
       >
-        <Typography
-          color={hasParentError ? 'error' : 'textPrimary'}
-          sx={{ mb: { xs: 1.5, md: 2 } }}
-        >
-          Contact Numbers
-        </Typography>
+        <Typography color={errors.length ? 'error' : 'textPrimary'}>{title}</Typography>
 
-        {inputValues.map((inputValue, i) => {
-          const isLast = i === inputValues.length - 1;
-          return (
-            <Box key={`${i}-input`} display="flex" alignItems="flex-start" gap={0.5}>
-              <FormControl fullWidth {...formControlProps}>
-                <TextField
-                  autoFocus={inputValue.isManuallyAdded}
-                  value={inputValue.value}
-                  onChange={(e) => handChange(e.target.value, i)}
-                  helperText={inputValue.error}
-                  error={Boolean(inputValue.error)}
-                  {...textFieldProps}
-                />
-              </FormControl>
+        <Grid2 container spacing={1}>
+          {inputValues.map((inputValue, i) => {
+            const isLast = i === inputValues.length - 1;
+            return (
+              <Grid2 key={`${i}-input`} size={girdSize} mt={{ xs: 1, md: 2 }}>
+                <Box display="flex" alignItems="flex-start" gap={0.5}>
+                  <FormControl fullWidth {...formControlProps}>
+                    <TextField
+                      autoFocus={inputValue.isManuallyAdded}
+                      value={inputValue.value ?? ''}
+                      onChange={(e) => handChange(e.target.value, i)}
+                      helperText={inputValue.error}
+                      error={Boolean(inputValue.error)}
+                      {...textFieldProps}
+                    />
+                  </FormControl>
 
-              {isLast ? (
-                <Tooltip title={addButtonTooltip}>
-                  <IconButton sx={{ mt: 1 }} onClick={() => addInput()}>
-                    <AddCircleOutline />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Remove">
-                  <IconButton sx={{ mt: 1 }} onClick={() => removeInput(i)}>
-                    <RemoveCircleOutline />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </Box>
-          );
-        })}
+                  {isLast ? (
+                    <Tooltip title={addButtonTooltip}>
+                      <IconButton sx={{ mt: 1 }} onClick={() => addInput()}>
+                        <AddCircleOutline />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Remove">
+                      <IconButton sx={{ mt: 1 }} onClick={() => removeInput(i)}>
+                        <RemoveCircleOutline />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </Box>
+              </Grid2>
+            );
+          })}
+        </Grid2>
       </Paper>
 
-      {hasParentError ? (
+      {errors.length ? (
         <Typography color="error" variant="caption" sx={{ ml: { xs: 1.5, md: 2 } }}>
           {errors.join(', ')}
         </Typography>

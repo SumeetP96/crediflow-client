@@ -50,4 +50,5 @@ export enum QueryKeys {
   CUSTOMERS_UPDATE = 'customers:update',
   CUSTOMERS_DELETE = 'customers:delete',
   CUSTOMERS_RESTORE = 'customers:restore',
+  CUSTOMERS_OPTIONS = 'customers:options',
 }
