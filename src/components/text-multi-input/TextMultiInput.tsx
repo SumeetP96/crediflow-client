@@ -6,12 +6,10 @@ import {
   Grid2,
   Grid2Props,
   IconButton,
-  Paper,
   TextField,
   TextFieldProps,
   Tooltip,
   Typography,
-  useTheme,
 } from '@mui/material';
 import { ValidationError } from '@tanstack/react-form';
 import { produce } from 'immer';
@@ -58,8 +56,6 @@ export default function TextMultiInput({
   girdSize = 12,
   forceTrim = false,
 }: ITextMultiInputProps) {
-  const theme = useTheme();
-
   const location = useLocation();
 
   const initRef = useRef<boolean>(false);
@@ -128,59 +124,48 @@ export default function TextMultiInput({
 
   return (
     <Box>
-      <Paper
-        sx={{
-          pl: { xs: 1.5, md: 2 },
-          pr: 1,
-          py: { xs: 1.5, md: 2 },
-          border: errors.length ? `1px solid ${theme.palette.error.main}` : 'auto',
-        }}
-        variant="outlined"
-      >
-        <Typography color={errors.length ? 'error' : 'textPrimary'}>{title}</Typography>
-
-        <Grid2 container spacing={1}>
-          {inputValues.map((inputValue, i) => {
-            const isLast = i === inputValues.length - 1;
-            return (
-              <Grid2 key={`${i}-input`} size={girdSize} mt={{ xs: 1, md: 2 }}>
-                <Box display="flex" alignItems="flex-start" gap={0.5}>
-                  <FormControl fullWidth {...formControlProps}>
-                    <TextField
-                      autoFocus={inputValue.isManuallyAdded}
-                      value={inputValue.value ?? ''}
-                      onChange={(e) => handChange(e.target.value, i)}
-                      helperText={inputValue.error}
-                      error={Boolean(inputValue.error)}
-                      {...textFieldProps}
-                    />
-                  </FormControl>
-
-                  {isLast ? (
-                    <Tooltip title={addButtonTooltip}>
-                      <IconButton sx={{ mt: 1 }} onClick={() => addInput()}>
-                        <AddCircleOutline />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Remove">
-                      <IconButton sx={{ mt: 1 }} onClick={() => removeInput(i)}>
-                        <RemoveCircleOutline />
-                      </IconButton>
-                    </Tooltip>
-                  )}
-                </Box>
-              </Grid2>
-            );
-          })}
-        </Grid2>
-      </Paper>
-
+      <Typography color={errors.length ? 'error' : 'textPrimary'}>{title}</Typography>
       {errors.length ? (
-        <Typography color="error" variant="caption" sx={{ ml: { xs: 1.5, md: 2 } }}>
-          {errors.join(', ')}
+        <Typography color="error" variant="caption">
+          ({errors.join(', ')})
         </Typography>
       ) : null}
+
+      <Grid2 container spacing={1}>
+        {inputValues.map((inputValue, i) => {
+          const isLast = i === inputValues.length - 1;
+          return (
+            <Grid2 key={`${i}-input`} size={girdSize} mt={1}>
+              <Box display="flex" alignItems="flex-start" gap={0.5}>
+                <FormControl fullWidth {...formControlProps}>
+                  <TextField
+                    autoFocus={inputValue.isManuallyAdded}
+                    value={inputValue.value ?? ''}
+                    onChange={(e) => handChange(e.target.value, i)}
+                    helperText={inputValue.error}
+                    error={Boolean(inputValue.error)}
+                    {...textFieldProps}
+                  />
+                </FormControl>
+
+                {isLast ? (
+                  <Tooltip title={addButtonTooltip}>
+                    <IconButton sx={{ mt: 1 }} onClick={() => addInput()}>
+                      <AddCircleOutline />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Remove">
+                    <IconButton sx={{ mt: 1 }} onClick={() => removeInput(i)}>
+                      <RemoveCircleOutline />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
+            </Grid2>
+          );
+        })}
+      </Grid2>
     </Box>
   );
 }

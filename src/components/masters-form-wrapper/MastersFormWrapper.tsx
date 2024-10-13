@@ -1,5 +1,15 @@
 import { Block, Delete, Save } from '@mui/icons-material';
-import { Box, Button, Divider, Grid2, Grid2Props, Paper, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  Grid2,
+  Grid2Props,
+  Paper,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import { FieldComponent, FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
@@ -76,6 +86,10 @@ export default function MastersFormWrapper<Model, FormModel>({
   resetBtnLabel = 'Cancel',
   spacing = 3,
 }: IMastersFormWrapperProps<Model, FormModel>) {
+  const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const { openDialog, closeDialog } = useDialog();
 
   const queryClient = useQueryClient();
@@ -155,14 +169,16 @@ export default function MastersFormWrapper<Model, FormModel>({
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    form.handleSubmit();
   };
 
   const apiError = findQuery.error || createQuery.error || updateQuery.error;
 
   return (
     <Page title={isUpdateMode ? updateTitle : createTitle}>
-      <Paper sx={{ p: 3, width: { xs: '100%', md: '860px' }, mx: 'auto' }} variant="outlined">
+      <Paper
+        sx={{ px: { xs: 2, md: 3 }, py: 3, width: { xs: '100%', md: '860px' }, mx: 'auto' }}
+        variant="outlined"
+      >
         <form onSubmit={handleFormSubmit}>
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" fontWeight={400} sx={{ mb: 2 }}>
@@ -195,7 +211,7 @@ export default function MastersFormWrapper<Model, FormModel>({
                   variant="outlined"
                   tabIndex={-1}
                   color="error"
-                  startIcon={<Delete />}
+                  startIcon={isMobile ? null : <Delete />}
                   disableElevation
                   onClick={() =>
                     openDialog(EDialogIds.CONFIRMATION, {
@@ -206,7 +222,7 @@ export default function MastersFormWrapper<Model, FormModel>({
                     })
                   }
                 >
-                  {deleteBtnLabel}
+                  {isMobile ? <Delete /> : deleteBtnLabel}
                 </Button>
               </>
             ) : null}
@@ -225,7 +241,7 @@ export default function MastersFormWrapper<Model, FormModel>({
                   <Button
                     disabled={!canSubmit}
                     variant="contained"
-                    type="submit"
+                    onClick={() => form.handleSubmit()}
                     disableElevation
                     startIcon={<Save />}
                   >
