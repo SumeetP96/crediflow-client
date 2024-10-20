@@ -1,7 +1,7 @@
 import { Theme } from '@emotion/react';
 import { createTheme } from '@mui/material';
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { ELocalStorageKeys } from '../helpers/constants';
+import { ELocalStorageKeys } from '../helpers/types';
 import { defaultFontName, defaultThemeName } from './helpers/defaults';
 import { fontTypographyMap } from './helpers/font';
 import { themeConfigMap } from './helpers/theme';

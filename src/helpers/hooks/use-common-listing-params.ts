@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { useCallback, useEffect, useState } from 'react';
-import { defaultPage, defaultPerPage, defaultSortOrder, EQueryParamKeys } from '../constants';
-import { TSortOrder } from '../types';
+import { defaultPage, defaultPerPage, defaultSortOrder } from '../constants';
+import { EQueryParamKeys, TSortOrder } from '../types';
 import useQueryParams from './use-query-params';
 
 interface ListingParams {

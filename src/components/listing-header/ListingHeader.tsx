@@ -16,9 +16,8 @@ import {
 } from '@mui/material';
 import { useMemo, useRef, useState } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
-import { EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { IListingSelectedFilter } from '../../helpers/types';
+import { EQueryParamKeys, IListingSelectedFilter } from '../../helpers/types';
 import useNavigateTo from '../../layouts/hooks/use-navigate-to';
 import ApiErrorAlert from '../alerts/ApiErrorAlert';
 import ButtonMenu from '../button-menu/ButtonMenu';

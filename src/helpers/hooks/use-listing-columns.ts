@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { IDataTableColumn } from '../../components/data-table/types';
-import { EQueryParamKeys } from '../constants';
+import { EQueryParamKeys } from '../types';
 import useQueryParams from './use-query-params';
 
 export default function useListingColumns<T>(columns: IDataTableColumn<T>[]) {

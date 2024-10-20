@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight, FirstPage, LastPage } from '@mui/icons-material';
 import { Box, FormControlLabel, IconButton, Pagination, Switch, Typography } from '@mui/material';
 import { useMemo } from 'react';
-import { defaultPerPageOptions, EQueryParamKeys } from '../../helpers/constants';
+import { defaultPerPageOptions } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
+import { EQueryParamKeys } from '../../helpers/types';
 import DataTableFooterPerPageSelect, {
   IDataTableFooterPerPageSelectProps,
 } from '../data-table-footer-per-page-select/DataTableFooterPerPageSelect';

@@ -6,8 +6,8 @@ import { axiosGet } from '../api/request';
 import { ApiRoutes } from '../api/routes';
 import { QueryKeys } from '../api/types';
 import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
-import { authUserRefetchInterval, ELocalStorageKeys } from '../helpers/constants';
-import { IAuthUser, IUser } from '../helpers/types';
+import { authUserRefetchInterval } from '../helpers/constants';
+import { ELocalStorageKeys, IAuthUser, IUser } from '../helpers/types';
 import { AppRoute } from '../router/helpers';
 
 export interface IAuthContextState {

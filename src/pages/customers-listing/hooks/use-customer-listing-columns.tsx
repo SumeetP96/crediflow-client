@@ -85,7 +85,7 @@ export default function useCustomerListingColumns() {
         },
         render: ({ contactNumbers }) => (
           <Box display="flex" flexDirection="column" justifyContent="center">
-            {contactNumbers.map((number) => (
+            {contactNumbers.map(({ number }) => (
               <Typography key={number} variant="body2">
                 {number}
               </Typography>
@@ -105,7 +105,7 @@ export default function useCustomerListingColumns() {
           <Box display="flex" flexDirection="column" justifyContent="center">
             {addresses.map((address, i) => (
               <Typography key={`${id}-${i}`} variant="body2">
-                {addresses.length > 1 ? '-' : ''} {address}
+                {addresses.length > 1 ? '-' : ''} {address.street1}
               </Typography>
             ))}
           </Box>

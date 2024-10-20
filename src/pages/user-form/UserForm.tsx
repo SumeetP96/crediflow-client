@@ -66,7 +66,7 @@ export default function UserForm() {
 
   return (
     <MastersFormWrapper {...formWrapperProps}>
-      {(form, Field) => (
+      {({ form, field: Field }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>

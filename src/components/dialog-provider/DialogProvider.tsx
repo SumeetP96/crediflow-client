@@ -2,9 +2,12 @@ import { createContext, ReactNode, useCallback, useState } from 'react';
 import ConfirmationDialog, {
   IConfirmationDialogProps,
 } from '../confirmation-dialog/ConfirmationDialog';
+import InformationDialog, {
+  IInformationDialogProps,
+} from '../information-dialog/InformationDialog';
 import { EDialogIds } from './constants';
 
-type TDialogProps = Omit<IConfirmationDialogProps, 'open'>;
+type TDialogProps = Omit<IConfirmationDialogProps | IInformationDialogProps, 'open'>;
 
 export interface IDialogContextState {
   dialogId: EDialogIds | null;
@@ -49,6 +52,8 @@ export default function DialogProvider({ children }: IDialogProviderProps) {
   return (
     <DialogContext.Provider value={{ ...state, ...actions }}>
       <ConfirmationDialog {...dialogProps!} open={dialogId === EDialogIds.CONFIRMATION} />
+
+      <InformationDialog {...dialogProps!} open={dialogId === EDialogIds.INFORMATION} />
 
       {children}
     </DialogContext.Provider>

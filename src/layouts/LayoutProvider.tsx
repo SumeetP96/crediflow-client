@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import DialogProvider from '../components/dialog-provider/DialogProvider';
 import SettingsDrawer from '../components/settings-drawer/SettingsDrawer';
-import { EQueryParamKeys } from '../helpers/constants';
 import useQueryParams from '../helpers/hooks/use-query-params';
+import { EQueryParamKeys } from '../helpers/types';
 import { useCurrentLayout } from './hooks/use-current-layout';
 
 export interface ILayoutProviderProps {

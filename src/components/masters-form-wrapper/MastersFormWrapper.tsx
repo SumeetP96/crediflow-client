@@ -6,6 +6,7 @@ import {
   Grid2,
   Grid2Props,
   Paper,
+  SxProps,
   Typography,
   useMediaQuery,
   useTheme,
@@ -14,8 +15,9 @@ import { FieldComponent, FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
+import { produce } from 'immer';
 import { useSnackbar } from 'notistack';
-import { ReactNode } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { To, useParams } from 'react-router';
 import { axiosDelete, axiosGet, axiosPatch, axiosPost } from '../../api/request';
 import { parseApiErrorResponse } from '../../api/response';
@@ -40,11 +42,18 @@ export interface IDeleteAction extends ICRUDAction {
   dialogBody: string;
 }
 
+export type TCustomErrorMap<FormModel> = Partial<Record<keyof FormModel, string[]>>;
+
+export interface IMasterFormChildrenParams<FormModel> {
+  form: FormApi<FormModel, ZodValidator>;
+  field: FieldComponent<FormModel, ZodValidator>;
+  customFieldErrors: TCustomErrorMap<FormModel>;
+  setCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
+  appendCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
+}
+
 export interface IMastersFormWrapperProps<Model, FormModel> {
-  children?: (
-    form: FormApi<FormModel, ZodValidator>,
-    field: FieldComponent<FormModel, ZodValidator>,
-  ) => ReactNode;
+  children?: (params: IMasterFormChildrenParams<FormModel>) => ReactNode;
   createTitle: string;
   updateTitle: string;
   heading: string;
@@ -56,6 +65,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   deleteRecord: IDeleteAction;
   apiSuccessMessage: (action: TCUDAction) => string;
   successQueryInvalidateKeys: string[];
+  customFieldErrors?: TCustomErrorMap<FormModel>;
   createBtnLabel?: string;
   createBtnLoadingLabel?: string;
   updateBtnLabel?: string;
@@ -63,6 +73,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   deleteBtnLabel?: string;
   resetBtnLabel?: string;
   spacing?: Grid2Props['spacing'];
+  paperSx?: SxProps;
 }
 
 export default function MastersFormWrapper<Model, FormModel>({
@@ -78,6 +89,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   defaultValues,
   apiSuccessMessage,
   successQueryInvalidateKeys,
+  customFieldErrors,
   createBtnLabel = 'Create',
   createBtnLoadingLabel = 'Creating...',
   updateBtnLabel = 'Update',
@@ -85,6 +97,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   deleteBtnLabel = 'Delete',
   resetBtnLabel = 'Cancel',
   spacing = 3,
+  paperSx = {},
 }: IMastersFormWrapperProps<Model, FormModel>) {
   const theme = useTheme();
 
@@ -173,10 +186,54 @@ export default function MastersFormWrapper<Model, FormModel>({
 
   const apiError = findQuery.error || createQuery.error || updateQuery.error;
 
+  const [customFormFieldErrors, setCustomFormFieldErrors] = useState<TCustomErrorMap<FormModel>>(
+    customFieldErrors || ({} as TCustomErrorMap<FormModel>),
+  );
+
+  const updateCustomFieldErrors = useCallback(function <T = FormModel>(
+    field: keyof TCustomErrorMap<T>,
+    errorMessages: string[],
+  ) {
+    setCustomFormFieldErrors(
+      produce((draft: unknown) => {
+        (draft as TCustomErrorMap<T>)[field] = errorMessages;
+      }),
+    );
+  }, []);
+
+  const appendCustomFieldErrors = useCallback(function <T = FormModel>(
+    field: keyof TCustomErrorMap<T>,
+    errorMessages: string[],
+  ) {
+    setCustomFormFieldErrors(
+      produce((draft: unknown) => {
+        (draft as TCustomErrorMap<T>)[field] = (draft as TCustomErrorMap<T>)[field]?.concat(
+          errorMessages,
+        );
+      }),
+    );
+  }, []);
+
+  const hasCustomErrors = useMemo(() => {
+    const normalizedFields = customFormFieldErrors ?? ({} as TCustomErrorMap<FormModel>);
+    const activeError = Object.keys(normalizedFields).find((field) => {
+      if (normalizedFields[field as keyof TCustomErrorMap<FormModel>]?.length) {
+        return true;
+      }
+    });
+    return Boolean(activeError);
+  }, [customFormFieldErrors]);
+
   return (
     <Page title={isUpdateMode ? updateTitle : createTitle}>
       <Paper
-        sx={{ px: { xs: 2, md: 3 }, py: 3, width: { xs: '100%', md: '860px' }, mx: 'auto' }}
+        sx={{
+          px: { xs: 2, md: 3 },
+          py: 3,
+          width: { xs: '100%', md: '860px' },
+          mx: 'auto',
+          ...paperSx,
+        }}
         variant="outlined"
       >
         <form onSubmit={handleFormSubmit}>
@@ -194,7 +251,13 @@ export default function MastersFormWrapper<Model, FormModel>({
             <FormSkeleton rows={6} />
           ) : (
             <Grid2 container spacing={spacing}>
-              {children?.(form, form.Field)}
+              {children?.({
+                form,
+                field: form.Field,
+                customFieldErrors: customFormFieldErrors || ({} as TCustomErrorMap<FormModel>),
+                setCustomFieldErrors: updateCustomFieldErrors,
+                appendCustomFieldErrors,
+              })}
             </Grid2>
           )}
 
@@ -239,7 +302,7 @@ export default function MastersFormWrapper<Model, FormModel>({
                   }}
                 >
                   <Button
-                    disabled={!canSubmit}
+                    disabled={!canSubmit || hasCustomErrors}
                     variant="contained"
                     onClick={() => form.handleSubmit()}
                     disableElevation

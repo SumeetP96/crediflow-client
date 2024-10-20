@@ -16,9 +16,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { ReactNode, useMemo, useState } from 'react';
-import { EQueryParamKeys } from '../../helpers/constants';
 import useQueryParams from '../../helpers/hooks/use-query-params';
-import { TSortOrder } from '../../helpers/types';
+import { EQueryParamKeys, TSortOrder } from '../../helpers/types';
 import DataTableFooter, { IDataTableFooterProps } from '../data-table-footer/DataTableFooter';
 import TableSkeleton from '../skeleton/TableSkeleton';
 import { IDataTableColumn } from './types';
