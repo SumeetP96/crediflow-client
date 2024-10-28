@@ -18,7 +18,7 @@ import MastersFormWrapper, {
   IMastersFormWrapperProps,
 } from '../../components/masters-form-wrapper/MastersFormWrapper';
 import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
-import { TUserStatus } from '../../helpers/types';
+import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { yesNoOptions } from '../../helpers/utils/data-table';
 import { AppRoute } from '../../router/helpers';
 import {
@@ -140,10 +140,11 @@ export default function CustomerForm() {
                     title="Contact Numbers"
                     addButtonTooltip="Add contact number"
                     validationSchema={z.object({
+                      // NOTE: Update in backend too
                       number: z
                         .string()
                         .min(8, 'Enter atleast 8 digits')
-                        .max(10, 'Cannot exceed 10 digits')
+                        .max(15, 'Cannot exceed 15 digits')
                         .optional(),
                       isPrimary: z.boolean(),
                       status: z.enum([
@@ -188,7 +189,8 @@ export default function CustomerForm() {
                     title="Addresses"
                     addButtonTooltip="Add address"
                     validationSchema={z.object({
-                      address: z.string().min(2).max(5).optional(),
+                      // NOTE: Update in backend too
+                      address: z.string().optional(),
                       isPrimary: z.boolean(),
                       status: z.enum([
                         ECustomerAddressStatus.ACTIVE,
@@ -225,9 +227,7 @@ export default function CustomerForm() {
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Field
               name="isReseller"
-              validators={{
-                onChange: z.boolean(),
-              }}
+              validators={{ onChange: z.boolean() }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <FormControl fullWidth error={Boolean(state.meta.errors.length)}>
@@ -259,7 +259,7 @@ export default function CustomerForm() {
             <Field
               name="status"
               validators={{
-                onChange: z.enum(['active', 'in_active'], {
+                onChange: z.enum([ERecordStatus.ACTIVE, ERecordStatus.IN_ACTIVE], {
                   message: 'Invalid status. Expected "Active" or "Inactive"',
                 }),
               }}

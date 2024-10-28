@@ -150,93 +150,96 @@ export default function TextMultiInput<ValueType>({
 
   const handleAddressChange = (index: number, value: string) => {
     initRef.current = true;
-    setInputValues(
-      produce((draft) => {
-        draft[index].address = value;
 
-        const validated = validationSchema.safeParse(draft[index]);
+    const draft = produce(inputValues, (draft) => {
+      draft[index].address = value;
 
-        if (!validated.success) {
-          const errors: ZodIssue[] = JSON.parse(String(validated.error?.message));
+      const validated = validationSchema.safeParse(draft[index]);
 
-          draft[index].errorMap = {
-            ...draft[index].errorMap,
-            ...errors.reduce((acc: Record<string, string>, err) => {
-              acc[err.path[0]] = err.message;
-              return acc;
-            }, {}),
-          };
+      if (!validated.success) {
+        const errors: ZodIssue[] = JSON.parse(String(validated.error?.message));
 
-          updateParentError();
-        } else {
-          draft[index].errorMap = {} as TTextMultiInputErrorMap;
-          clearParentErrors();
-        }
+        draft[index].errorMap = {
+          ...draft[index].errorMap,
+          ...errors.reduce((acc: Record<string, string>, err) => {
+            acc[err.path[0]] = err.message;
+            return acc;
+          }, {}),
+        };
 
-        emitChange(draft);
-      }),
-    );
+        updateParentError();
+      } else {
+        draft[index].errorMap = {} as TTextMultiInputErrorMap;
+        clearParentErrors();
+      }
+    });
+
+    emitChange(draft);
+
+    setInputValues(draft);
   };
 
   const handleContactNumberChange = (index: number, value: string) => {
     initRef.current = true;
-    setInputValues(
-      produce((draft) => {
-        let safeValue: string | undefined = value;
 
-        const transformedValue = type === 'contact-numbers' ? value.trim() : value;
+    const draft = produce(inputValues, (draft) => {
+      let safeValue: string | undefined = value;
 
-        if (transformedValue) {
-          safeValue = transformedValue;
-        }
+      const transformedValue = type === 'contact-numbers' ? value.trim() : value;
 
-        draft[index].number = safeValue;
+      if (transformedValue) {
+        safeValue = transformedValue;
+      }
 
-        const validated = validationSchema.safeParse(draft[index]);
+      draft[index].number = safeValue;
 
-        if (!validated.success) {
-          draft[index].errorMap.number = validated.error.issues[0].message;
-          updateParentError();
-        } else {
-          draft[index].errorMap.number = '';
-          clearParentErrors();
-        }
+      const validated = validationSchema.safeParse(draft[index]);
 
-        emitChange(draft);
-      }),
-    );
+      if (!validated.success) {
+        draft[index].errorMap.number = validated.error.issues[0].message;
+        updateParentError();
+      } else {
+        draft[index].errorMap.number = '';
+        clearParentErrors();
+      }
+    });
+
+    emitChange(draft);
+
+    setInputValues(draft);
   };
 
   const handleStatusChange = (index: number, status: ERecordStatus) => {
     initRef.current = true;
-    setInputValues(
-      produce((draft) => {
-        const input = draft[index];
 
-        if (input.isPrimary && status === ERecordStatus.IN_ACTIVE) {
-          openDialog(EDialogIds.INFORMATION, {
-            title: deactivatePrimaryStatusInfoDialogProps.title || 'Failed to Update Status',
-            body:
-              deactivatePrimaryStatusInfoDialogProps.body ||
-              'Cannot deactivate primary record. Please unset it from primary or assign a different record as primary before performing this action.',
-            acceptLabel: deactivatePrimaryStatusInfoDialogProps.acceptLabel || 'Okay',
-            onClose: () => closeDialog(),
-          });
-          return;
-        }
+    const draft = produce(inputValues, (draft) => {
+      const input = draft[index];
 
-        const validated = validationSchema.safeParse(draft[index]);
-        if (!validated.success) {
-          draft[index].errorMap.status = validated.error.issues[0].message;
-        } else {
-          draft[index].errorMap.status = '';
-        }
+      if (input.isPrimary && status === ERecordStatus.IN_ACTIVE) {
+        openDialog(EDialogIds.INFORMATION, {
+          title: deactivatePrimaryStatusInfoDialogProps.title || 'Failed to Update Status',
+          body:
+            deactivatePrimaryStatusInfoDialogProps.body ||
+            'Cannot deactivate primary record. Please unset it from primary or assign a different record as primary before performing this action.',
+          acceptLabel: deactivatePrimaryStatusInfoDialogProps.acceptLabel || 'Okay',
+          onClose: () => closeDialog(),
+        });
+        return;
+      }
 
-        draft[index].status = status;
+      const validated = validationSchema.safeParse(draft[index]);
+      if (!validated.success) {
+        draft[index].errorMap.status = validated.error.issues[0].message;
+      } else {
+        draft[index].errorMap.status = '';
+      }
 
-        emitChange(draft as TInputValue[]);
-      }),
-    );
+      draft[index].status = status;
+    });
+
+    emitChange(draft);
+
+    setInputValues(draft);
   };
 
   const addInput = () => {
@@ -253,14 +256,17 @@ export default function TextMultiInput<ValueType>({
   };
 
   const removeInput = (index: number) => {
-    setInputValues(
-      produce((draft) => {
-        if (draft.length > 1) {
-          draft.splice(index, 1);
-          emitChange(draft as TInputValue[]);
-        }
-      }),
-    );
+    const draft = produce(inputValues, (draft) => {
+      if (draft.length > 1) {
+        draft.splice(index, 1);
+      }
+    });
+
+    console.log('🚀 ~ draft ~ draft:', draft);
+
+    emitChange(draft);
+
+    setInputValues(draft);
   };
 
   const handleTogglePrimary = (inputValue: TInputValue) => {

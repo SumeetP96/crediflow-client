@@ -16,7 +16,7 @@ import { yesNoOptions, yesNoRender } from '../../../helpers/utils/data-table';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
 import { customerStatusOptions } from '../constants';
-import { TCustomerRecord } from '../types';
+import { ECustomerAddressStatus, ECustomerContactNumberStatus, TCustomerRecord } from '../types';
 
 export default function useCustomerListingColumns() {
   const { navigateTo } = useNavigateTo();
@@ -83,15 +83,20 @@ export default function useCustomerListingColumns() {
           label: 'Contact',
           type: 'text-fuzzy',
         },
-        render: ({ contactNumbers }) => (
-          <Box display="flex" flexDirection="column" justifyContent="center">
-            {contactNumbers.map(({ number }) => (
-              <Typography key={number} variant="body2">
-                {number}
-              </Typography>
-            ))}
-          </Box>
-        ),
+        render: ({ contactNumbers }) => {
+          const activeContacts = contactNumbers.filter(
+            (a) => a.status === ECustomerContactNumberStatus.ACTIVE,
+          );
+          return (
+            <Box display="flex" flexDirection="column" justifyContent="center">
+              {activeContacts.map(({ number }) => (
+                <Typography key={number} variant="body2">
+                  {number}
+                </Typography>
+              ))}
+            </Box>
+          );
+        },
       },
       {
         field: 'addresses',
@@ -101,15 +106,20 @@ export default function useCustomerListingColumns() {
           label: 'Address',
           type: 'text-fuzzy',
         },
-        render: ({ id, addresses }) => (
-          <Box display="flex" flexDirection="column" justifyContent="center">
-            {addresses.map((addressRecord, i) => (
-              <Typography key={`${id}-${i}`} variant="body2">
-                {addresses.length > 1 ? '-' : ''} {addressRecord.address}
-              </Typography>
-            ))}
-          </Box>
-        ),
+        render: ({ id, addresses }) => {
+          const activeAddresses = addresses.filter(
+            (a) => a.status === ECustomerAddressStatus.ACTIVE,
+          );
+          return (
+            <Box display="flex" flexDirection="column" justifyContent="center">
+              {activeAddresses.map((a, i) => (
+                <Typography key={`${id}-${i}`} variant="body2">
+                  {activeAddresses.length > 1 ? '-' : ''} {a.address}
+                </Typography>
+              ))}
+            </Box>
+          );
+        },
       },
       {
         field: 'isReseller',

@@ -55,38 +55,3 @@ export enum ERecordStatus {
   ACTIVE = 'active',
   IN_ACTIVE = 'inactive',
 }
-
-export enum EAddressType {
-  HOME = 'home',
-  WORK = 'work',
-}
-
-export interface ICountry {
-  id: number;
-  name: string;
-  iso3: string;
-  iso2: string;
-  numericCode: string;
-  phoneCode: string;
-  currency: string;
-  currencyName: string;
-  emoji: string;
-  emojiUnicode: string;
-}
-
-export interface IState {
-  id: number;
-  countryId: number;
-  name: string;
-  stateCode: string;
-  country: ICountry;
-}
-
-export interface ICity {
-  id: number;
-  countryId: number;
-  stateId: number;
-  name: string;
-  country: ICountry;
-  state: IState;
-}
