@@ -51,4 +51,9 @@ export enum QueryKeys {
   CUSTOMERS_DELETE = 'customers:delete',
   CUSTOMERS_RESTORE = 'customers:restore',
   CUSTOMERS_OPTIONS = 'customers:options',
+
+  // World
+  GET_COUNTRIES = 'world:countries',
+  GET_STATES = 'world:states',
+  GET_CITIES = 'world:cities',
 }

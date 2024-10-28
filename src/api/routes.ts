@@ -17,4 +17,8 @@ export const ApiRoutes = {
   CUSTOMER_DELETE: (id: number | string) => `/customers/${String(id)}`,
   CUSTOMER_RESTORE: (id: number | string) => `/customers/restore/${String(id)}`,
   CUSTOMER_OPTIONS: '/customers/options',
+
+  WORLD_COUNTRIES: (search?: string) => `/world/countries?search=${search || ''}`,
+  WORLD_STATES: (search?: string) => `/world/states?search=${search || ''}`,
+  WORLD_CITIES: '/world/cities',
 };

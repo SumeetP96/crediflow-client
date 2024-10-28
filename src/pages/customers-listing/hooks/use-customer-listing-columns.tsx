@@ -103,9 +103,9 @@ export default function useCustomerListingColumns() {
         },
         render: ({ id, addresses }) => (
           <Box display="flex" flexDirection="column" justifyContent="center">
-            {addresses.map((address, i) => (
+            {addresses.map((addressRecord, i) => (
               <Typography key={`${id}-${i}`} variant="body2">
-                {addresses.length > 1 ? '-' : ''} {address.street1}
+                {addresses.length > 1 ? '-' : ''} {addressRecord.address}
               </Typography>
             ))}
           </Box>

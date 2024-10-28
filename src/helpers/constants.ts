@@ -17,23 +17,3 @@ export const defaultSortOrder: TSortOrder = 'none';
 export const defaultDateValueFormat = 'YYYY-MM-DD';
 
 export const defaultDateVisibleFormat = 'DD-MM-YYYY';
-
-export enum ELocalStorageKeys {
-  AUTH_USER = 'user-details',
-  THEME = 'mui-theme',
-  FONT = 'mui-font',
-}
-
-export enum EQueryParamKeys {
-  // App
-  SETTINGS_DRAWER = 'settingsDrawer',
-
-  // Data Table
-  IS_DENSE = 'isDense',
-  COLS = 'cols',
-  SEARCH = 'search',
-  PAGE = 'page',
-  PER_PAGE = 'perPage',
-  SORT_BY = 'sortBy',
-  SORT_ORDER = 'sortOrder',
-}

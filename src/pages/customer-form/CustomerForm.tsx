@@ -21,7 +21,11 @@ import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
 import { TUserStatus } from '../../helpers/types';
 import { yesNoOptions } from '../../helpers/utils/data-table';
 import { AppRoute } from '../../router/helpers';
-import { ICustomer } from '../customers-listing/types';
+import {
+  ECustomerAddressStatus,
+  ECustomerContactNumberStatus,
+  ICustomer,
+} from '../customers-listing/types';
 import { customerStatusOptions } from './constants';
 import { IFormCustomer, TCustomerOption } from './types';
 
@@ -62,6 +66,10 @@ export default function CustomerForm() {
       return `Customer ${action.charAt(0).toUpperCase() + action.slice(1)}d successfully`;
     },
     successQueryInvalidateKeys: [QueryKeys.CUSTOMERS_LISTING],
+    customFieldErrors: {
+      contactNumbers: [],
+      addresses: [],
+    },
   };
 
   const optionsQuery = useQuery({
@@ -82,8 +90,12 @@ export default function CustomerForm() {
   }, [optionsData]);
 
   return (
-    <MastersFormWrapper {...formWrapperProps} spacing={4}>
-      {(_, Field) => (
+    <MastersFormWrapper
+      {...formWrapperProps}
+      spacing={4}
+      // paperSx={{ width: { xs: '100%', md: '900px' } }}
+    >
+      {({ field: Field, customFieldErrors, setCustomFieldErrors }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
@@ -120,36 +132,44 @@ export default function CustomerForm() {
           <Grid2 size={12}>
             <Field
               name="contactNumbers"
-              validators={{
-                onChange: z
-                  .array(
-                    z
-                      .string()
-                      .min(8, 'One or more fields have errors')
-                      .max(10, 'One or more fields have errors'),
-                  )
-                  .optional(),
-              }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <TextMultiInput
-                    girdSize={{ xs: 12, md: 6 }}
-                    forceTrim
-                    validationSchema={z
-                      .string()
-                      .min(8, 'Enter atleast 8 digits')
-                      .max(10, 'Cannot exceed 10 digits')
-                      .optional()}
+                    girdSize={{ xs: 12, md: 9 }}
+                    type="contact-numbers"
                     title="Contact Numbers"
                     addButtonTooltip="Add contact number"
-                    value={state.value}
+                    validationSchema={z.object({
+                      number: z
+                        .string()
+                        .min(8, 'Enter atleast 8 digits')
+                        .max(10, 'Cannot exceed 10 digits')
+                        .optional(),
+                      isPrimary: z.boolean(),
+                      status: z.enum([
+                        ECustomerContactNumberStatus.ACTIVE,
+                        ECustomerContactNumberStatus.IN_ACTIVE,
+                      ]),
+                    })}
+                    values={state.value || []}
                     onChange={handleChange}
-                    errors={state.meta.errors}
+                    parentErrors={customFieldErrors.contactNumbers || []}
+                    setParentErrors={(errorMessages) =>
+                      setCustomFieldErrors<IFormCustomer>('contactNumbers', errorMessages)
+                    }
                     textFieldProps={{
                       onBlur: handleBlur,
-                      id: 'contactNumbers',
-                      variant: 'outlined',
-                      placeholder: 'Enter contact number',
+                    }}
+                    deactivatePrimaryStatusInfoDialogProps={{
+                      body: 'Cannot deactivate the primary contact number. Please unset it from primary or assign a different contact number as primary before performing this action.',
+                    }}
+                    inactivePrimarySwitchInfoDialogProps={{
+                      title: 'Failed to update Primary Contact Number',
+                      body: 'Cannot set an inactive number as primary. Please activate the number to set it as primary.',
+                    }}
+                    primaryUpdateConfirmationDialogProps={{
+                      title: 'Update Primary Contact Number',
+                      body: 'Are you sure you want to change the primary contact number?',
                     }}
                   />
                 );
@@ -161,25 +181,39 @@ export default function CustomerForm() {
           <Grid2 size={12}>
             <Field
               name="addresses"
-              validators={{
-                onChange: z.array(z.string()).optional(),
-              }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <TextMultiInput
-                    value={state.value}
-                    onChange={(values) => handleChange(values.filter(Boolean))}
-                    addButtonTooltip="Add address"
-                    validationSchema={z.string().optional()}
+                    type="addresses"
                     title="Addresses"
-                    errors={state.meta.errors}
+                    addButtonTooltip="Add address"
+                    validationSchema={z.object({
+                      address: z.string().min(2).max(5).optional(),
+                      isPrimary: z.boolean(),
+                      status: z.enum([
+                        ECustomerAddressStatus.ACTIVE,
+                        ECustomerAddressStatus.IN_ACTIVE,
+                      ]),
+                    })}
+                    values={state.value || []}
+                    onChange={handleChange}
+                    parentErrors={customFieldErrors.addresses || []}
+                    setParentErrors={(errorMessages) =>
+                      setCustomFieldErrors<IFormCustomer>('addresses', errorMessages)
+                    }
                     textFieldProps={{
                       onBlur: handleBlur,
-                      multiline: true,
-                      maxRows: 3,
-                      id: 'addresses',
-                      variant: 'outlined',
-                      placeholder: 'Enter address',
+                    }}
+                    deactivatePrimaryStatusInfoDialogProps={{
+                      body: 'Cannot deactivate the primary address. Please unset it from primary or assign a different address as primary before performing this action.',
+                    }}
+                    inactivePrimarySwitchInfoDialogProps={{
+                      title: 'Failed to update Primary Address',
+                      body: 'Cannot set an inactive address as primary. Please activate the address to set it as primary.',
+                    }}
+                    primaryUpdateConfirmationDialogProps={{
+                      title: 'Update Primary Address',
+                      body: 'Are you sure you want to change the primary address?',
                     }}
                   />
                 );

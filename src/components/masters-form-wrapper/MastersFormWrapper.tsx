@@ -44,16 +44,18 @@ export interface IDeleteAction extends ICRUDAction {
 
 export type TCustomErrorMap<FormModel> = Partial<Record<keyof FormModel, string[]>>;
 
-export interface IMasterFormChildrenParams<FormModel> {
+export interface IMasterFormChildrenParams<Model, FormModel> {
   form: FormApi<FormModel, ZodValidator>;
   field: FieldComponent<FormModel, ZodValidator>;
   customFieldErrors: TCustomErrorMap<FormModel>;
   setCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
   appendCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
+  isUpdateMode: boolean;
+  findData?: Model;
 }
 
 export interface IMastersFormWrapperProps<Model, FormModel> {
-  children?: (params: IMasterFormChildrenParams<FormModel>) => ReactNode;
+  children?: (params: IMasterFormChildrenParams<Model, FormModel>) => ReactNode;
   createTitle: string;
   updateTitle: string;
   heading: string;
@@ -74,6 +76,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   resetBtnLabel?: string;
   spacing?: Grid2Props['spacing'];
   paperSx?: SxProps;
+  transformValues?: (values: FormModel) => Record<string, any>;
 }
 
 export default function MastersFormWrapper<Model, FormModel>({
@@ -98,6 +101,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   resetBtnLabel = 'Cancel',
   spacing = 3,
   paperSx = {},
+  transformValues,
 }: IMastersFormWrapperProps<Model, FormModel>) {
   const theme = useTheme();
 
@@ -170,10 +174,11 @@ export default function MastersFormWrapper<Model, FormModel>({
   const form = useForm<FormModel, ZodValidator>({
     defaultValues: defaultValues(record),
     onSubmit: async ({ value }) => {
+      const transformedValues = transformValues ? transformValues(value) : value;
       if (isUpdateMode) {
-        await updateQuery.mutateAsync(value);
+        await updateQuery.mutateAsync(transformedValues as FormModel);
       } else {
-        await createQuery.mutateAsync(value);
+        await createQuery.mutateAsync(transformedValues as FormModel);
       }
     },
     validatorAdapter: zodValidator(),
@@ -257,6 +262,8 @@ export default function MastersFormWrapper<Model, FormModel>({
                 customFieldErrors: customFormFieldErrors || ({} as TCustomErrorMap<FormModel>),
                 setCustomFieldErrors: updateCustomFieldErrors,
                 appendCustomFieldErrors,
+                isUpdateMode,
+                findData: findQuery.data?.data,
               })}
             </Grid2>
           )}
