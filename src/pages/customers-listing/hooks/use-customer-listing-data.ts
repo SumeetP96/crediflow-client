@@ -23,6 +23,7 @@ export default function useCustomerListingData() {
     createdAt,
     updatedAt,
     deletedAt,
+    isDeletedShown,
     ...rest
   } = getSearchParams();
 
@@ -46,6 +47,7 @@ export default function useCustomerListingData() {
       createdAt,
       updatedAt,
       deletedAt,
+      isDeletedShown,
     }),
   };
 
@@ -66,6 +68,7 @@ export default function useCustomerListingData() {
     createdAt,
     updatedAt,
     deletedAt,
+    isDeletedShown,
   ];
 
   const query = useQuery({

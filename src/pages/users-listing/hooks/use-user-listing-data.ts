@@ -16,7 +16,8 @@ export default function useUserListingData() {
 
   const { getSearchParams } = useQueryParams();
 
-  const { id, name, username, role, status, createdAt, updatedAt, deletedAt } = getSearchParams();
+  const { id, name, username, role, status, createdAt, updatedAt, deletedAt, isDeletedShown } =
+    getSearchParams();
 
   const { page, perPage, sortBy, sortOrder, search } = useCommonListingParams();
 
@@ -34,6 +35,7 @@ export default function useUserListingData() {
       createdAt,
       updatedAt,
       deletedAt,
+      isDeletedShown,
     }),
   };
 
@@ -52,6 +54,7 @@ export default function useUserListingData() {
     createdAt,
     updatedAt,
     deletedAt,
+    isDeletedShown,
   ];
 
   const query = useQuery({
