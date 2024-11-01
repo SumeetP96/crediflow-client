@@ -1,5 +1,4 @@
 export const urlWithParams = (inputUrl: string, params: Record<string, any>): string => {
-  console.log('🚀 ~ urlWithParams ~ params:', params);
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const safeApiUrl = apiUrl.charAt(apiUrl.length - 1) === '/' ? apiUrl.slice(0, -1) : apiUrl;

@@ -229,6 +229,10 @@ export default function MastersFormWrapper<Model, FormModel>({
     return Boolean(activeError);
   }, [customFormFieldErrors]);
 
+  const submitForm = () => {
+    form.handleSubmit();
+  };
+
   return (
     <Page title={isUpdateMode ? updateTitle : createTitle}>
       <Paper
@@ -311,7 +315,7 @@ export default function MastersFormWrapper<Model, FormModel>({
                   <Button
                     disabled={!canSubmit || hasCustomErrors}
                     variant="contained"
-                    onClick={() => form.handleSubmit()}
+                    onClick={submitForm}
                     disableElevation
                     startIcon={<Save />}
                   >

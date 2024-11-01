@@ -1,7 +1,9 @@
-import { TUserStatus } from '../../helpers/types';
-import { ICustomer, ICustomerAddress, ICustomerContactNumber } from '../customers-listing/types';
-
-export type TCustomerStatus = 'active' | 'in_active';
+import {
+  ICustomer,
+  ICustomerAddress,
+  ICustomerContactNumber,
+  TCustomerStatus,
+} from '../customers-listing/types';
 
 export type TCustomerStatusSelectLabel = 'Active' | 'Inactive';
 
@@ -19,5 +21,5 @@ export interface IFormCustomer {
   addresses?: ICustomerAddress[];
   isReseller: boolean;
   openingBalance?: number;
-  status: TUserStatus;
+  status: TCustomerStatus;
 }

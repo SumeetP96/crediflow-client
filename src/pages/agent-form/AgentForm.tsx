@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
@@ -20,53 +21,51 @@ import MastersFormWrapper, {
 import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { urlWithParams } from '../../helpers/utils/builders';
-import { yesNoOptions } from '../../helpers/utils/data-table';
 import { AppRoute } from '../../router/helpers';
-import {
-  ECustomerAddressStatus,
-  ECustomerContactNumberStatus,
-  ICustomer,
-} from '../customers-listing/types';
-import { customerStatusOptions } from './constants';
-import { IFormCustomer, TCustomerOption } from './types';
+import { IAgent } from '../agents-listing/types';
+import { ECustomerAddressStatus, ECustomerContactNumberStatus } from '../customers-listing/types';
+import { agentStatusOptions } from './constants';
+import { IFormAgent, TAgentOption } from './types';
 
-export default function CustomerForm() {
-  const formWrapperProps: IMastersFormWrapperProps<ICustomer, IFormCustomer> = {
-    createTitle: 'Create New Customer',
-    updateTitle: 'Update Customer',
-    heading: 'Customer Details',
-    fallbackPrevRoute: AppRoute('CUSTOMERS_LIST'),
-    defaultValues: (customer) => ({
-      parentId: customer?.parentId ?? null,
-      name: customer?.name ?? '',
-      contactNumbers: customer?.contactNumbers ?? [],
-      addresses: customer?.addresses ?? [],
-      isReseller: customer?.isReseller ?? false,
-      openingBalance: customer?.openingBalance ?? undefined,
-      status: customer?.status ?? 'active',
+export default function AgentForm() {
+  const params = useParams();
+
+  const id = params.id ? parseInt(params.id, 10) : undefined;
+
+  const formWrapperProps: IMastersFormWrapperProps<IAgent, IFormAgent> = {
+    createTitle: 'Create New Agent',
+    updateTitle: 'Update Agent',
+    heading: 'Agent Details',
+    fallbackPrevRoute: AppRoute('AGENTS_LIST'),
+    defaultValues: (agent) => ({
+      parentId: agent?.parentId ?? null,
+      name: agent?.name ?? '',
+      contactNumbers: agent?.contactNumbers ?? [],
+      addresses: agent?.addresses ?? [],
+      status: agent?.status ?? 'active',
     }),
     readRecord: {
-      key: QueryKeys.CUSTOMERS_BY_ID,
-      apiRoute: (id) => ApiRoutes.CUSTOMER_BY_ID(id),
+      key: QueryKeys.AGENTS_BY_ID,
+      apiRoute: (id) => ApiRoutes.AGENT_BY_ID(id),
     },
     createRecord: {
-      key: QueryKeys.CUSTOMERS_CREATE,
-      apiRoute: () => ApiRoutes.CUSTOMER_CREATE,
+      key: QueryKeys.AGENTS_CREATE,
+      apiRoute: () => ApiRoutes.AGENT_CREATE,
     },
     updateRecord: {
-      key: QueryKeys.CUSTOMERS_UPDATE,
-      apiRoute: (id) => ApiRoutes.CUSTOMER_UPDATE(id),
+      key: QueryKeys.AGENTS_UPDATE,
+      apiRoute: (id) => ApiRoutes.AGENT_UPDATE(id),
     },
     deleteRecord: {
-      key: QueryKeys.CUSTOMERS_DELETE,
-      apiRoute: (id) => ApiRoutes.CUSTOMER_DELETE(id),
-      dialogTitle: 'Delete Customer',
-      dialogBody: 'Are you sure you want to delete this customer?',
+      key: QueryKeys.AGENTS_DELETE,
+      apiRoute: (id) => ApiRoutes.AGENT_DELETE(id),
+      dialogTitle: 'Delete Agent',
+      dialogBody: 'Are you sure you want to delete this agent?',
     },
     apiSuccessMessage: (action) => {
-      return `Customer ${action.charAt(0).toUpperCase() + action.slice(1)}d successfully`;
+      return `Agent ${action.charAt(0).toUpperCase() + action.slice(1)}d successfully`;
     },
-    successQueryInvalidateKeys: [QueryKeys.CUSTOMERS_LISTING],
+    successQueryInvalidateKeys: [QueryKeys.AGENTS_LISTING],
     customFieldErrors: {
       contactNumbers: [],
       addresses: [],
@@ -74,14 +73,14 @@ export default function CustomerForm() {
   };
 
   const optionsQuery = useQuery({
-    queryKey: [QueryKeys.CUSTOMERS_OPTIONS],
-    queryFn: () => axiosGet<TCustomerOption[]>(urlWithParams(ApiRoutes.CUSTOMER_OPTIONS, { id })),
+    queryKey: [QueryKeys.AGENTS_OPTIONS],
+    queryFn: () => axiosGet<TAgentOption[]>(urlWithParams(ApiRoutes.AGENT_OPTIONS, { id })),
     retry: false,
   });
 
   const optionsData = optionsQuery.data?.data;
 
-  const customerOptions = useMemo(() => {
+  const agentOptions = useMemo(() => {
     return optionsData
       ? optionsData.map(({ id, name }) => ({
           value: id,
@@ -115,7 +114,7 @@ export default function CustomerForm() {
                       value={state.value}
                       onChange={(e) => handleChange(e.target.value)}
                       onBlur={handleBlur}
-                      placeholder="Enter name of customer"
+                      placeholder="Enter name of agent"
                       helperText={state.meta.errors.join(', ')}
                       error={Boolean(state.meta.errors.length)}
                     />
@@ -153,7 +152,7 @@ export default function CustomerForm() {
                     onChange={handleChange}
                     parentErrors={customFieldErrors.contactNumbers || []}
                     setParentErrors={(errorMessages) =>
-                      setCustomFieldErrors<IFormCustomer>('contactNumbers', errorMessages)
+                      setCustomFieldErrors<IFormAgent>('contactNumbers', errorMessages)
                     }
                     textFieldProps={{
                       onBlur: handleBlur,
@@ -198,7 +197,7 @@ export default function CustomerForm() {
                     onChange={handleChange}
                     parentErrors={customFieldErrors.addresses || []}
                     setParentErrors={(errorMessages) =>
-                      setCustomFieldErrors<IFormCustomer>('addresses', errorMessages)
+                      setCustomFieldErrors<IFormAgent>('addresses', errorMessages)
                     }
                     textFieldProps={{
                       onBlur: handleBlur,
@@ -220,38 +219,7 @@ export default function CustomerForm() {
             />
           </Grid2>
 
-          {/* Is Reseller */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
-              name="isReseller"
-              validators={{ onChange: z.boolean() }}
-              children={({ state, handleChange, handleBlur }) => {
-                return (
-                  <FormControl fullWidth error={Boolean(state.meta.errors.length)}>
-                    <InputLabel id="role">Is Reseller</InputLabel>
-                    <Select
-                      labelId="isReseller"
-                      id="isReseller"
-                      value={state.value === true ? 'yes' : 'no'}
-                      label="Is Reseller"
-                      onChange={(e) => handleChange(e.target.value === 'yes')}
-                      onBlur={handleBlur}
-                    >
-                      {yesNoOptions.map((opt) => (
-                        <MenuItem key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    {state.meta.errors.length ? (
-                      <FormHelperText>{state.meta.errors.join(', ')}</FormHelperText>
-                    ) : null}
-                  </FormControl>
-                );
-              }}
-            />
-          </Grid2>
-
+          {/* Status */}
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Field
               name="status"
@@ -272,7 +240,7 @@ export default function CustomerForm() {
                       onChange={(e) => handleChange(e.target.value as TUserStatus)}
                       onBlur={handleBlur}
                     >
-                      {customerStatusOptions.map((status) => (
+                      {agentStatusOptions.map((status) => (
                         <MenuItem key={status.value} value={status.value}>
                           {status.label}
                         </MenuItem>
@@ -281,35 +249,6 @@ export default function CustomerForm() {
                     {state.meta.errors.length ? (
                       <FormHelperText>{state.meta.errors.join(', ')}</FormHelperText>
                     ) : null}
-                  </FormControl>
-                );
-              }}
-            />
-          </Grid2>
-
-          {/* Opening Balance */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
-              name="openingBalance"
-              validators={{ onChange: z.number().optional() }}
-              children={({ state, handleChange, handleBlur }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      id="openingBalance"
-                      type="number"
-                      label="Opening Balance"
-                      variant="outlined"
-                      value={state.value ?? ''}
-                      onChange={(e) => {
-                        const { value } = e.target;
-                        handleChange(value ? parseFloat(value) : undefined);
-                      }}
-                      onBlur={handleBlur}
-                      placeholder="Enter opening balance"
-                      helperText={state.meta.errors.join(', ')}
-                      error={Boolean(state.meta.errors.length)}
-                    />
                   </FormControl>
                 );
               }}
@@ -328,11 +267,11 @@ export default function CustomerForm() {
                   <FormControl fullWidth>
                     <Autocomplete
                       id="parentId"
-                      value={customerOptions.find((opt) => opt.value === state.value) ?? null}
-                      options={customerOptions}
+                      value={agentOptions.find((opt) => opt.value === state.value) ?? null}
+                      options={agentOptions}
                       onChange={(_, selection) => handleChange(selection?.value)}
                       onBlur={handleBlur}
-                      renderInput={(params) => <TextField {...params} label="Parent Customer" />}
+                      renderInput={(params) => <TextField {...params} label="Parent Agent" />}
                     />
                   </FormControl>
                 );
