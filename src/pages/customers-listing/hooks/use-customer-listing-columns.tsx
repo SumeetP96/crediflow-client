@@ -78,7 +78,6 @@ export default function useCustomerListingColumns() {
       {
         field: 'contactNumbers',
         title: 'Contact',
-        textAlign: 'center',
         filter: {
           label: 'Contact',
           type: 'text-fuzzy',
@@ -89,11 +88,13 @@ export default function useCustomerListingColumns() {
           );
           return (
             <Box display="flex" flexDirection="column" justifyContent="center">
-              {activeContacts.map(({ number }) => (
-                <Typography key={number} variant="body2">
-                  {number}
-                </Typography>
-              ))}
+              {activeContacts.length
+                ? activeContacts.map(({ number }) => (
+                    <Typography key={number} variant="body2">
+                      {number}
+                    </Typography>
+                  ))
+                : '-'}
             </Box>
           );
         },
@@ -106,17 +107,15 @@ export default function useCustomerListingColumns() {
           label: 'Address',
           type: 'text-fuzzy',
         },
-        render: ({ id, addresses }) => {
+        render: ({ addresses }) => {
           const activeAddresses = addresses.filter(
             (a) => a.status === ECustomerAddressStatus.ACTIVE,
           );
+          const primaryAddress = activeAddresses.find((a) => a.isPrimary);
+          const { address = '' } = primaryAddress || activeAddresses[0] || {};
           return (
             <Box display="flex" flexDirection="column" justifyContent="center">
-              {activeAddresses.map((a, i) => (
-                <Typography key={`${id}-${i}`} variant="body2">
-                  {activeAddresses.length > 1 ? '-' : ''} {a.address}
-                </Typography>
-              ))}
+              {address ? <Typography variant="body2">{address}</Typography> : '-'}
             </Box>
           );
         },
