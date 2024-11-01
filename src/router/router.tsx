@@ -19,7 +19,8 @@ import NotFound from '../pages/not-found/NotFound';
 import Profile from '../pages/profile/Profile';
 import Reports from '../pages/reports/Reports';
 import Settings from '../pages/settings/Settings';
-import TransactionTypes from '../pages/transaction-types/TransactionTypes';
+import TransactionTypeForm from '../pages/transaction-type-form/TransactionTypeForm';
+import TransactionTypesListing from '../pages/transaction-types-listing/TransactionTypesListing';
 import Transactions from '../pages/transactions/Transactions';
 import UserForm from '../pages/user-form/UserForm';
 import UsersListing from '../pages/users-listing/UsersListing';
@@ -123,6 +124,7 @@ export const router = createBrowserRouter([
                 ],
               },
 
+              // Invoice Categories
               {
                 path: EAppRoutes.INVOICE_CATEGORIES,
                 element: (
@@ -147,6 +149,7 @@ export const router = createBrowserRouter([
                 ],
               },
 
+              // Transaction Types
               {
                 path: EAppRoutes.TRANSACTION_TYPES,
                 element: (
@@ -158,16 +161,16 @@ export const router = createBrowserRouter([
                 children: [
                   {
                     path: EAppRoutes.TRANSACTION_TYPES_LIST,
-                    element: <TransactionTypes />,
+                    element: <TransactionTypesListing />,
                   },
-                  // {
-                  //   path: EAppRoutes.TRANSACTION_TYPES_CREATE,
-                  //   element: <AgentForm />,
-                  // },
-                  // {
-                  //   path: EAppRoutes.TRANSACTION_TYPES_UPDATE,
-                  //   element: <AgentForm />,
-                  // },
+                  {
+                    path: EAppRoutes.TRANSACTION_TYPES_CREATE,
+                    element: <TransactionTypeForm />,
+                  },
+                  {
+                    path: EAppRoutes.TRANSACTION_TYPES_UPDATE,
+                    element: <TransactionTypeForm />,
+                  },
                 ],
               },
             ],

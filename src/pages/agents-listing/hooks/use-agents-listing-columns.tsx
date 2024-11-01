@@ -13,7 +13,7 @@ import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
-import { customerStatusOptions } from '../constants';
+import { agentStatusOptions } from '../../agent-form/constants';
 import { EAgentAddressStatus, EAgentContactNumberStatus, TAgentRecord } from '../types';
 
 export default function useCustomerListingColumns() {
@@ -124,9 +124,9 @@ export default function useCustomerListingColumns() {
         filter: {
           label: 'Status',
           type: 'select',
-          selectOptions: customerStatusOptions,
+          selectOptions: agentStatusOptions,
           render: (_, value) => {
-            return (customerStatusOptions.find((opt) => opt.value === value)?.label ||
+            return (agentStatusOptions.find((opt) => opt.value === value)?.label ||
               value) as string;
           },
         },

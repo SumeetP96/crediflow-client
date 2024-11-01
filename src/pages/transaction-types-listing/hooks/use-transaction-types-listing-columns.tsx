@@ -7,21 +7,22 @@ import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import { yesNoOptions, yesNoRender } from '../../../helpers/utils/data-table';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
-import { invoiceCategoryStatusOptions } from '../../invoice-category-form/constants';
-import { TInvoiceCategoryRecord } from '../types';
+import { transactionTypeStatusOptions } from '../constants';
+import { TTransactionTypeRecord } from '../types';
 
-export default function useInvoiceCategoriesListingColumns() {
+export default function useTransactionTypesListingColumns() {
   const { navigateTo } = useNavigateTo();
 
-  const columns: IDataTableColumn<TInvoiceCategoryRecord>[] = useMemo(
+  const columns: IDataTableColumn<TTransactionTypeRecord>[] = useMemo(
     () => [
       {
         field: 'id',
         title: 'ID',
         textAlign: 'right',
         sort: true,
+        width: '100px',
         filter: {
-          label: 'Category ID',
+          label: 'Transaction Type ID',
           type: 'number',
           Icon: <Tag />,
         },
@@ -37,45 +38,16 @@ export default function useInvoiceCategoriesListingColumns() {
         },
       },
       {
-        field: 'prefix',
-        title: 'Prefix',
+        field: 'isDeduction',
+        title: 'Is Deduction',
         sort: true,
         filter: {
-          label: 'Prefix',
-          type: 'text-fuzzy',
-        },
-        render: ({ prefix }) => prefix || '-',
-      },
-      {
-        field: 'suffix',
-        title: 'Suffix',
-        sort: true,
-        filter: {
-          label: 'Suffix',
-          type: 'text-fuzzy',
-        },
-        render: ({ suffix }) => suffix || '-',
-      },
-      {
-        field: 'isAutoIncrement',
-        title: 'Auto Increment',
-        sort: true,
-        filter: {
-          label: 'Auto Increment',
+          label: 'Is Deduction',
           type: 'select',
           selectOptions: yesNoOptions,
           render: (_, value) => yesNoRender(value as string),
         },
-        render: ({ isAutoIncrement }) => (isAutoIncrement ? 'Yes' : 'No'),
-      },
-      {
-        field: 'description',
-        title: 'Description',
-        sort: false,
-        filter: {
-          label: 'Description',
-          type: 'text-fuzzy',
-        },
+        render: ({ isDeduction }) => (isDeduction ? 'Yes' : 'No'),
       },
       {
         field: 'status',
@@ -85,9 +57,9 @@ export default function useInvoiceCategoriesListingColumns() {
         filter: {
           label: 'Status',
           type: 'select',
-          selectOptions: invoiceCategoryStatusOptions,
+          selectOptions: transactionTypeStatusOptions,
           render: (_, value) => {
-            return (invoiceCategoryStatusOptions.find((opt) => opt.value === value)?.label ||
+            return (transactionTypeStatusOptions.find((opt) => opt.value === value)?.label ||
               value) as string;
           },
         },
@@ -127,10 +99,10 @@ export default function useInvoiceCategoriesListingColumns() {
         title: '',
         select: false,
         render: ({ id }) => (
-          <Tooltip title="Edit Invoice Category">
+          <Tooltip title="Edit Transaction Type">
             <IconButton
               size="small"
-              onClick={() => navigateTo(AppRoute('INVOICE_CATEGORIES_UPDATE', id))}
+              onClick={() => navigateTo(AppRoute('TRANSACTION_TYPES_UPDATE', id))}
             >
               <Edit />
             </IconButton>

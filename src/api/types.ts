@@ -67,6 +67,13 @@ export enum QueryKeys {
   INVOICE_CATEGORIES_CREATE = 'invoice_categories:create',
   INVOICE_CATEGORIES_UPDATE = 'invoice_categories:update',
   INVOICE_CATEGORIES_DELETE = 'invoice_categories:delete',
-  INVOICE_CATEGORIES_RESTORE = 'invoice_categories:restore',
   INVOICE_CATEGORIES_OPTIONS = 'invoice_categories:options',
+
+  // Transaction Types
+  TRANSACTION_TYPES_LISTING = 'transaction_types:listing',
+  TRANSACTION_TYPES_BY_ID = 'transaction_types:by_id',
+  TRANSACTION_TYPES_CREATE = 'transaction_types:create',
+  TRANSACTION_TYPES_UPDATE = 'transaction_types:update',
+  TRANSACTION_TYPES_DELETE = 'transaction_types:delete',
+  TRANSACTION_TYPES_OPTIONS = 'transaction_types:options',
 }

@@ -10,9 +10,9 @@ export type TDataTableFilterType =
   | 'date'
   | 'daterange';
 
-export interface IDataTableFilterSelectOption {
-  label: string | null;
-  value: string | number;
+export interface IDataTableFilterSelectOption<Label = string | null, Value = string | number> {
+  label: Label;
+  value: Value;
   [key: string]: unknown;
 }
 

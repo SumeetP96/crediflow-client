@@ -36,4 +36,11 @@ export const ApiRoutes = {
   INVOICE_CATEGORIES_CREATE: '/invoice-categories',
   INVOICE_CATEGORIES_UPDATE: (id: number | string) => `/invoice-categories/${String(id)}`,
   INVOICE_CATEGORIES_DELETE: (id: number | string) => `/invoice-categories/${String(id)}`,
+
+  // Transaction Types
+  TRANSACTION_TYPES_ALL: '/transaction-types',
+  TRANSACTION_TYPES_BY_ID: (id: number | string) => `/transaction-types/${String(id)}`,
+  TRANSACTION_TYPES_CREATE: '/transaction-types',
+  TRANSACTION_TYPES_UPDATE: (id: number | string) => `/transaction-types/${String(id)}`,
+  TRANSACTION_TYPES_DELETE: (id: number | string) => `/transaction-types/${String(id)}`,
 };

@@ -128,6 +128,25 @@ export default function DataTable<T>({
     };
   };
 
+  const generateHeadFlexJustification = (direction?: string) => {
+    switch (direction) {
+      case 'left':
+        return 'flex-start';
+        break;
+
+      case 'center':
+        return 'center';
+        break;
+
+      case 'right':
+        return 'flex-end';
+        break;
+
+      default:
+        return 'flex-start';
+    }
+  };
+
   const renderColumn = (row: T, col: IDataTableColumn<T>) => {
     if (col.render) {
       return col.render(row);
@@ -189,7 +208,12 @@ export default function DataTable<T>({
                     ...col.sx,
                   }}
                 >
-                  <Box display="flex" alignItems="center" gap={1}>
+                  <Box
+                    display="flex"
+                    justifyContent={generateHeadFlexJustification(col.textAlign)}
+                    alignItems="center"
+                    gap={1}
+                  >
                     <Typography variant="subtitle2">{col.title}</Typography>
 
                     {col.sort ? (
