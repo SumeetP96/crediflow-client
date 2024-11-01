@@ -52,6 +52,15 @@ export enum QueryKeys {
   CUSTOMERS_RESTORE = 'customers:restore',
   CUSTOMERS_OPTIONS = 'customers:options',
 
+  // Agents
+  AGENTS_LISTING = 'agents:listing',
+  AGENTS_BY_ID = 'agents:by_id',
+  AGENTS_CREATE = 'agents:create',
+  AGENTS_UPDATE = 'agents:update',
+  AGENTS_DELETE = 'agents:delete',
+  AGENTS_RESTORE = 'agents:restore',
+  AGENTS_OPTIONS = 'agents:options',
+
   // World
   GET_COUNTRIES = 'world:countries',
   GET_STATES = 'world:states',

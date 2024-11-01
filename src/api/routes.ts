@@ -18,6 +18,14 @@ export const ApiRoutes = {
   CUSTOMER_RESTORE: (id: number | string) => `/customers/restore/${String(id)}`,
   CUSTOMER_OPTIONS: '/customers/options',
 
+  AGENT_ALL: '/agents',
+  AGENT_BY_ID: (id: number | string) => `/agents/${String(id)}`,
+  AGENT_CREATE: '/agents',
+  AGENT_UPDATE: (id: number | string) => `/agents/${String(id)}`,
+  AGENT_DELETE: (id: number | string) => `/agents/${String(id)}`,
+  AGENT_RESTORE: (id: number | string) => `/agents/restore/${String(id)}`,
+  AGENT_OPTIONS: '/agents/options',
+
   WORLD_COUNTRIES: (search?: string) => `/world/countries?search=${search || ''}`,
   WORLD_STATES: (search?: string) => `/world/states?search=${search || ''}`,
   WORLD_CITIES: '/world/cities',

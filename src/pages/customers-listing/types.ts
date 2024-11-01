@@ -1,4 +1,5 @@
 import { IDataTableExtraColumns } from '../../components/data-table/types';
+import { IModelCommon } from '../../helpers/types';
 
 export enum ECustomerContactNumberStatus {
   ACTIVE = 'active',
@@ -24,8 +25,7 @@ export interface ICustomerAddress {
 
 export type TCustomerStatus = 'active' | 'in_active';
 
-export interface ICustomer {
-  id: number;
+export interface ICustomer extends IModelCommon {
   parentId: number;
   name: string;
   contactNumbers: ICustomerContactNumber[];
@@ -34,9 +34,6 @@ export interface ICustomer {
   balance: number;
   openingBalance: number;
   status: TCustomerStatus;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
   parent: ICustomer;
 }
 

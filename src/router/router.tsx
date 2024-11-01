@@ -5,7 +5,7 @@ import LoaderFullscreen from '../components/loader-fullscreen/LoaderFullscreen';
 import ProtectedRoutes from '../components/protected-routes/ProtectedRoutes';
 import RouterRedirect from '../components/router-redirect/RouterRedirect';
 import { breadcrumbRoutesId } from '../helpers/constants';
-import Agents from '../pages/agents/Agents';
+import AgentsListing from '../pages/agents-listing/AgentsListing';
 import CustomerForm from '../pages/customer-form/CustomerForm';
 import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
@@ -101,10 +101,18 @@ export const router = createBrowserRouter([
                 ],
               },
 
+              // Agents
               {
                 path: EAppRoutes.AGENTS,
-                element: <Agents />,
+                element: <RouterRedirect from={EAppRoutes.AGENTS} to={EAppRoutes.AGENTS_LIST} />,
+                children: [
+                  {
+                    path: EAppRoutes.AGENTS_LIST,
+                    element: <AgentsListing />,
+                  },
+                ],
               },
+
               {
                 path: EAppRoutes.INVOICE_CATEGORIES,
                 element: <InvoiceCategories />,
