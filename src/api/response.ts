@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { IApiErrorResponse, IFieldError, IParsedApiError } from './types';
 
 export const parseApiErrorObject = (error: any): IApiErrorResponse => {
