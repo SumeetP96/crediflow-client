@@ -11,7 +11,6 @@ import { IDataTableColumn } from '../../../components/data-table/types';
 import { EDialogIds } from '../../../components/dialog-provider/constants';
 import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
-import useListingColumns from '../../../helpers/hooks/use-listing-columns';
 import { yesNoOptions, yesNoRender } from '../../../helpers/utils/data-table';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
@@ -232,11 +231,5 @@ export default function useCustomerListingColumns() {
     [closeDialog, navigateTo, openDialog, restoreQuery],
   );
 
-  const { activeColumns, toggleColumn } = useListingColumns<TCustomerRecord>(columns);
-
-  return {
-    allColumns: columns,
-    activeColumns,
-    toggleColumn,
-  };
+  return { columns };
 }

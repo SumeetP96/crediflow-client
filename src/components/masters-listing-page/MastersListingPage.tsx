@@ -22,7 +22,7 @@ export interface IListingPageProps<RecordType> {
   softDeleteFilter?: boolean;
 }
 
-export default function ListingPage<RecordType>({
+export default function MastersListingPage<RecordType>({
   pageTitle,
   isApiLoading,
   isApiError,

@@ -1,8 +1,6 @@
-import ListingPage from '../../components/listing-page/ListingPage';
+import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
 import useInvoiceCategoriesListingColumns from './hooks/use-invoice-categories-listing-columns';
 import useInvoiceCategoriesListingData from './hooks/use-invoice-categories-listing-data';
-
-const pageTitle = 'Invoice Categories Listing';
 
 export default function InvoiceCategoriesListing() {
   const { query, rows, totalRecords } = useInvoiceCategoriesListingData();
@@ -10,8 +8,8 @@ export default function InvoiceCategoriesListing() {
   const { columns } = useInvoiceCategoriesListingColumns();
 
   return (
-    <ListingPage
-      pageTitle={pageTitle}
+    <MastersListingPage
+      pageTitle="Invoice Categories Listing"
       isApiLoading={query.isLoading}
       isApiError={query.isError}
       rows={rows ?? []}

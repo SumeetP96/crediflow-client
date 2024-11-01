@@ -11,7 +11,6 @@ import { IDataTableColumn } from '../../../components/data-table/types';
 import { EDialogIds } from '../../../components/dialog-provider/constants';
 import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
-import useListingColumns from '../../../helpers/hooks/use-listing-columns';
 import { TListingFilterValue } from '../../../helpers/types';
 import { transformMultiSelectSelectedValue } from '../../../helpers/utils/transformers';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
@@ -200,11 +199,5 @@ export default function useUserListingColumns() {
     [closeDialog, navigateTo, openDialog, restoreQuery],
   );
 
-  const { activeColumns, toggleColumn } = useListingColumns<TUserRecord>(columns);
-
-  return {
-    allColumns: columns,
-    activeColumns,
-    toggleColumn,
-  };
+  return { columns };
 }
