@@ -38,6 +38,27 @@ export const mainMenuLinks: INavLink[] = [
     to: AppRoute('DASHBOARD'),
   },
   {
+    id: 'invoices',
+    icon: <ReceiptLongOutlined />,
+    activeIcon: <ReceiptLong />,
+    label: 'Invoices',
+    to: AppRoute('INVOICES'),
+  },
+  {
+    id: 'transactions',
+    icon: <PaidOutlined />,
+    activeIcon: <Paid />,
+    label: 'Transactions',
+    to: AppRoute('TRANSACTIONS'),
+  },
+  {
+    id: 'reports',
+    icon: <DataUsageOutlined />,
+    activeIcon: <DataUsage />,
+    label: 'Reports',
+    to: AppRoute('REPORTS_HOME'),
+  },
+  {
     id: 'masters',
     icon: <FolderOpenOutlined />,
     activeIcon: <FolderOpen />,
@@ -85,27 +106,6 @@ export const mainMenuLinks: INavLink[] = [
         description: 'Manage transaction types',
       },
     ],
-  },
-  {
-    id: 'invoices',
-    icon: <ReceiptLongOutlined />,
-    activeIcon: <ReceiptLong />,
-    label: 'Invoices',
-    to: AppRoute('INVOICES'),
-  },
-  {
-    id: 'transactions',
-    icon: <PaidOutlined />,
-    activeIcon: <Paid />,
-    label: 'Transactions',
-    to: AppRoute('TRANSACTIONS'),
-  },
-  {
-    id: 'reports',
-    icon: <DataUsageOutlined />,
-    activeIcon: <DataUsage />,
-    label: 'Reports',
-    to: AppRoute('REPORTS_HOME'),
   },
 ];
 

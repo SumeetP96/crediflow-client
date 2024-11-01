@@ -43,4 +43,11 @@ export const ApiRoutes = {
   TRANSACTION_TYPES_CREATE: '/transaction-types',
   TRANSACTION_TYPES_UPDATE: (id: number | string) => `/transaction-types/${String(id)}`,
   TRANSACTION_TYPES_DELETE: (id: number | string) => `/transaction-types/${String(id)}`,
+
+  // Invoices
+  INVOICES_ALL: '/invoices',
+  INVOICES_BY_ID: (id: number | string) => `/invoices/${String(id)}`,
+  INVOICES_CREATE: '/invoices',
+  INVOICES_UPDATE: (id: number | string) => `/invoices/${String(id)}`,
+  INVOICES_DELETE: (id: number | string) => `/invoices/${String(id)}`,
 };

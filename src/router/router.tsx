@@ -12,7 +12,7 @@ import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
 import InvoiceCategoriesListing from '../pages/invoice-categories-listing/InvoiceCategoriesListing';
 import InvoiceCategoryForm from '../pages/invoice-category-form/InvoiceCategoryForm';
-import Invoices from '../pages/invoices/Invoices';
+import InvoicesListing from '../pages/invoices-listing/InvoicesListing';
 import Login from '../pages/login/Login';
 import Masters from '../pages/masters/Masters';
 import NotFound from '../pages/not-found/NotFound';
@@ -175,10 +175,27 @@ export const router = createBrowserRouter([
               },
             ],
           },
+
+          // Invoices
           {
             path: EAppRoutes.INVOICES,
-            element: <Invoices />,
+            element: <RouterRedirect from={EAppRoutes.INVOICES} to={EAppRoutes.INVOICES_LIST} />,
+            children: [
+              {
+                path: EAppRoutes.INVOICES_LIST,
+                element: <InvoicesListing />,
+              },
+              // {
+              //   path: EAppRoutes.TRANSACTION_TYPES_CREATE,
+              //   element: <TransactionTypeForm />,
+              // },
+              // {
+              //   path: EAppRoutes.TRANSACTION_TYPES_UPDATE,
+              //   element: <TransactionTypeForm />,
+              // },
+            ],
           },
+
           {
             path: EAppRoutes.TRANSACTIONS,
             element: <Transactions />,

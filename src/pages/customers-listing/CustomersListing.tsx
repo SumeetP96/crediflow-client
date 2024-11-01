@@ -1,11 +1,11 @@
 import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
-import useCustomerListingColumns from './hooks/use-customer-listing-columns';
-import useCustomerListingData from './hooks/use-customer-listing-data';
+import useCustomersListingColumns from './hooks/use-customers-listing-columns';
+import useCustomersListingData from './hooks/use-customers-listing-data';
 
 export default function CustomersListing() {
-  const { query, rows, totalRecords } = useCustomerListingData();
+  const { query, rows, totalRecords } = useCustomersListingData();
 
-  const { columns } = useCustomerListingColumns();
+  const { columns } = useCustomersListingColumns();
 
   return (
     <MastersListingPage

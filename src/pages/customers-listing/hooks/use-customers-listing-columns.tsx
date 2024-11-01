@@ -17,7 +17,7 @@ import { AppRoute } from '../../../router/helpers';
 import { customerStatusOptions } from '../constants';
 import { ECustomerAddressStatus, ECustomerContactNumberStatus, TCustomerRecord } from '../types';
 
-export default function useCustomerListingColumns() {
+export default function useCustomersListingColumns() {
   const { navigateTo } = useNavigateTo();
 
   const queryClient = useQueryClient();

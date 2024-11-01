@@ -8,7 +8,7 @@ import useQueryParams from '../../../helpers/hooks/use-query-params';
 import { transformToApiQueryParamsObject } from '../../../helpers/utils/transformers';
 import { ICustomersWithCount } from '../types';
 
-export default function useCustomerListingData() {
+export default function useCustomersListingData() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { getSearchParams } = useQueryParams();

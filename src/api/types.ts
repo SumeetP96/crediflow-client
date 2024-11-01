@@ -76,4 +76,11 @@ export enum QueryKeys {
   TRANSACTION_TYPES_UPDATE = 'transaction_types:update',
   TRANSACTION_TYPES_DELETE = 'transaction_types:delete',
   TRANSACTION_TYPES_OPTIONS = 'transaction_types:options',
+
+  // Invoices
+  INVOICES_LISTING = 'invoices:listing',
+  INVOICES_BY_ID = 'invoices:by_id',
+  INVOICES_CREATE = 'invoices:create',
+  INVOICES_UPDATE = 'invoices:update',
+  INVOICES_DELETE = 'invoices:delete',
 }

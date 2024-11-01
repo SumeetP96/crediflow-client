@@ -38,6 +38,9 @@ export enum EAppRoutes {
   TRANSACTION_TYPES_UPDATE = '/masters/transaction-types/update/:id',
 
   INVOICES = '/invoices',
+  INVOICES_LIST = '/invoices/list',
+  INVOICES_CREATE = '/invoices/create',
+  INVOICES_UPDATE = '/invoices/update/:id',
 
   TRANSACTIONS = '/transactions',
 
@@ -186,10 +189,23 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: (id: string | number) => EAppRoutes.TRANSACTION_TYPES_UPDATE.replace(':id', String(id)),
   },
 
+  // Invoices
   INVOICES: {
     isPlaceholder: true,
-    redirectRoute: '',
+    redirectRoute: EAppRoutes.INVOICES_LIST,
     path: EAppRoutes.INVOICES,
+  },
+  INVOICES_LIST: {
+    label: 'Transaction Types',
+    path: EAppRoutes.INVOICES_LIST,
+  },
+  INVOICES_CREATE: {
+    label: 'Create',
+    path: EAppRoutes.INVOICES_CREATE,
+  },
+  INVOICES_UPDATE: {
+    label: 'Update',
+    path: (id: string | number) => EAppRoutes.INVOICES_UPDATE.replace(':id', String(id)),
   },
 
   TRANSACTIONS: {
