@@ -11,7 +11,11 @@ export type TSortOrder = 'asc' | 'desc' | 'none';
 
 export type TUserRole = 'super_admin' | 'admin' | 'employee';
 
+export type TUserRoleLabel = 'Super Admin' | 'Admin' | 'Employee';
+
 export type TUserStatus = 'active' | 'in_active';
+
+export type TUserStatusLabel = 'Active' | 'Inactive';
 
 export interface IUser extends IModelCommon {
   name: string;

@@ -1,13 +1,4 @@
-import { IInvoiceCategory, TInvoiceCategoryeStatus } from '../invoice-categories-listing/types';
-
-export type TInvoiceCategoryStatus = Pick<IInvoiceCategory, 'id' | 'name'>;
-
-export type TInvoiceCategoryStatusSelectLabel = 'Active' | 'Inactive';
-
-export interface IInvoiceCategoryStatusSelectOption {
-  label: TInvoiceCategoryStatusSelectLabel;
-  value: TInvoiceCategoryeStatus;
-}
+import { TInvoiceCategoryeStatus } from '../invoice-categories-listing/types';
 
 export interface IFormInvoiceCategory {
   name: string;

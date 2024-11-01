@@ -25,6 +25,8 @@ export interface ICustomerAddress {
 
 export type TCustomerStatus = 'active' | 'in_active';
 
+export type TCustomerStatusLabel = 'Active' | 'Inactive';
+
 export interface ICustomer extends IModelCommon {
   parentId: number;
   name: string;

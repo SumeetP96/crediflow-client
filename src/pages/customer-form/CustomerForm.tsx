@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useParams } from 'react-router';
 import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
@@ -22,15 +23,19 @@ import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { urlWithParams } from '../../helpers/utils/builders';
 import { yesNoOptions } from '../../helpers/utils/data-table';
 import { AppRoute } from '../../router/helpers';
+import { customerStatusOptions } from '../customers-listing/constants';
 import {
   ECustomerAddressStatus,
   ECustomerContactNumberStatus,
   ICustomer,
 } from '../customers-listing/types';
-import { customerStatusOptions } from './constants';
 import { IFormCustomer, TCustomerOption } from './types';
 
 export default function CustomerForm() {
+  const params = useParams();
+
+  const id = params.id ? parseInt(params.id, 10) : undefined;
+
   const formWrapperProps: IMastersFormWrapperProps<ICustomer, IFormCustomer> = {
     createTitle: 'Create New Customer',
     updateTitle: 'Update Customer',

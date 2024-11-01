@@ -7,7 +7,7 @@ import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import { yesNoOptions, yesNoRender } from '../../../helpers/utils/data-table';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
-import { invoiceCategoryStatusOptions } from '../../invoice-category-form/constants';
+import { invoiceCategoryStatusOptions } from '../constants';
 import { TInvoiceCategoryRecord } from '../types';
 
 export default function useInvoiceCategoriesListingColumns() {

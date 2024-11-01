@@ -13,7 +13,7 @@ import useDialog from '../../../components/dialog-provider/use-dialog';
 import { defaultDateVisibleFormat } from '../../../helpers/constants';
 import useNavigateTo from '../../../layouts/hooks/use-navigate-to';
 import { AppRoute } from '../../../router/helpers';
-import { agentStatusOptions } from '../../agent-form/constants';
+import { agentStatusOptions } from '../constants';
 import { EAgentAddressStatus, EAgentContactNumberStatus, TAgentRecord } from '../types';
 
 export default function useCustomerListingColumns() {

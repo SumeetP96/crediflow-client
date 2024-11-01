@@ -5,13 +5,6 @@ import {
   TCustomerStatus,
 } from '../customers-listing/types';
 
-export type TCustomerStatusSelectLabel = 'Active' | 'Inactive';
-
-export interface ICustomerStatusSelectOption {
-  label: TCustomerStatusSelectLabel;
-  value: TCustomerStatus;
-}
-
 export type TCustomerOption = Pick<ICustomer, 'id' | 'name'>;
 
 export interface IFormCustomer {

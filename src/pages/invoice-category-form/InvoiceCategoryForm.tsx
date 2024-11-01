@@ -15,8 +15,8 @@ import MastersFormWrapper, {
 } from '../../components/masters-form-wrapper/MastersFormWrapper';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/helpers';
+import { invoiceCategoryStatusOptions } from '../invoice-categories-listing/constants';
 import { IInvoiceCategory } from '../invoice-categories-listing/types';
-import { invoiceCategoryStatusOptions } from './constants';
 import { IFormInvoiceCategory } from './types';
 
 export default function InvoiceCategoryForm() {

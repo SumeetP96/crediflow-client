@@ -25,6 +25,8 @@ export interface IAgentAddress {
 
 export type TAgentStatus = 'active' | 'in_active';
 
+export type TAgentStatusLabel = 'Active' | 'Inactive';
+
 export interface IAgent extends IModelCommon {
   parentId: number;
   name: string;

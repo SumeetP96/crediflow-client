@@ -16,7 +16,7 @@ import MastersFormWrapper, {
 } from '../../components/masters-form-wrapper/MastersFormWrapper';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/helpers';
-import { userRoles, userStatus } from './constants';
+import { userRoleOptions, userStatusOptions } from '../users-listing/constants';
 import { IFormUser } from './types';
 import { confirmPasswordSchema, passwordSchema } from './validations';
 
@@ -209,7 +209,7 @@ export default function UserForm() {
                       onChange={(e) => handleChange(e.target.value as TUserRole)}
                       onBlur={handleBlur}
                     >
-                      {userRoles.map((role) => (
+                      {userRoleOptions.map((role) => (
                         <MenuItem key={role.value} value={role.value}>
                           {role.label}
                         </MenuItem>
@@ -245,7 +245,7 @@ export default function UserForm() {
                       onChange={(e) => handleChange(e.target.value as TUserStatus)}
                       onBlur={handleBlur}
                     >
-                      {userStatus.map((status) => (
+                      {userStatusOptions.map((status) => (
                         <MenuItem key={status.value} value={status.value}>
                           {status.label}
                         </MenuItem>

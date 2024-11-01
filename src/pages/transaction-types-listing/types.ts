@@ -3,7 +3,7 @@ import { IModelCommon } from '../../helpers/types';
 
 export type TTransactionTypeStatus = 'active' | 'in_active';
 
-export type TTransactionTypeStatusSelectLabel = 'Active' | 'Inactive';
+export type TTransactionTypeStatusLabel = 'Active' | 'Inactive';
 
 export interface ITransactionType extends IModelCommon {
   name: string;

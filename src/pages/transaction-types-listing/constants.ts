@@ -1,8 +1,8 @@
 import { IDataTableFilterSelectOption } from '../../components/data-table/types';
-import { TTransactionTypeStatus, TTransactionTypeStatusSelectLabel } from './types';
+import { TTransactionTypeStatus, TTransactionTypeStatusLabel } from './types';
 
 export const transactionTypeStatusOptions: IDataTableFilterSelectOption<
-  TTransactionTypeStatusSelectLabel,
+  TTransactionTypeStatusLabel,
   TTransactionTypeStatus
 >[] = [
   { label: 'Active', value: 'active' },

@@ -22,9 +22,9 @@ import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { urlWithParams } from '../../helpers/utils/builders';
 import { AppRoute } from '../../router/helpers';
+import { agentStatusOptions } from '../agents-listing/constants';
 import { IAgent } from '../agents-listing/types';
 import { ECustomerAddressStatus, ECustomerContactNumberStatus } from '../customers-listing/types';
-import { agentStatusOptions } from './constants';
 import { IFormAgent, TAgentOption } from './types';
 
 export default function AgentForm() {

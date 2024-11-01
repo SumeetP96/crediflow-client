@@ -3,6 +3,8 @@ import { IModelCommon } from '../../helpers/types';
 
 export type TInvoiceCategoryeStatus = 'active' | 'in_active';
 
+export type TInvoiceCategoryeStatusLabel = 'Active' | 'Inactive';
+
 export interface IInvoiceCategory extends IModelCommon {
   name: string;
   prefix: string | null;
