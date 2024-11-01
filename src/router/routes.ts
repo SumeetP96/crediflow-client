@@ -28,7 +28,14 @@ export enum EAppRoutes {
   AGENTS_UPDATE = '/masters/agents/update/:id',
 
   INVOICE_CATEGORIES = '/masters/invoice-categories',
+  INVOICE_CATEGORIES_LIST = '/masters/invoice-categories/list',
+  INVOICE_CATEGORIES_CREATE = '/masters/invoice-categories/create',
+  INVOICE_CATEGORIES_UPDATE = '/masters/invoice-categories/update/:id',
+
   TRANSACTION_TYPES = '/masters/transaction-types',
+  TRANSACTION_TYPES_LIST = '/masters/transaction-types/list',
+  TRANSACTION_TYPES_CREATE = '/masters/transaction-types/create',
+  TRANSACTION_TYPES_UPDATE = '/masters/transaction-types/update/:id',
 
   INVOICES = '/invoices',
 
@@ -84,6 +91,7 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: EAppRoutes.MASTERS_HOME,
   },
 
+  // Users
   USERS: {
     isPlaceholder: true,
     redirectRoute: EAppRoutes.USERS_LIST,
@@ -102,6 +110,7 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: (id: string | number) => EAppRoutes.USERS_UPDATE.replace(':id', String(id)),
   },
 
+  // Customers
   CUSTOMERS: {
     isPlaceholder: true,
     redirectRoute: EAppRoutes.CUSTOMERS_LIST,
@@ -120,6 +129,7 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: (id: string | number) => EAppRoutes.CUSTOMERS_UPDATE.replace(':id', String(id)),
   },
 
+  // Agents
   AGENTS: {
     isPlaceholder: true,
     redirectRoute: EAppRoutes.AGENTS_LIST,
@@ -138,15 +148,42 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: (id: string | number) => EAppRoutes.AGENTS_UPDATE.replace(':id', String(id)),
   },
 
+  // Invoice Categories
   INVOICE_CATEGORIES: {
     isPlaceholder: true,
-    redirectRoute: '',
+    redirectRoute: EAppRoutes.INVOICE_CATEGORIES_LIST,
     path: EAppRoutes.INVOICE_CATEGORIES,
   },
+  INVOICE_CATEGORIES_LIST: {
+    label: 'Invoice Categories',
+    path: EAppRoutes.INVOICE_CATEGORIES_LIST,
+  },
+  INVOICE_CATEGORIES_CREATE: {
+    label: 'Create',
+    path: EAppRoutes.INVOICE_CATEGORIES_CREATE,
+  },
+  INVOICE_CATEGORIES_UPDATE: {
+    label: 'Update',
+    path: (id: string | number) => EAppRoutes.INVOICE_CATEGORIES_UPDATE.replace(':id', String(id)),
+  },
+
+  // Transaction Types
   TRANSACTION_TYPES: {
     isPlaceholder: true,
-    redirectRoute: '',
+    redirectRoute: EAppRoutes.TRANSACTION_TYPES_LIST,
     path: EAppRoutes.TRANSACTION_TYPES,
+  },
+  TRANSACTION_TYPES_LIST: {
+    label: 'Transaction Types',
+    path: EAppRoutes.TRANSACTION_TYPES_LIST,
+  },
+  TRANSACTION_TYPES_CREATE: {
+    label: 'Create',
+    path: EAppRoutes.TRANSACTION_TYPES_CREATE,
+  },
+  TRANSACTION_TYPES_UPDATE: {
+    label: 'Update',
+    path: (id: string | number) => EAppRoutes.TRANSACTION_TYPES_UPDATE.replace(':id', String(id)),
   },
 
   INVOICES: {

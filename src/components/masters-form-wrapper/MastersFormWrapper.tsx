@@ -169,6 +169,10 @@ export default function MastersFormWrapper<Model, FormModel>({
       return await axiosDelete(deleteRecord.apiRoute(id as number));
     },
     onSuccess: () => handleCUDApiSuccess('delete'),
+    onError: (error: AxiosError) => {
+      const { message } = parseApiErrorResponse(error);
+      enqueueSnackbar(message, { variant: 'error' });
+    },
   });
 
   const form = useForm<FormModel, ZodValidator>({

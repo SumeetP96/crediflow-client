@@ -10,7 +10,8 @@ import AgentsListing from '../pages/agents-listing/AgentsListing';
 import CustomerForm from '../pages/customer-form/CustomerForm';
 import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
-import InvoiceCategories from '../pages/invoice-categories/InvoiceCategories';
+import InvoiceCategoriesListing from '../pages/invoice-categories-listing/InvoiceCategoriesListing';
+import InvoiceCategoryForm from '../pages/invoice-category-form/InvoiceCategoryForm';
 import Invoices from '../pages/invoices/Invoices';
 import Login from '../pages/login/Login';
 import Masters from '../pages/masters/Masters';
@@ -124,11 +125,50 @@ export const router = createBrowserRouter([
 
               {
                 path: EAppRoutes.INVOICE_CATEGORIES,
-                element: <InvoiceCategories />,
+                element: (
+                  <RouterRedirect
+                    from={EAppRoutes.INVOICE_CATEGORIES}
+                    to={EAppRoutes.INVOICE_CATEGORIES_LIST}
+                  />
+                ),
+                children: [
+                  {
+                    path: EAppRoutes.INVOICE_CATEGORIES_LIST,
+                    element: <InvoiceCategoriesListing />,
+                  },
+                  {
+                    path: EAppRoutes.INVOICE_CATEGORIES_CREATE,
+                    element: <InvoiceCategoryForm />,
+                  },
+                  {
+                    path: EAppRoutes.INVOICE_CATEGORIES_UPDATE,
+                    element: <InvoiceCategoryForm />,
+                  },
+                ],
               },
+
               {
                 path: EAppRoutes.TRANSACTION_TYPES,
-                element: <TransactionTypes />,
+                element: (
+                  <RouterRedirect
+                    from={EAppRoutes.TRANSACTION_TYPES}
+                    to={EAppRoutes.TRANSACTION_TYPES_LIST}
+                  />
+                ),
+                children: [
+                  {
+                    path: EAppRoutes.TRANSACTION_TYPES_LIST,
+                    element: <TransactionTypes />,
+                  },
+                  // {
+                  //   path: EAppRoutes.TRANSACTION_TYPES_CREATE,
+                  //   element: <AgentForm />,
+                  // },
+                  // {
+                  //   path: EAppRoutes.TRANSACTION_TYPES_UPDATE,
+                  //   element: <AgentForm />,
+                  // },
+                ],
               },
             ],
           },

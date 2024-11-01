@@ -61,8 +61,12 @@ export enum QueryKeys {
   AGENTS_RESTORE = 'agents:restore',
   AGENTS_OPTIONS = 'agents:options',
 
-  // World
-  GET_COUNTRIES = 'world:countries',
-  GET_STATES = 'world:states',
-  GET_CITIES = 'world:cities',
+  // Invoice Categories
+  INVOICE_CATEGORIES_LISTING = 'invoice_categories:listing',
+  INVOICE_CATEGORIES_BY_ID = 'invoice_categories:by_id',
+  INVOICE_CATEGORIES_CREATE = 'invoice_categories:create',
+  INVOICE_CATEGORIES_UPDATE = 'invoice_categories:update',
+  INVOICE_CATEGORIES_DELETE = 'invoice_categories:delete',
+  INVOICE_CATEGORIES_RESTORE = 'invoice_categories:restore',
+  INVOICE_CATEGORIES_OPTIONS = 'invoice_categories:options',
 }
