@@ -1,4 +1,5 @@
-import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
+import ListingPage from '../../components/listing-page/ListingPage';
+import { AppRoute } from '../../router/helpers';
 import useUserListingColumns from './hooks/use-user-listing-columns';
 import useUserListingData from './hooks/use-user-listing-data';
 
@@ -8,7 +9,7 @@ export default function UsersListing() {
   const { columns } = useUserListingColumns();
 
   return (
-    <MastersListingPage
+    <ListingPage
       pageTitle="Users Listing"
       isApiLoading={query.isLoading}
       isApiError={query.isError}
@@ -16,6 +17,7 @@ export default function UsersListing() {
       totalRecords={totalRecords}
       columns={columns}
       softDeleteFilter={false}
+      newRecordRoute={AppRoute('USERS_CREATE')}
     />
   );
 }

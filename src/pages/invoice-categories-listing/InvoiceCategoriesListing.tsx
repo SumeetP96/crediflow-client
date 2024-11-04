@@ -1,4 +1,4 @@
-import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
+import ListingPage from '../../components/listing-page/ListingPage';
 import { AppRoute } from '../../router/helpers';
 import useInvoiceCategoriesListingColumns from './hooks/use-invoice-categories-listing-columns';
 import useInvoiceCategoriesListingData from './hooks/use-invoice-categories-listing-data';
@@ -9,7 +9,7 @@ export default function InvoiceCategoriesListing() {
   const { columns } = useInvoiceCategoriesListingColumns();
 
   return (
-    <MastersListingPage
+    <ListingPage
       pageTitle="Invoice Categories Listing"
       isApiLoading={query.isLoading}
       isApiError={query.isError}

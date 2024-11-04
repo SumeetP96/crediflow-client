@@ -1,4 +1,5 @@
-import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
+import ListingPage from '../../components/listing-page/ListingPage';
+import { AppRoute } from '../../router/helpers';
 import useTransactionTypesListingColumns from './hooks/use-transaction-types-listing-columns';
 import useTransactionTypesListingData from './hooks/use-transaction-types-listing-data';
 
@@ -8,7 +9,7 @@ export default function TransactionTypesListing() {
   const { columns } = useTransactionTypesListingColumns();
 
   return (
-    <MastersListingPage
+    <ListingPage
       pageTitle="Transaction Types Listing"
       isApiLoading={query.isLoading}
       isApiError={query.isError}
@@ -16,6 +17,7 @@ export default function TransactionTypesListing() {
       totalRecords={totalRecords}
       columns={columns}
       softDeleteFilter={false}
+      newRecordRoute={AppRoute('TRANSACTION_TYPES_CREATE')}
     />
   );
 }

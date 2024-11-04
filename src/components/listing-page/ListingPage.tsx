@@ -22,7 +22,7 @@ export interface IListingPageProps<RecordType> {
   newRecordRoute: string;
 }
 
-export default function MastersListingPage<RecordType>({
+export default function ListingPage<RecordType>({
   pageTitle,
   isApiLoading,
   isApiError,
