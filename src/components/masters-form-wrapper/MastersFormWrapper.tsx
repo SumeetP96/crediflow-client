@@ -64,7 +64,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   readRecord: ICRUDAction;
   createRecord: ICRUDAction;
   updateRecord: ICRUDAction;
-  deleteRecord: IDeleteAction;
+  deleteRecord?: IDeleteAction;
   apiSuccessMessage: (action: TCUDAction) => string;
   successQueryInvalidateKeys: string[];
   customFieldErrors?: TCustomErrorMap<FormModel>;
@@ -88,7 +88,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   readRecord,
   createRecord,
   updateRecord,
-  deleteRecord,
+  deleteRecord = { key: '', apiRoute: () => '', dialogTitle: '', dialogBody: '' },
   defaultValues,
   apiSuccessMessage,
   successQueryInvalidateKeys,
@@ -283,7 +283,7 @@ export default function MastersFormWrapper<Model, FormModel>({
               justifyContent: isUpdateMode ? 'space-between' : 'flex-end',
             }}
           >
-            {isUpdateMode ? (
+            {isUpdateMode && deleteRecord.key ? (
               <>
                 <Button
                   variant="outlined"

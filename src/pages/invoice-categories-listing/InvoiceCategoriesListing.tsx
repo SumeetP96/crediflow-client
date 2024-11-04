@@ -1,4 +1,5 @@
 import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
+import { AppRoute } from '../../router/helpers';
 import useInvoiceCategoriesListingColumns from './hooks/use-invoice-categories-listing-columns';
 import useInvoiceCategoriesListingData from './hooks/use-invoice-categories-listing-data';
 
@@ -16,6 +17,7 @@ export default function InvoiceCategoriesListing() {
       totalRecords={totalRecords}
       columns={columns}
       softDeleteFilter={false}
+      newRecordRoute={AppRoute('INVOICE_CATEGORIES_CREATE')}
     />
   );
 }

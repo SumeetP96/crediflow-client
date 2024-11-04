@@ -12,6 +12,7 @@ import CustomersListing from '../pages/customers-listing/CustomersListing';
 import Dashboard from '../pages/dashboard/Dashboard';
 import InvoiceCategoriesListing from '../pages/invoice-categories-listing/InvoiceCategoriesListing';
 import InvoiceCategoryForm from '../pages/invoice-category-form/InvoiceCategoryForm';
+import InvoiceForm from '../pages/invoice-form/InvoiceForm';
 import InvoicesListing from '../pages/invoices-listing/InvoicesListing';
 import Login from '../pages/login/Login';
 import Masters from '../pages/masters/Masters';
@@ -185,14 +186,14 @@ export const router = createBrowserRouter([
                 path: EAppRoutes.INVOICES_LIST,
                 element: <InvoicesListing />,
               },
-              // {
-              //   path: EAppRoutes.TRANSACTION_TYPES_CREATE,
-              //   element: <TransactionTypeForm />,
-              // },
-              // {
-              //   path: EAppRoutes.TRANSACTION_TYPES_UPDATE,
-              //   element: <TransactionTypeForm />,
-              // },
+              {
+                path: EAppRoutes.INVOICES_CREATE,
+                element: <InvoiceForm />,
+              },
+              {
+                path: EAppRoutes.INVOICES_UPDATE,
+                element: <InvoiceForm />,
+              },
             ],
           },
 

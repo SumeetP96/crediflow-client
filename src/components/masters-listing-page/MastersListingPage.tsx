@@ -5,7 +5,6 @@ import useListingColumns from '../../helpers/hooks/use-listing-columns';
 import useQueryParams from '../../helpers/hooks/use-query-params';
 import { EQueryParamKeys } from '../../helpers/types';
 import { showDeletedFilter } from '../../helpers/utils/data-table';
-import { AppRoute } from '../../router/helpers';
 import DataTable from '../data-table/DataTable';
 import { IDataTableColumn, IDataTableFilter } from '../data-table/types';
 import ListingHeader from '../listing-header/ListingHeader';
@@ -20,6 +19,7 @@ export interface IListingPageProps<RecordType> {
   columns: IDataTableColumn<RecordType>[];
   keyField?: keyof RecordType;
   softDeleteFilter?: boolean;
+  newRecordRoute: string;
 }
 
 export default function MastersListingPage<RecordType>({
@@ -31,6 +31,7 @@ export default function MastersListingPage<RecordType>({
   totalRecords,
   keyField = 'id' as keyof RecordType,
   softDeleteFilter = true,
+  newRecordRoute,
 }: IListingPageProps<RecordType>) {
   const { setSearchParams } = useQueryParams();
 
@@ -53,7 +54,7 @@ export default function MastersListingPage<RecordType>({
           filters={additionalFilters}
           selectedColumns={activeColumns}
           onToggleColumn={toggleColumn}
-          newRecordRoute={AppRoute('INVOICE_CATEGORIES_CREATE')}
+          newRecordRoute={newRecordRoute}
         />
 
         <DataTable

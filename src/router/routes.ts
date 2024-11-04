@@ -196,7 +196,7 @@ export const AppRoutesForBreadcrumbs: TAppRoutesMap = {
     path: EAppRoutes.INVOICES,
   },
   INVOICES_LIST: {
-    label: 'Transaction Types',
+    label: 'Invoices',
     path: EAppRoutes.INVOICES_LIST,
   },
   INVOICES_CREATE: {

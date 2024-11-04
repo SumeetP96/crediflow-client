@@ -1,4 +1,5 @@
 import MastersListingPage from '../../components/masters-listing-page/MastersListingPage';
+import { AppRoute } from '../../router/helpers';
 import useCustomersListingColumns from './hooks/use-customers-listing-columns';
 import useCustomersListingData from './hooks/use-customers-listing-data';
 
@@ -16,6 +17,7 @@ export default function CustomersListing() {
       totalRecords={totalRecords}
       columns={columns}
       softDeleteFilter={false}
+      newRecordRoute={AppRoute('CUSTOMERS_CREATE')}
     />
   );
 }

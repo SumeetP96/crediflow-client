@@ -1,5 +1,6 @@
 import { IDataTableExtraColumns } from '../../components/data-table/types';
 import { IModelCommon, IUser } from '../../helpers/types';
+import { IAgent } from '../agents-listing/types';
 import { ICustomer } from '../customers-listing/types';
 import { IInvoiceCategory } from '../invoice-categories-listing/types';
 
@@ -23,11 +24,24 @@ export interface IInvoice extends IModelCommon {
   balance: number;
   dueDate: string;
   status: EInvoiceStatus;
+  remarks: string | null;
 
   // Relations
   invoiceCategory: IInvoiceCategory;
   customer: ICustomer;
   user: IUser;
+  invoiceRelations: IInvoiceRelation[];
+}
+
+export interface IInvoiceRelation extends IModelCommon {
+  invoiceId: number;
+  customerId: number | null;
+  agentId: number | null;
+
+  // Relations
+  invoice: IInvoice;
+  customer: ICustomer;
+  agent: IAgent;
 }
 
 export type TInvoiceRecord = IInvoice & IDataTableExtraColumns;
