@@ -95,11 +95,11 @@ export default function CustomerForm() {
 
   return (
     <FormWrapper {...formWrapperProps} spacing={4}>
-      {({ field: Field, customFieldErrors, setCustomFieldErrors }) => (
+      {({ form, customFieldErrors, setCustomFieldErrors }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="name"
               validators={{
                 onChange: z
@@ -130,7 +130,7 @@ export default function CustomerForm() {
 
           {/* Contact Numbers */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="contactNumbers"
               children={({ state, handleChange, handleBlur }) => {
                 return (
@@ -180,7 +180,7 @@ export default function CustomerForm() {
 
           {/* Addresses */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="addresses"
               children={({ state, handleChange, handleBlur }) => {
                 return (
@@ -225,7 +225,7 @@ export default function CustomerForm() {
 
           {/* Is Reseller */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="isReseller"
               validators={{ onChange: z.boolean() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -256,7 +256,7 @@ export default function CustomerForm() {
           </Grid2>
 
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="status"
               validators={{
                 onChange: z.enum([ERecordStatus.ACTIVE, ERecordStatus.IN_ACTIVE], {
@@ -292,7 +292,7 @@ export default function CustomerForm() {
 
           {/* Opening Balance */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="openingBalance"
               validators={{ onChange: z.number().optional() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -321,7 +321,7 @@ export default function CustomerForm() {
 
           {/* Parent */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="parentId"
               validators={{
                 onChange: z.number().nullable(),

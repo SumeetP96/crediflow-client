@@ -57,11 +57,11 @@ export default function InvoiceCategoryForm() {
 
   return (
     <FormWrapper {...formWrapperProps} spacing={4}>
-      {({ field: Field }) => (
+      {({ form }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="name"
               validators={{
                 onChange: z
@@ -92,7 +92,7 @@ export default function InvoiceCategoryForm() {
 
           {/* Prefix */}
           <Grid2 size={6}>
-            <Field
+            <form.Field
               name="prefix"
               validators={{
                 onChange: z.string().max(10, 'Prefix cannot exceed 10 characters').optional(),
@@ -119,7 +119,7 @@ export default function InvoiceCategoryForm() {
 
           {/* Suffix */}
           <Grid2 size={6}>
-            <Field
+            <form.Field
               name="suffix"
               validators={{
                 onChange: z.string().max(10, 'Suffix cannot exceed 10 characters').optional(),
@@ -146,7 +146,7 @@ export default function InvoiceCategoryForm() {
 
           {/* Auto Increment */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="isAutoIncrement"
               validators={{
                 onChange: z.boolean(),
@@ -177,7 +177,7 @@ export default function InvoiceCategoryForm() {
 
           {/* Status */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="status"
               validators={{
                 onChange: z.enum([ERecordStatus.ACTIVE, ERecordStatus.IN_ACTIVE], {
@@ -212,7 +212,7 @@ export default function InvoiceCategoryForm() {
           </Grid2>
 
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="description"
               validators={{ onChange: z.string().optional() }}
               children={({ state, handleChange, handleBlur }) => {

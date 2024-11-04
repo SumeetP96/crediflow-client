@@ -5,19 +5,23 @@ import { useInvoiceFormStore } from '../store';
 import { EInvoiceRelation, IInvoiceRelationValue } from '../types';
 
 export interface IInvoiceRelationsInputProps {
+  disabled: boolean;
   type: EInvoiceRelation;
   index: number;
   invoiceRelationValue: IInvoiceRelationValue;
   label: string;
   removeTooltipText: string;
+  invoiceCustomerId?: number;
 }
 
 export default function InvoiceRelationsInput({
+  disabled,
   type,
   index,
   invoiceRelationValue,
   label,
   removeTooltipText,
+  invoiceCustomerId,
 }: IInvoiceRelationsInputProps) {
   const { customerOptions, agentOptions, invoiceRelations, addRelation, removeRelation } =
     useInvoiceFormStore();
@@ -30,17 +34,24 @@ export default function InvoiceRelationsInput({
   const options = optionMap[type];
 
   const availableOptions = useMemo(() => {
-    return options.filter(
+    const filteredOptions = options.filter(
       (option) =>
         option.value === invoiceRelationValue.id ||
         !invoiceRelations[type].find((rel) => rel.id === option.value),
     );
-  }, [invoiceRelationValue.id, invoiceRelations, options, type]);
+
+    if (invoiceCustomerId) {
+      return filteredOptions.filter((option) => option.value !== invoiceCustomerId);
+    }
+
+    return filteredOptions;
+  }, [invoiceCustomerId, invoiceRelationValue.id, invoiceRelations, options, type]);
 
   return (
     <Box mt={2} display="flex" alignItems="center" gap={1} width="100%">
       <Autocomplete
         id={`${type}-${invoiceRelationValue.id}`}
+        disabled={disabled}
         value={availableOptions.find((opt) => opt.value === invoiceRelationValue.id) ?? null}
         options={availableOptions}
         onChange={(_, selection) => addRelation(type, index, selection?.value as number)}
@@ -49,15 +60,18 @@ export default function InvoiceRelationsInput({
       />
 
       <Tooltip title={removeTooltipText}>
-        <Button
-          disableElevation
-          size="large"
-          color="error"
-          onClick={() => removeRelation(type, invoiceRelationValue.id)}
-          sx={{ minWidth: '40px', px: 0 }}
-        >
-          <RemoveCircleOutline />
-        </Button>
+        <span>
+          <Button
+            disableElevation
+            disabled={disabled}
+            size="large"
+            color="error"
+            onClick={() => removeRelation(type, invoiceRelationValue.id)}
+            sx={{ minWidth: '40px', px: 0 }}
+          >
+            <RemoveCircleOutline />
+          </Button>
+        </span>
       </Tooltip>
     </Box>
   );

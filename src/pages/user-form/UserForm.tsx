@@ -64,11 +64,11 @@ export default function UserForm() {
 
   return (
     <FormWrapper {...formWrapperProps}>
-      {({ form, field: Field }) => (
+      {({ form }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="name"
               validators={{
                 onChange: z
@@ -99,7 +99,7 @@ export default function UserForm() {
 
           {/* Username */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="username"
               validators={{
                 onChange: z
@@ -130,7 +130,7 @@ export default function UserForm() {
 
           {/* Password */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="password"
               validators={{
                 onChange: isUpdateMode ? passwordSchema(form).update : passwordSchema(form).create,
@@ -158,7 +158,7 @@ export default function UserForm() {
 
           {/* Confirm Password */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="confirmPassword"
               validators={{
                 onChange: isUpdateMode
@@ -188,7 +188,7 @@ export default function UserForm() {
 
           {/* Role */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="role"
               validators={{
                 onChange: z.enum(['super_admin', 'admin', 'employee'], {
@@ -224,7 +224,7 @@ export default function UserForm() {
 
           {/* Status */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="status"
               validators={{
                 onChange: z.enum(['active', 'in_active'], {

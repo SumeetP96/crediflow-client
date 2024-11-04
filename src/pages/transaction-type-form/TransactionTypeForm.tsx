@@ -55,11 +55,11 @@ export default function TransactionTypeForm() {
 
   return (
     <FormWrapper {...formWrapperProps} spacing={4}>
-      {({ field: Field }) => (
+      {({ form }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="name"
               validators={{
                 onChange: z
@@ -90,7 +90,7 @@ export default function TransactionTypeForm() {
 
           {/* Is Deduction */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="isDeduction"
               validators={{ onChange: z.boolean() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -119,7 +119,7 @@ export default function TransactionTypeForm() {
 
           {/* Status */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="status"
               validators={{
                 onChange: z.enum([ERecordStatus.ACTIVE, ERecordStatus.IN_ACTIVE], {
@@ -154,7 +154,7 @@ export default function TransactionTypeForm() {
           </Grid2>
 
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="description"
               validators={{ onChange: z.string().optional() }}
               children={({ state, handleChange, handleBlur }) => {

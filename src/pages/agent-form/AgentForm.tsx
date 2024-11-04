@@ -89,11 +89,11 @@ export default function AgentForm() {
 
   return (
     <FormWrapper {...formWrapperProps} spacing={4}>
-      {({ field: Field, customFieldErrors, setCustomFieldErrors }) => (
+      {({ form, customFieldErrors, setCustomFieldErrors }) => (
         <>
           {/* Name */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="name"
               validators={{
                 onChange: z
@@ -124,7 +124,7 @@ export default function AgentForm() {
 
           {/* Contact Numbers */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="contactNumbers"
               children={({ state, handleChange, handleBlur }) => {
                 return (
@@ -174,7 +174,7 @@ export default function AgentForm() {
 
           {/* Addresses */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="addresses"
               children={({ state, handleChange, handleBlur }) => {
                 return (
@@ -219,7 +219,7 @@ export default function AgentForm() {
 
           {/* Status */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="status"
               validators={{
                 onChange: z.enum([ERecordStatus.ACTIVE, ERecordStatus.IN_ACTIVE], {
@@ -255,7 +255,7 @@ export default function AgentForm() {
 
           {/* Parent */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="parentId"
               validators={{
                 onChange: z.number().nullable(),

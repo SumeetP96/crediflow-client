@@ -113,11 +113,11 @@ export default function InvoiceForm() {
         width: { xs: '100%' },
       }}
     >
-      {({ field: Field }) => (
+      {({ form }) => (
         <>
           {/* Invoice Category */}
           <Grid2 size={{ xs: 12, md: 6 }}>
-            <Field
+            <form.Field
               name="invoiceCategoryId"
               validators={{ onChange: z.number() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -142,7 +142,7 @@ export default function InvoiceForm() {
 
           {/* Invoice Number */}
           <Grid2 size={{ xs: 12, md: 3 }}>
-            <Field
+            <form.Field
               name="invoiceNumber"
               validators={{ onChange: z.string() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -167,7 +167,7 @@ export default function InvoiceForm() {
 
           {/* Date */}
           <Grid2 size={{ xs: 12, md: 3 }}>
-            <Field
+            <form.Field
               name="date"
               validators={{ onChange: z.string() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -192,7 +192,7 @@ export default function InvoiceForm() {
 
           {/* Customer */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="customerId"
               validators={{ onChange: z.number() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -220,7 +220,7 @@ export default function InvoiceForm() {
 
           {/* Remarks */}
           <Grid2 size={12}>
-            <Field
+            <form.Field
               name="remarks"
               validators={{ onChange: z.string().optional() }}
               children={({ state, handleChange, handleBlur }) => {
@@ -255,25 +255,33 @@ export default function InvoiceForm() {
               Invoice Relations
             </Typography>
 
-            <Grid2 container spacing={3}>
-              {/* Customer */}
-              <InvoiceRelations
-                type={EInvoiceRelation.CUSTOMERS}
-                inputLabel="Customer"
-                addButtonLabel="Add Customer"
-                addTooltip="Add customer relation to invoice"
-                removeTooltip="Remove customer relation from invoice"
-              />
+            <form.Subscribe
+              selector={(state) => [state.values.customerId]}
+              children={([customerId]) => (
+                <Grid2 container spacing={3}>
+                  {/* Customer */}
+                  <InvoiceRelations
+                    disabled={!customerId}
+                    type={EInvoiceRelation.CUSTOMERS}
+                    inputLabel="Customer"
+                    addButtonLabel="Add Customer"
+                    addTooltip="Add customer relation to invoice"
+                    removeTooltip="Remove customer relation from invoice"
+                    invoiceCustomerId={customerId}
+                  />
 
-              {/* Agent */}
-              <InvoiceRelations
-                type={EInvoiceRelation.AGENTS}
-                inputLabel="Agent"
-                addButtonLabel="Add Agent"
-                addTooltip="Add agent relation to invoice"
-                removeTooltip="Remove agent relation from invoice"
-              />
-            </Grid2>
+                  {/* Agent */}
+                  <InvoiceRelations
+                    disabled={!customerId}
+                    type={EInvoiceRelation.AGENTS}
+                    inputLabel="Agent"
+                    addButtonLabel="Add Agent"
+                    addTooltip="Add agent relation to invoice"
+                    removeTooltip="Remove agent relation from invoice"
+                  />
+                </Grid2>
+              )}
+            />
           </Grid2>
         </>
       )}

@@ -11,7 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { FieldComponent, FormApi, useForm } from '@tanstack/react-form';
+import { FormApi, ReactFormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ZodValidator, zodValidator } from '@tanstack/zod-form-adapter';
 import { AxiosError } from 'axios';
@@ -45,8 +45,7 @@ export interface IDeleteAction extends ICRUDAction {
 export type TCustomErrorMap<FormModel> = Partial<Record<keyof FormModel, string[]>>;
 
 export interface IFormChildrenParams<Model, FormModel> {
-  form: FormApi<FormModel, ZodValidator>;
-  field: FieldComponent<FormModel, ZodValidator>;
+  form: ReactFormApi<FormModel, ZodValidator> & FormApi<FormModel, ZodValidator>;
   customFieldErrors: TCustomErrorMap<FormModel>;
   setCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
   appendCustomFieldErrors: <T>(field: keyof TCustomErrorMap<T>, errorMessages: string[]) => void;
@@ -266,7 +265,6 @@ export default function FormWrapper<Model, FormModel>({
             <Grid2 container spacing={spacing}>
               {children?.({
                 form,
-                field: form.Field,
                 customFieldErrors: customFormFieldErrors || ({} as TCustomErrorMap<FormModel>),
                 setCustomFieldErrors: updateCustomFieldErrors,
                 appendCustomFieldErrors,
