@@ -1,7 +1,6 @@
-import { Autocomplete, Divider, FormControl, Grid2, TextField } from '@mui/material';
+import { Autocomplete, Divider, FormControl, Grid2, TextField, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { produce } from 'immer';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
@@ -12,28 +11,14 @@ import { IAgent } from '../agents-listing/types';
 import { ICustomer } from '../customers-listing/types';
 import { IInvoiceCategory } from '../invoice-categories-listing/types';
 import { IInvoice } from '../invoices-listing/types';
-import InvoiceItems from './InvoiceItems';
-import InvoiceRelations from './InvoiceRelations';
-import {
-  EInvoiceRelation,
-  IFormInvoice,
-  IInvoiceRelations,
-  IInvoiceRelationValue,
-  TInvoiceAgentOption,
-  TInvoiceCustomerOption,
-} from './types';
-
-const emptyCustomerRelation: IInvoiceRelationValue = {
-  id: 0,
-  isPlaceholder: true,
-};
-
-const emptyAgentRelation: IInvoiceRelationValue = {
-  id: 0,
-  isPlaceholder: true,
-};
+import InvoiceItems from './components/InvoiceItems';
+import InvoiceRelations from './components/InvoiceRelations';
+import { useInvoiceFormStore } from './store';
+import { EInvoiceRelation, IFormInvoice } from './types';
 
 export default function InvoiceForm() {
+  const { customerOptions, setCustomerOptions, setAgentOptions } = useInvoiceFormStore();
+
   const formWrapperProps: IFormWrapperProps<IInvoice, IFormInvoice> = {
     createTitle: 'Create New Invoice',
     updateTitle: 'Update Invoice',
@@ -100,64 +85,25 @@ export default function InvoiceForm() {
     }));
   }, [invoiceCategoriesQuery.data?.data]);
 
-  const customerOptions: TInvoiceCustomerOption[] = useMemo(() => {
+  useEffect(() => {
     const data = customersQuery.data?.data ?? [];
-    if (!data.length) return [];
-    return data.map((customer) => ({
+    const options = data.map((customer) => ({
       ...customer,
       value: customer.id,
       label: customer.name,
     }));
-  }, [customersQuery.data?.data]);
+    setCustomerOptions(options);
+  }, [customersQuery.data?.data, setCustomerOptions]);
 
-  const agentOptions: TInvoiceAgentOption[] = useMemo(() => {
+  useEffect(() => {
     const data = agentsQuery.data?.data ?? [];
-    if (!data.length) return [];
-    return data.map((agent) => ({
+    const options = data.map((agent) => ({
       ...agent,
       value: agent.id,
       label: agent.name,
     }));
-  }, [agentsQuery.data?.data]);
-
-  const [invoiceRelations, setInvoiceRelations] = useState<IInvoiceRelations>({
-    customers: [emptyCustomerRelation],
-    agents: [emptyAgentRelation],
-  });
-
-  const addEmptyRelation = (type: EInvoiceRelation) => {
-    setInvoiceRelations(
-      produce((draft) => {
-        draft[type].push(
-          type === 'customers'
-            ? { ...emptyCustomerRelation, id: Number((Math.random() * 1e5).toFixed(0)) }
-            : { ...emptyAgentRelation, id: Number((Math.random() * 1e5).toFixed(0)) },
-        );
-      }),
-    );
-  };
-
-  const addRelation = (type: EInvoiceRelation, index: number, id: number) => {
-    setInvoiceRelations(
-      produce((draft) => {
-        draft[type][index].id = id;
-        draft[type][index].isPlaceholder = false;
-      }),
-    );
-  };
-
-  const removeRelation = (type: EInvoiceRelation, id: number) => {
-    setInvoiceRelations(
-      produce((draft) => {
-        if (draft[type].length === 1) {
-          draft[type][0].id = 0;
-          draft[type][0].isPlaceholder = true;
-        } else {
-          draft[type] = draft[type].filter((relation) => relation.id !== id);
-        }
-      }),
-    );
-  };
+    setAgentOptions(options);
+  }, [agentsQuery.data?.data, setAgentOptions]);
 
   return (
     <FormWrapper
@@ -305,14 +251,29 @@ export default function InvoiceForm() {
 
           {/* Invoice Relations */}
           <Grid2 size={12}>
-            <InvoiceRelations
-              customerOptions={customerOptions}
-              agentOptions={agentOptions}
-              invoiceRelations={invoiceRelations}
-              onAddRelation={addRelation}
-              onRemoveRelation={removeRelation}
-              onAddEmptyRelation={addEmptyRelation}
-            />
+            <Typography variant="h6" gutterBottom>
+              Invoice Relations
+            </Typography>
+
+            <Grid2 container spacing={3}>
+              {/* Customer */}
+              <InvoiceRelations
+                type={EInvoiceRelation.CUSTOMERS}
+                inputLabel="Customer"
+                addButtonLabel="Add Customer"
+                addTooltip="Add customer relation to invoice"
+                removeTooltip="Remove customer relation from invoice"
+              />
+
+              {/* Agent */}
+              <InvoiceRelations
+                type={EInvoiceRelation.AGENTS}
+                inputLabel="Agent"
+                addButtonLabel="Add Agent"
+                addTooltip="Add agent relation to invoice"
+                removeTooltip="Remove agent relation from invoice"
+              />
+            </Grid2>
           </Grid2>
         </>
       )}
