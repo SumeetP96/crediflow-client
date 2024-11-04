@@ -17,7 +17,9 @@ import { useInvoiceFormStore } from './store';
 import { EInvoiceRelation, IFormInvoice } from './types';
 
 export default function InvoiceForm() {
-  const { customerOptions, setCustomerOptions, setAgentOptions } = useInvoiceFormStore();
+  const customerOptions = useInvoiceFormStore((state) => state.customerOptions);
+  const setCustomerOptions = useInvoiceFormStore((state) => state.setCustomerOptions);
+  const setAgentOptions = useInvoiceFormStore((state) => state.setAgentOptions);
 
   const formWrapperProps: IFormWrapperProps<IInvoice, IFormInvoice> = {
     createTitle: 'Create New Invoice',

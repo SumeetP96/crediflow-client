@@ -23,8 +23,11 @@ export default function InvoiceRelationsInput({
   removeTooltipText,
   invoiceCustomerId,
 }: IInvoiceRelationsInputProps) {
-  const { customerOptions, agentOptions, invoiceRelations, addRelation, removeRelation } =
-    useInvoiceFormStore();
+  const customerOptions = useInvoiceFormStore((state) => state.customerOptions);
+  const agentOptions = useInvoiceFormStore((state) => state.agentOptions);
+  const invoiceRelations = useInvoiceFormStore((state) => state.invoiceRelations);
+  const addRelation = useInvoiceFormStore((state) => state.addRelation);
+  const removeRelation = useInvoiceFormStore((state) => state.removeRelation);
 
   const optionMap = {
     [EInvoiceRelation.CUSTOMERS]: customerOptions,

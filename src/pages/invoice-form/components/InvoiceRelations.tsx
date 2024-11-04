@@ -24,7 +24,9 @@ export default function InvoiceRelations({
   removeTooltip,
   invoiceCustomerId,
 }: IInvoiceRelationsProps) {
-  const { invoiceRelations, addEmptyRelation, removeRelation } = useInvoiceFormStore();
+  const invoiceRelations = useInvoiceFormStore((state) => state.invoiceRelations);
+  const addEmptyRelation = useInvoiceFormStore((state) => state.addEmptyRelation);
+  const removeRelation = useInvoiceFormStore((state) => state.removeRelation);
 
   useEffect(() => {
     if (invoiceCustomerId) {
