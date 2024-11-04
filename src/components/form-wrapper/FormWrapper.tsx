@@ -44,7 +44,7 @@ export interface IDeleteAction extends ICRUDAction {
 
 export type TCustomErrorMap<FormModel> = Partial<Record<keyof FormModel, string[]>>;
 
-export interface IMasterFormChildrenParams<Model, FormModel> {
+export interface IFormChildrenParams<Model, FormModel> {
   form: FormApi<FormModel, ZodValidator>;
   field: FieldComponent<FormModel, ZodValidator>;
   customFieldErrors: TCustomErrorMap<FormModel>;
@@ -54,8 +54,8 @@ export interface IMasterFormChildrenParams<Model, FormModel> {
   findData?: Model;
 }
 
-export interface IMastersFormWrapperProps<Model, FormModel> {
-  children?: (params: IMasterFormChildrenParams<Model, FormModel>) => ReactNode;
+export interface IFormWrapperProps<Model, FormModel> {
+  children?: (params: IFormChildrenParams<Model, FormModel>) => ReactNode;
   createTitle: string;
   updateTitle: string;
   heading: string;
@@ -79,7 +79,7 @@ export interface IMastersFormWrapperProps<Model, FormModel> {
   transformValues?: (values: FormModel) => Record<string, any>;
 }
 
-export default function MastersFormWrapper<Model, FormModel>({
+export default function FormWrapper<Model, FormModel>({
   children,
   createTitle,
   updateTitle,
@@ -102,7 +102,7 @@ export default function MastersFormWrapper<Model, FormModel>({
   spacing = 3,
   paperSx = {},
   transformValues,
-}: IMastersFormWrapperProps<Model, FormModel>) {
+}: IFormWrapperProps<Model, FormModel>) {
   const theme = useTheme();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

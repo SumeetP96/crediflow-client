@@ -10,9 +10,7 @@ import {
 import { z } from 'zod';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/helpers';
 import { transactionTypeStatusOptions } from '../transaction-types-listing/constants';
@@ -20,7 +18,7 @@ import { ITransactionType } from '../transaction-types-listing/types';
 import { IFormTransactionType } from './types';
 
 export default function TransactionTypeForm() {
-  const formWrapperProps: IMastersFormWrapperProps<ITransactionType, IFormTransactionType> = {
+  const formWrapperProps: IFormWrapperProps<ITransactionType, IFormTransactionType> = {
     createTitle: 'Create New Transaction Type',
     updateTitle: 'Update Transaction Type',
     heading: 'Transaction Type Details',
@@ -56,7 +54,7 @@ export default function TransactionTypeForm() {
   };
 
   return (
-    <MastersFormWrapper {...formWrapperProps} spacing={4}>
+    <FormWrapper {...formWrapperProps} spacing={4}>
       {({ field: Field }) => (
         <>
           {/* Name */}
@@ -182,6 +180,6 @@ export default function TransactionTypeForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }

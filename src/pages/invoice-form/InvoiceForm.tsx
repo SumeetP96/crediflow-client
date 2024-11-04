@@ -6,9 +6,7 @@ import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import { AppRoute } from '../../router/helpers';
 import { IAgent } from '../agents-listing/types';
 import { ICustomer } from '../customers-listing/types';
@@ -36,7 +34,7 @@ const emptyAgentRelation: IInvoiceRelationValue = {
 };
 
 export default function InvoiceForm() {
-  const formWrapperProps: IMastersFormWrapperProps<IInvoice, IFormInvoice> = {
+  const formWrapperProps: IFormWrapperProps<IInvoice, IFormInvoice> = {
     createTitle: 'Create New Invoice',
     updateTitle: 'Update Invoice',
     heading: 'Invoice Details',
@@ -162,7 +160,7 @@ export default function InvoiceForm() {
   };
 
   return (
-    <MastersFormWrapper
+    <FormWrapper
       {...formWrapperProps}
       spacing={3}
       paperSx={{
@@ -305,6 +303,7 @@ export default function InvoiceForm() {
             <Divider />
           </Grid2>
 
+          {/* Invoice Relations */}
           <Grid2 size={12}>
             <InvoiceRelations
               customerOptions={customerOptions}
@@ -317,6 +316,6 @@ export default function InvoiceForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }

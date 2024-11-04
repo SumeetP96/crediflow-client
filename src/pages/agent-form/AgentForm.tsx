@@ -15,9 +15,7 @@ import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { urlWithParams } from '../../helpers/utils/builders';
@@ -32,7 +30,7 @@ export default function AgentForm() {
 
   const id = params.id ? parseInt(params.id, 10) : undefined;
 
-  const formWrapperProps: IMastersFormWrapperProps<IAgent, IFormAgent> = {
+  const formWrapperProps: IFormWrapperProps<IAgent, IFormAgent> = {
     createTitle: 'Create New Agent',
     updateTitle: 'Update Agent',
     heading: 'Agent Details',
@@ -90,7 +88,7 @@ export default function AgentForm() {
   }, [optionsData]);
 
   return (
-    <MastersFormWrapper {...formWrapperProps} spacing={4}>
+    <FormWrapper {...formWrapperProps} spacing={4}>
       {({ field: Field, customFieldErrors, setCustomFieldErrors }) => (
         <>
           {/* Name */}
@@ -280,6 +278,6 @@ export default function AgentForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }

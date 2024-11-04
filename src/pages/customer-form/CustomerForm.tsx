@@ -15,9 +15,7 @@ import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import TextMultiInput from '../../components/text-multi-input/TextMultiInput';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { urlWithParams } from '../../helpers/utils/builders';
@@ -36,7 +34,7 @@ export default function CustomerForm() {
 
   const id = params.id ? parseInt(params.id, 10) : undefined;
 
-  const formWrapperProps: IMastersFormWrapperProps<ICustomer, IFormCustomer> = {
+  const formWrapperProps: IFormWrapperProps<ICustomer, IFormCustomer> = {
     createTitle: 'Create New Customer',
     updateTitle: 'Update Customer',
     heading: 'Customer Details',
@@ -96,7 +94,7 @@ export default function CustomerForm() {
   }, [optionsData]);
 
   return (
-    <MastersFormWrapper {...formWrapperProps} spacing={4}>
+    <FormWrapper {...formWrapperProps} spacing={4}>
       {({ field: Field, customFieldErrors, setCustomFieldErrors }) => (
         <>
           {/* Name */}
@@ -346,6 +344,6 @@ export default function CustomerForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }

@@ -11,9 +11,7 @@ import { useParams } from 'react-router';
 import { z } from 'zod';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import { IUser, TUserRole, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/helpers';
 import { userRoleOptions, userStatusOptions } from '../users-listing/constants';
@@ -27,7 +25,7 @@ export default function UserForm() {
 
   const isUpdateMode = Boolean(id);
 
-  const formWrapperProps: IMastersFormWrapperProps<IUser, IFormUser> = {
+  const formWrapperProps: IFormWrapperProps<IUser, IFormUser> = {
     createTitle: 'Create New User',
     updateTitle: 'Update User',
     heading: 'User Details',
@@ -65,7 +63,7 @@ export default function UserForm() {
   };
 
   return (
-    <MastersFormWrapper {...formWrapperProps}>
+    <FormWrapper {...formWrapperProps}>
       {({ form, field: Field }) => (
         <>
           {/* Name */}
@@ -261,6 +259,6 @@ export default function UserForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }

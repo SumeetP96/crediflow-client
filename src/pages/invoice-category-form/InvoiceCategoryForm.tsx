@@ -10,9 +10,7 @@ import {
 import { z } from 'zod';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
-import MastersFormWrapper, {
-  IMastersFormWrapperProps,
-} from '../../components/masters-form-wrapper/MastersFormWrapper';
+import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
 import { ERecordStatus, TUserStatus } from '../../helpers/types';
 import { AppRoute } from '../../router/helpers';
 import { invoiceCategoryStatusOptions } from '../invoice-categories-listing/constants';
@@ -20,7 +18,7 @@ import { IInvoiceCategory } from '../invoice-categories-listing/types';
 import { IFormInvoiceCategory } from './types';
 
 export default function InvoiceCategoryForm() {
-  const formWrapperProps: IMastersFormWrapperProps<IInvoiceCategory, IFormInvoiceCategory> = {
+  const formWrapperProps: IFormWrapperProps<IInvoiceCategory, IFormInvoiceCategory> = {
     createTitle: 'Create New Invoice Category',
     updateTitle: 'Update Invoice Category',
     heading: 'Invoice Category Details',
@@ -58,7 +56,7 @@ export default function InvoiceCategoryForm() {
   };
 
   return (
-    <MastersFormWrapper {...formWrapperProps} spacing={4}>
+    <FormWrapper {...formWrapperProps} spacing={4}>
       {({ field: Field }) => (
         <>
           {/* Name */}
@@ -240,6 +238,6 @@ export default function InvoiceCategoryForm() {
           </Grid2>
         </>
       )}
-    </MastersFormWrapper>
+    </FormWrapper>
   );
 }
