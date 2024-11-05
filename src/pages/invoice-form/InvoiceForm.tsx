@@ -25,6 +25,7 @@ import { ICustomer } from '../customers-listing/types';
 import { IInvoiceCategory } from '../invoice-categories-listing/types';
 import { IInvoice } from '../invoices-listing/types';
 import InvoiceItems from './components/InvoiceItems';
+import InvoicePayments from './components/InvoicePayments';
 import InvoiceRelations from './components/InvoiceRelations';
 import { useInvoiceFormStore } from './store';
 import { EInvoiceRelation, IFormInvoice } from './types';
@@ -258,7 +259,7 @@ export default function InvoiceForm() {
 
           {/* Invoice Items */}
           <Grid2 size={12}>
-            <Typography fontSize="1.15rem" fontWeight="normal" gutterBottom marginBottom={2.5}>
+            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
               Invoice Items
             </Typography>
 
@@ -269,10 +270,23 @@ export default function InvoiceForm() {
             <Divider />
           </Grid2>
 
+          {/* Advance Payment */}
+          <Grid2 size={12}>
+            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
+              Payments (optional)
+            </Typography>
+
+            <InvoicePayments />
+          </Grid2>
+
+          <Grid2 size={12}>
+            <Divider />
+          </Grid2>
+
           {/* Invoice Relations */}
           <Grid2 size={12}>
-            <Typography fontSize="1.15rem" fontWeight="normal" gutterBottom>
-              Invoice Relations (optional)
+            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
+              Relations (optional)
             </Typography>
 
             <form.Subscribe

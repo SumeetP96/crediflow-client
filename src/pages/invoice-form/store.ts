@@ -3,7 +3,8 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import {
   EInvoiceRelation,
-  IInvoiceItem,
+  IInvoiceFormItem,
+  IInvoicePayment,
   IInvoiceRelations,
   IInvoiceRelationValue,
   TInvoiceAgentOption,
@@ -14,7 +15,8 @@ type State = {
   customerOptions: TInvoiceCustomerOption[];
   agentOptions: TInvoiceAgentOption[];
   invoiceRelations: IInvoiceRelations;
-  invoiceItems: IInvoiceItem[];
+  invoiceItems: IInvoiceFormItem[];
+  invoicePayments: IInvoicePayment[];
 };
 
 type Actions = {
@@ -23,9 +25,12 @@ type Actions = {
   updateRelation: (type: EInvoiceRelation, index: number, id: number) => void;
   removeRelation: (type: EInvoiceRelation, uid: string) => void;
   addEmptyRelation: (type: EInvoiceRelation) => void;
-  updateInvoiceItem: (index: number, field: keyof IInvoiceItem, value: string) => void;
+  updateInvoiceItem: (index: number, field: keyof IInvoiceFormItem, value: string) => void;
   removeInvoiceItem: (uid: string) => void;
   addEmptyInvoiceItem: () => void;
+  updateInvoicePayment: (index: number, field: keyof IInvoicePayment, value: string) => void;
+  removeInvoicePayment: (uid: string) => void;
+  addEmptyInvoicePayment: () => void;
 };
 
 const emptyCustomerRelation: IInvoiceRelationValue = {
@@ -40,11 +45,17 @@ const emptyAgentRelation: IInvoiceRelationValue = {
   isPlaceholder: true,
 };
 
-const emptyInvoiceItem: IInvoiceItem = {
+const emptyInvoiceItem: IInvoiceFormItem = {
   uid: nanoid(),
   name: '',
   quantity: 0,
   price: 0,
+  amount: 0,
+};
+
+const emptyInvoicePayment: IInvoicePayment = {
+  uid: nanoid(),
+  remarks: '',
   amount: 0,
 };
 
@@ -92,7 +103,7 @@ export const useInvoiceFormStore = create<State & Actions>()(
 
     invoiceItems: [emptyInvoiceItem],
 
-    updateInvoiceItem: (index: number, field: keyof IInvoiceItem, value: string) =>
+    updateInvoiceItem: (index: number, field: keyof IInvoiceFormItem, value: string) =>
       set(({ invoiceItems }) => {
         (invoiceItems[index][field] as any) = String(value);
       }),
@@ -109,6 +120,27 @@ export const useInvoiceFormStore = create<State & Actions>()(
     addEmptyInvoiceItem: () =>
       set((state) => {
         state.invoiceItems.push({ ...emptyInvoiceItem, uid: nanoid() });
+      }),
+
+    invoicePayments: [emptyInvoicePayment],
+
+    updateInvoicePayment: (index: number, field: keyof IInvoicePayment, value: string) =>
+      set(({ invoicePayments }) => {
+        (invoicePayments[index][field] as any) = String(value);
+      }),
+
+    removeInvoicePayment: (uid: string) =>
+      set((state) => {
+        if (state.invoicePayments.length === 1) {
+          state.invoicePayments[0] = { ...emptyInvoicePayment, uid: nanoid() };
+        } else {
+          state.invoicePayments = state.invoicePayments.filter((i) => i.uid !== uid);
+        }
+      }),
+
+    addEmptyInvoicePayment: () =>
+      set((state) => {
+        state.invoicePayments.push({ ...emptyInvoicePayment, uid: nanoid() });
       }),
   })),
 );

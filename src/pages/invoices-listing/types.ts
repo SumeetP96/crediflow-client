@@ -14,12 +14,20 @@ export enum EInvoiceStatus {
 
 export type TInvoiceStatusLabel = 'Paid' | 'Partial Paid' | 'Unpaid' | 'On Hold' | 'Cancelled';
 
+export interface IInvoiceItem {
+  name: string;
+  quantity: number;
+  price: number;
+  amount: number;
+}
+
 export interface IInvoice extends IModelCommon {
   invoiceCategoryId: number;
   customerId: number;
   userId: number;
   date: string;
   invoiceNumber: string;
+  invoiceItems: IInvoiceItem[] | null;
   amount: number;
   balance: number;
   dueDate: string;

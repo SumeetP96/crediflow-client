@@ -21,19 +21,15 @@ export default function InvoiceItems() {
     return Number(((safePrice * safeQuantity * 100) / 100).toFixed(2));
   };
 
-  const totalQuantity = useMemo(() => {
-    return invoiceItems.reduce((acc, cur) => acc + cur.quantity, 0);
-  }, [invoiceItems]);
-
   const totalAmount = useMemo(() => {
     return invoiceItems.reduce((acc, cur) => acc + cur.amount, 0);
   }, [invoiceItems]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="flex-start" gap={1.5}>
+    <Box display="flex" flexDirection="column" alignItems="flex-start" gap={{ xs: 3, md: 1 }}>
       {invoiceItems.map((item, i) => (
         <Box key={item.uid} width="100%" display="flex" alignItems="flex-start" gap={1}>
-          <Grid2 container spacing={3} flexGrow={1}>
+          <Grid2 container spacing={{ xs: 1.5, md: 3 }} flexGrow={1}>
             {/* Name */}
             <Grid2 size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
@@ -57,7 +53,13 @@ export default function InvoiceItems() {
                   label={<FormLabel label="Quantity" />}
                   variant="outlined"
                   value={item.quantity ? Number(item.quantity) : ''}
-                  onChange={(e) => updateInvoiceItem(i, 'quantity', e.target.value)}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    updateInvoiceItem(i, 'quantity', value);
+                    if (item.price) {
+                      updateInvoiceItem(i, 'amount', String(Number(value) * item.price));
+                    }
+                  }}
                   placeholder="0.00"
                   slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
                 />
@@ -73,7 +75,13 @@ export default function InvoiceItems() {
                   label={<FormLabel label="Price" />}
                   variant="outlined"
                   value={item.price ? Number(item.price) : ''}
-                  onChange={(e) => updateInvoiceItem(i, 'price', e.target.value)}
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    updateInvoiceItem(i, 'price', value);
+                    if (item.quantity) {
+                      updateInvoiceItem(i, 'amount', String(Number(value) * item.quantity));
+                    }
+                  }}
                   placeholder="0.00"
                   slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
                 />
@@ -111,44 +119,45 @@ export default function InvoiceItems() {
         </Box>
       ))}
 
-      <Button
-        variant="text"
-        startIcon={<AddCircleOutline />}
-        sx={{ mt: 0.5 }}
-        onClick={() => addEmptyInvoiceItem()}
-      >
-        Add Item
-      </Button>
+      <Box pr="45px" width="100%">
+        <Button
+          variant="text"
+          startIcon={<AddCircleOutline />}
+          onClick={() => addEmptyInvoiceItem()}
+          sx={{ width: { xs: '100%', md: 'auto' } }}
+        >
+          Add Item
+        </Button>
 
-      <Grid2
-        container
-        spacing={3}
-        sx={{
-          py: 1,
-          px: 2,
-          bgcolor: (theme) => theme.palette.background.default,
-          borderRadius: '12px',
-          width: '100%',
-        }}
-      >
-        <Grid2 size={{ xs: 12, md: 5 }}>
-          <Typography variant="subtitle2">Total</Typography>
+        <Grid2
+          container
+          spacing={3}
+          sx={{
+            py: 1,
+            px: 3,
+            mt: { xs: 3, md: 1 },
+            bgcolor: (theme) => theme.palette.background.default,
+            borderRadius: '12px',
+            width: '100%',
+          }}
+        >
+          <Grid2 size={{ xs: 6, md: 10 }}>
+            <Typography
+              variant="subtitle1"
+              fontWeight={500}
+              textAlign={{ xs: 'left', md: 'right' }}
+            >
+              Gross Total
+            </Typography>
+          </Grid2>
+
+          <Grid2 size={{ xs: 6, md: 2 }}>
+            <Typography variant="subtitle1" fontWeight={500} textAlign="right">
+              {Number(totalAmount).toFixed(2)}
+            </Typography>
+          </Grid2>
         </Grid2>
-
-        <Grid2 size={{ xs: 12, md: 2 }}>
-          <Typography variant="subtitle2" textAlign="right" mr={1}>
-            {Number(totalQuantity).toFixed(2)}
-          </Typography>
-        </Grid2>
-
-        <Grid2 size={{ xs: 12, md: 2 }} />
-
-        <Grid2 size={{ xs: 12, md: 2 }}>
-          <Typography variant="subtitle2" textAlign="right" mr={1}>
-            {Number(totalAmount).toFixed(2)}
-          </Typography>
-        </Grid2>
-      </Grid2>
+      </Box>
     </Box>
   );
 }

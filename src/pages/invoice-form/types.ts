@@ -1,5 +1,6 @@
 import { IAgent } from '../agents-listing/types';
 import { ICustomer } from '../customers-listing/types';
+import { IInvoiceItem } from '../invoices-listing/types';
 
 export interface IFormInvoice {
   invoiceCategoryId: number;
@@ -36,10 +37,12 @@ export interface IInvoiceRelations {
   agents: IInvoiceRelationValue[];
 }
 
-export interface IInvoiceItem {
+export interface IInvoiceFormItem extends IInvoiceItem {
   uid: string;
-  name: string;
-  quantity: number;
-  price: number;
+}
+
+export interface IInvoicePayment {
+  uid: string;
+  remarks: string;
   amount: number;
 }
