@@ -1,11 +1,24 @@
-import { Autocomplete, Divider, FormControl, Grid2, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Divider,
+  FormControl,
+  Grid2,
+  TextField,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { DatePicker, MobileDatePicker } from '@mui/x-date-pickers';
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { useEffect, useMemo } from 'react';
 import { z } from 'zod';
 import { axiosGet } from '../../api/request';
 import { ApiRoutes } from '../../api/routes';
 import { QueryKeys } from '../../api/types';
+import FormLabel from '../../components/form-label/FormLabel';
 import FormWrapper, { IFormWrapperProps } from '../../components/form-wrapper/FormWrapper';
+import { defaultDateVisibleFormat } from '../../helpers/constants';
 import { AppRoute } from '../../router/helpers';
 import { IAgent } from '../agents-listing/types';
 import { ICustomer } from '../customers-listing/types';
@@ -17,6 +30,12 @@ import { useInvoiceFormStore } from './store';
 import { EInvoiceRelation, IFormInvoice } from './types';
 
 export default function InvoiceForm() {
+  const theme = useTheme();
+
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
+  const Picker = isTablet ? MobileDatePicker : DatePicker;
+
   const customerOptions = useInvoiceFormStore((state) => state.customerOptions);
   const setCustomerOptions = useInvoiceFormStore((state) => state.setCustomerOptions);
   const setAgentOptions = useInvoiceFormStore((state) => state.setAgentOptions);
@@ -29,7 +48,7 @@ export default function InvoiceForm() {
     defaultValues: (invoice) => ({
       invoiceCategoryId: invoice?.invoiceCategoryId ?? 0,
       customerId: invoice?.customerId ?? 0,
-      date: invoice?.date ?? '',
+      date: invoice?.date ?? dayjs().format(defaultDateVisibleFormat),
       invoiceNumber: invoice?.invoiceNumber ?? '',
       amount: invoice?.amount ?? 0,
       dueDate: invoice?.dueDate ?? '',
@@ -127,14 +146,21 @@ export default function InvoiceForm() {
                   <FormControl fullWidth>
                     <Autocomplete
                       id="invoiceCategoryId"
-                      autoFocus
+                      handleHomeEndKeys
                       value={
                         invoiceCategoryOptions.find((opt) => opt.value === state.value) ?? null
                       }
                       options={invoiceCategoryOptions}
                       onChange={(_, selection) => handleChange(selection?.value as number)}
                       onBlur={handleBlur}
-                      renderInput={(params) => <TextField {...params} label="Invoice category" />}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          autoFocus
+                          placeholder="Select invoice category"
+                          label={<FormLabel label="Invoice Category" required />}
+                        />
+                      )}
                     />
                   </FormControl>
                 );
@@ -152,12 +178,12 @@ export default function InvoiceForm() {
                   <FormControl fullWidth>
                     <TextField
                       id="invoiceNumber"
-                      label="Invoice Number"
+                      label={<FormLabel label="Invoice Number" required />}
                       variant="outlined"
                       value={state.value}
                       onChange={(e) => handleChange(e.target.value)}
                       onBlur={handleBlur}
-                      placeholder="Invoice number"
+                      placeholder="Enter invoice number"
                       helperText={state.meta.errors.join(', ')}
                       error={Boolean(state.meta.errors.length)}
                     />
@@ -171,20 +197,25 @@ export default function InvoiceForm() {
           <Grid2 size={{ xs: 12, md: 3 }}>
             <form.Field
               name="date"
-              validators={{ onChange: z.string() }}
-              children={({ state, handleChange, handleBlur }) => {
+              validators={{
+                onChange: z
+                  .string()
+                  .refine(
+                    (date) => dayjs(date, defaultDateVisibleFormat, true).isValid(),
+                    `Date must be in ${defaultDateVisibleFormat} format`,
+                  ),
+              }}
+              children={({ state, handleChange }) => {
                 return (
                   <FormControl fullWidth>
-                    <TextField
-                      id="date"
-                      label="Date"
-                      variant="outlined"
-                      value={state.value}
-                      onChange={(e) => handleChange(e.target.value)}
-                      onBlur={handleBlur}
-                      placeholder="Enter date"
-                      helperText={state.meta.errors.join(', ')}
-                      error={Boolean(state.meta.errors.length)}
+                    <Picker
+                      label={<FormLabel label="Invoice Date" required />}
+                      format={defaultDateVisibleFormat}
+                      value={dayjs(state.value)}
+                      onChange={(value) =>
+                        handleChange(value ? value.format(defaultDateVisibleFormat) : '')
+                      }
+                      slotProps={{ textField: { helperText: state.meta.errors.join(', ') } }}
                     />
                   </FormControl>
                 );
@@ -207,39 +238,13 @@ export default function InvoiceForm() {
                       options={customerOptions}
                       onChange={(_, selection) => handleChange(selection?.value as number)}
                       onBlur={handleBlur}
-                      renderInput={(params) => <TextField {...params} label="Customer" />}
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-          </Grid2>
-
-          {/* Invoice Items */}
-          <Grid2 size={12}>
-            <InvoiceItems />
-          </Grid2>
-
-          {/* Remarks */}
-          <Grid2 size={12}>
-            <form.Field
-              name="remarks"
-              validators={{ onChange: z.string().optional() }}
-              children={({ state, handleChange, handleBlur }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      id="remarks"
-                      label="Remarks"
-                      variant="outlined"
-                      multiline
-                      maxRows={3}
-                      value={state.value}
-                      onChange={(e) => handleChange(e.target.value)}
-                      onBlur={handleBlur}
-                      placeholder="Remarks"
-                      helperText={state.meta.errors.join(', ')}
-                      error={Boolean(state.meta.errors.length)}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Select customer"
+                          label={<FormLabel label="Customer" required />}
+                        />
+                      )}
                     />
                   </FormControl>
                 );
@@ -251,10 +256,23 @@ export default function InvoiceForm() {
             <Divider />
           </Grid2>
 
+          {/* Invoice Items */}
+          <Grid2 size={12}>
+            <Typography fontSize="1.15rem" fontWeight="normal" gutterBottom marginBottom={2.5}>
+              Invoice Items
+            </Typography>
+
+            <InvoiceItems />
+          </Grid2>
+
+          <Grid2 size={12}>
+            <Divider />
+          </Grid2>
+
           {/* Invoice Relations */}
           <Grid2 size={12}>
-            <Typography variant="h6" gutterBottom>
-              Invoice Relations
+            <Typography fontSize="1.15rem" fontWeight="normal" gutterBottom>
+              Invoice Relations (optional)
             </Typography>
 
             <form.Subscribe
@@ -269,6 +287,7 @@ export default function InvoiceForm() {
                     addButtonLabel="Add Customer"
                     addTooltip="Add customer relation to invoice"
                     removeTooltip="Remove customer relation from invoice"
+                    placeholder="Select customer"
                     invoiceCustomerId={customerId}
                   />
 
@@ -280,9 +299,41 @@ export default function InvoiceForm() {
                     addButtonLabel="Add Agent"
                     addTooltip="Add agent relation to invoice"
                     removeTooltip="Remove agent relation from invoice"
+                    placeholder="Select agent"
                   />
                 </Grid2>
               )}
+            />
+          </Grid2>
+
+          <Grid2 size={12}>
+            <Divider />
+          </Grid2>
+
+          {/* Remarks */}
+          <Grid2 size={12}>
+            <form.Field
+              name="remarks"
+              validators={{ onChange: z.string().optional() }}
+              children={({ state, handleChange, handleBlur }) => {
+                return (
+                  <FormControl fullWidth>
+                    <TextField
+                      id="remarks"
+                      label={<FormLabel label="Remarks" />}
+                      variant="outlined"
+                      multiline
+                      maxRows={3}
+                      value={state.value}
+                      onChange={(e) => handleChange(e.target.value)}
+                      onBlur={handleBlur}
+                      placeholder="Remarks"
+                      helperText={state.meta.errors.join(', ')}
+                      error={Boolean(state.meta.errors.length)}
+                    />
+                  </FormControl>
+                );
+              }}
             />
           </Grid2>
         </>

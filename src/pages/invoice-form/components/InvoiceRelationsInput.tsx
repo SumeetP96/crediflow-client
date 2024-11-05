@@ -1,6 +1,7 @@
 import { RemoveCircleOutline } from '@mui/icons-material';
-import { Autocomplete, Box, Button, TextField, Tooltip } from '@mui/material';
+import { Autocomplete, Box, Button, TextField } from '@mui/material';
 import { useMemo } from 'react';
+import FormLabel from '../../../components/form-label/FormLabel';
 import { useInvoiceFormStore } from '../store';
 import { EInvoiceRelation, IInvoiceRelationValue } from '../types';
 
@@ -10,8 +11,8 @@ export interface IInvoiceRelationsInputProps {
   index: number;
   invoiceRelationValue: IInvoiceRelationValue;
   label: string;
-  removeTooltipText: string;
   invoiceCustomerId?: number;
+  placeholder?: string;
 }
 
 export default function InvoiceRelationsInput({
@@ -20,13 +21,13 @@ export default function InvoiceRelationsInput({
   index,
   invoiceRelationValue,
   label,
-  removeTooltipText,
   invoiceCustomerId,
+  placeholder,
 }: IInvoiceRelationsInputProps) {
   const customerOptions = useInvoiceFormStore((state) => state.customerOptions);
   const agentOptions = useInvoiceFormStore((state) => state.agentOptions);
   const invoiceRelations = useInvoiceFormStore((state) => state.invoiceRelations);
-  const addRelation = useInvoiceFormStore((state) => state.addRelation);
+  const updateRelation = useInvoiceFormStore((state) => state.updateRelation);
   const removeRelation = useInvoiceFormStore((state) => state.removeRelation);
 
   const optionMap = {
@@ -53,29 +54,28 @@ export default function InvoiceRelationsInput({
   return (
     <Box mt={2} display="flex" alignItems="center" gap={1} width="100%">
       <Autocomplete
-        id={`${type}-${invoiceRelationValue.id}`}
+        id={`${type}-${invoiceRelationValue.uid}`}
         disabled={disabled}
         value={availableOptions.find((opt) => opt.value === invoiceRelationValue.id) ?? null}
         options={availableOptions}
-        onChange={(_, selection) => addRelation(type, index, selection?.value as number)}
-        renderInput={(params) => <TextField {...params} label={label} />}
+        onChange={(_, selection) => updateRelation(type, index, selection?.value as number)}
+        renderInput={(params) => (
+          <TextField {...params} placeholder={placeholder} label={<FormLabel label={label} />} />
+        )}
         sx={{ flexGrow: 1 }}
       />
 
-      <Tooltip title={removeTooltipText}>
-        <span>
-          <Button
-            disableElevation
-            disabled={disabled}
-            size="large"
-            color="error"
-            onClick={() => removeRelation(type, invoiceRelationValue.id)}
-            sx={{ minWidth: '40px', px: 0 }}
-          >
-            <RemoveCircleOutline />
-          </Button>
-        </span>
-      </Tooltip>
+      <Button
+        disableElevation
+        disabled={disabled}
+        tabIndex={-1}
+        size="large"
+        color="error"
+        onClick={() => removeRelation(type, invoiceRelationValue.uid)}
+        sx={{ minWidth: '40px', px: 0 }}
+      >
+        <RemoveCircleOutline />
+      </Button>
     </Box>
   );
 }

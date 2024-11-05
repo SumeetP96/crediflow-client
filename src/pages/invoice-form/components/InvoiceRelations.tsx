@@ -1,5 +1,5 @@
 import { AddCircleOutline } from '@mui/icons-material';
-import { Button, Grid2, Tooltip } from '@mui/material';
+import { Button, Grid2 } from '@mui/material';
 import { useEffect } from 'react';
 import { useInvoiceFormStore } from '../store';
 import { EInvoiceRelation } from '../types';
@@ -13,16 +13,16 @@ export interface IInvoiceRelationsProps {
   addButtonLabel: string;
   removeTooltip: string;
   invoiceCustomerId?: number;
+  placeholder?: string;
 }
 
 export default function InvoiceRelations({
   disabled,
   type,
   inputLabel,
-  addTooltip,
   addButtonLabel,
-  removeTooltip,
   invoiceCustomerId,
+  placeholder,
 }: IInvoiceRelationsProps) {
   const invoiceRelations = useInvoiceFormStore((state) => state.invoiceRelations);
   const addEmptyRelation = useInvoiceFormStore((state) => state.addEmptyRelation);
@@ -30,38 +30,37 @@ export default function InvoiceRelations({
 
   useEffect(() => {
     if (invoiceCustomerId) {
-      removeRelation(type, invoiceCustomerId);
+      const matchingRelation = invoiceRelations.customers.find((r) => r.id === invoiceCustomerId);
+      if (matchingRelation) {
+        removeRelation(type, matchingRelation.uid);
+      }
     }
-  }, [invoiceCustomerId, removeRelation, type]);
+  }, [invoiceCustomerId, invoiceRelations.customers, removeRelation, type]);
 
   return (
     <Grid2 size={{ xs: 12, md: 6 }}>
       {invoiceRelations[type].map((invoiceRelationValue, i) => (
         <InvoiceRelationsInput
-          key={`${type}-${invoiceRelationValue.id}`}
+          key={`${type}-${invoiceRelationValue.uid}`}
           index={i}
           disabled={disabled}
           type={type}
           label={inputLabel}
-          removeTooltipText={removeTooltip}
           invoiceRelationValue={invoiceRelationValue}
           invoiceCustomerId={invoiceCustomerId}
+          placeholder={placeholder}
         />
       ))}
 
-      <Tooltip title={addTooltip}>
-        <span>
-          <Button
-            disabled={disabled}
-            disableElevation
-            startIcon={<AddCircleOutline />}
-            sx={{ mt: 1 }}
-            onClick={() => addEmptyRelation(type)}
-          >
-            {addButtonLabel}
-          </Button>
-        </span>
-      </Tooltip>
+      <Button
+        disabled={disabled}
+        disableElevation
+        startIcon={<AddCircleOutline />}
+        sx={{ mt: 0.5 }}
+        onClick={() => addEmptyRelation(type)}
+      >
+        {addButtonLabel}
+      </Button>
     </Grid2>
   );
 }

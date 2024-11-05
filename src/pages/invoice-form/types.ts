@@ -26,6 +26,7 @@ export enum EInvoiceRelation {
 }
 
 export interface IInvoiceRelationValue {
+  uid: string;
   id: number;
   isPlaceholder: boolean;
 }
@@ -33,4 +34,12 @@ export interface IInvoiceRelationValue {
 export interface IInvoiceRelations {
   customers: IInvoiceRelationValue[];
   agents: IInvoiceRelationValue[];
+}
+
+export interface IInvoiceItem {
+  uid: string;
+  name: string;
+  quantity: number;
+  price: number;
+  amount: number;
 }
