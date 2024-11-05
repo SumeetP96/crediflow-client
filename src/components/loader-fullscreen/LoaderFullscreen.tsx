@@ -1,28 +1,26 @@
-import { Box, Fade, useTheme } from '@mui/material';
+import { Backdrop, useTheme } from '@mui/material';
 import { ThreeDots } from 'react-loader-spinner';
+import { useDarkMode } from '../../helpers/hooks/use-dark-mode';
 import ThemeProviderWrapper from '../theme-provider-wrapper/ThemeProviderWrapper';
-import './LoaderFullscreen.css';
 
 function LoaderFullscreenComponent() {
+  const { isDarkMode } = useDarkMode();
+
   const theme = useTheme();
 
-  const color = theme.palette.primary.main;
+  const color = isDarkMode ? theme.palette.primary.dark : theme.palette.primary.light;
 
   return (
-    <Fade in={true}>
-      <Box className="fullscreen-container" sx={{ bgcolor: 'background.default' }}>
-        <Box className="loader-container">
-          <ThreeDots
-            visible={true}
-            height="80"
-            width="80"
-            color={color}
-            radius="9"
-            ariaLabel="three-dots-loading"
-          />
-        </Box>
-      </Box>
-    </Fade>
+    <Backdrop sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })} open>
+      <ThreeDots
+        visible={true}
+        height="80"
+        width="80"
+        color={color}
+        radius="9"
+        ariaLabel="three-dots-loading"
+      />
+    </Backdrop>
   );
 }
 
