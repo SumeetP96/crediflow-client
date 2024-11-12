@@ -16,7 +16,8 @@ type State = {
   agentOptions: TInvoiceAgentOption[];
   invoiceRelations: IInvoiceRelations;
   invoiceItems: IInvoiceFormItem[];
-  invoicePayments: IInvoicePayment[];
+  discount?: string;
+  payment?: string;
 };
 
 type Actions = {
@@ -28,9 +29,8 @@ type Actions = {
   updateInvoiceItem: (index: number, field: keyof IInvoiceFormItem, value: string) => void;
   removeInvoiceItem: (uid: string) => void;
   addEmptyInvoiceItem: () => void;
-  updateInvoicePayment: (index: number, field: keyof IInvoicePayment, value: string) => void;
-  removeInvoicePayment: (uid: string) => void;
-  addEmptyInvoicePayment: () => void;
+  setDiscount: (amount: string) => void;
+  setPayment: (amount: string) => void;
 };
 
 const emptyCustomerRelation: IInvoiceRelationValue = {
@@ -124,23 +124,18 @@ export const useInvoiceFormStore = create<State & Actions>()(
 
     invoicePayments: [emptyInvoicePayment],
 
-    updateInvoicePayment: (index: number, field: keyof IInvoicePayment, value: string) =>
-      set(({ invoicePayments }) => {
-        (invoicePayments[index][field] as any) = String(value);
+    discount: '',
+
+    setDiscount: (amount: string) =>
+      set((state) => {
+        state.discount = amount;
       }),
 
-    removeInvoicePayment: (uid: string) =>
-      set((state) => {
-        if (state.invoicePayments.length === 1) {
-          state.invoicePayments[0] = { ...emptyInvoicePayment, uid: nanoid() };
-        } else {
-          state.invoicePayments = state.invoicePayments.filter((i) => i.uid !== uid);
-        }
-      }),
+    payment: '',
 
-    addEmptyInvoicePayment: () =>
+    setPayment: (amount: string) =>
       set((state) => {
-        state.invoicePayments.push({ ...emptyInvoicePayment, uid: nanoid() });
+        state.payment = amount;
       }),
   })),
 );

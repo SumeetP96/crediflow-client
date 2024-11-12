@@ -25,7 +25,6 @@ import { ICustomer } from '../customers-listing/types';
 import { IInvoiceCategory } from '../invoice-categories-listing/types';
 import { IInvoice } from '../invoices-listing/types';
 import InvoiceItems from './components/InvoiceItems';
-import InvoicePayments from './components/InvoicePayments';
 import InvoiceRelations from './components/InvoiceRelations';
 import { useInvoiceFormStore } from './store';
 import { EInvoiceRelation, IFormInvoice } from './types';
@@ -179,10 +178,10 @@ export default function InvoiceForm() {
                   <FormControl fullWidth>
                     <TextField
                       id="invoiceNumber"
-                      label={<FormLabel label="Invoice Number" required />}
+                      label={<FormLabel label="Invoice number" required />}
                       variant="outlined"
                       value={state.value}
-                      onChange={(e) => handleChange(e.target.value)}
+                      onChange={(e) => handleChange(e.target.value.toUpperCase())}
                       onBlur={handleBlur}
                       placeholder="Enter invoice number"
                       helperText={state.meta.errors.join(', ')}
@@ -253,39 +252,27 @@ export default function InvoiceForm() {
             />
           </Grid2>
 
+          {/* Invoice Items with Gross Total */}
           <Grid2 size={12}>
-            <Divider />
-          </Grid2>
-
-          {/* Invoice Items */}
-          <Grid2 size={12}>
-            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
+            <Typography textTransform="uppercase" gutterBottom marginBottom={2} mt={2}>
               Invoice Items
             </Typography>
 
-            <InvoiceItems />
-          </Grid2>
-
-          <Grid2 size={12}>
-            <Divider />
-          </Grid2>
-
-          {/* Advance Payment */}
-          <Grid2 size={12}>
-            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
-              Payments (optional)
-            </Typography>
-
-            <InvoicePayments />
-          </Grid2>
-
-          <Grid2 size={12}>
-            <Divider />
+            <form.Subscribe
+              selector={(state) => [
+                state.values.invoiceCategoryId,
+                state.values.invoiceNumber,
+                state.values.customerId,
+              ]}
+              children={([invoiceCategoryId, invoiceNumber, customerId]) => (
+                <InvoiceItems disabled={!(invoiceCategoryId && invoiceNumber && customerId)} />
+              )}
+            />
           </Grid2>
 
           {/* Invoice Relations */}
           <Grid2 size={12}>
-            <Typography textTransform="uppercase" gutterBottom marginBottom={2}>
+            <Typography textTransform="uppercase" gutterBottom mt={2}>
               Relations (optional)
             </Typography>
 
@@ -334,9 +321,10 @@ export default function InvoiceForm() {
                   <FormControl fullWidth>
                     <TextField
                       id="remarks"
-                      label={<FormLabel label="Remarks" />}
+                      label={<FormLabel label="Invoice remarks" />}
                       variant="outlined"
                       multiline
+                      rows={3}
                       maxRows={3}
                       value={state.value}
                       onChange={(e) => handleChange(e.target.value)}
