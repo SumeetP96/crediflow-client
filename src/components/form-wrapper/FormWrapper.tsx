@@ -76,6 +76,7 @@ export interface IFormWrapperProps<Model, FormModel> {
   spacing?: Grid2Props['spacing'];
   paperSx?: SxProps;
   transformValues?: (values: FormModel) => Record<string, any>;
+  isSubmitDisabled?: boolean;
 }
 
 export default function FormWrapper<Model, FormModel>({
@@ -101,6 +102,7 @@ export default function FormWrapper<Model, FormModel>({
   spacing = 3,
   paperSx = {},
   transformValues,
+  isSubmitDisabled = false,
 }: IFormWrapperProps<Model, FormModel>) {
   const theme = useTheme();
 
@@ -178,11 +180,15 @@ export default function FormWrapper<Model, FormModel>({
     defaultValues: defaultValues(record),
     onSubmit: async ({ value }) => {
       const transformedValues = transformValues ? transformValues(value) : value;
-      if (isUpdateMode) {
-        await updateQuery.mutateAsync(transformedValues as FormModel);
-      } else {
-        await createQuery.mutateAsync(transformedValues as FormModel);
-      }
+      console.log(
+        '-- 🚀 ~ file: FormWrapper.tsx:181 ~ onSubmit: ~ transformedValues:',
+        transformedValues,
+      );
+      // if (isUpdateMode) {
+      //   await updateQuery.mutateAsync(transformedValues as FormModel);
+      // } else {
+      //   await createQuery.mutateAsync(transformedValues as FormModel);
+      // }
     },
     validatorAdapter: zodValidator(),
   });
@@ -315,7 +321,7 @@ export default function FormWrapper<Model, FormModel>({
                   }}
                 >
                   <Button
-                    disabled={!canSubmit || hasCustomErrors}
+                    disabled={!canSubmit || hasCustomErrors || isSubmitDisabled}
                     variant="contained"
                     onClick={submitForm}
                     disableElevation

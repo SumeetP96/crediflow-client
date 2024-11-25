@@ -36,20 +36,53 @@ export default function InvoiceForm() {
 
   const Picker = isTablet ? MobileDatePicker : DatePicker;
 
-  const customerOptions = useInvoiceFormStore((state) => state.customerOptions);
-  const setCustomerOptions = useInvoiceFormStore((state) => state.setCustomerOptions);
-  const setAgentOptions = useInvoiceFormStore((state) => state.setAgentOptions);
+  const {
+    customerOptions,
+    setCustomerOptions,
+    setAgentOptions,
+    invoiceItems,
+    invoiceRelations,
+    discount,
+    payment,
+    errorMap,
+  } = useInvoiceFormStore();
+
+  const hasErrors = useMemo(() => {
+    return Object.values(errorMap).some((error) => error);
+  }, [errorMap]);
+
+  const transformValues = (values: IFormInvoice) => {
+    const items = invoiceItems.filter((item) => !!item.name);
+
+    const customerRelationIds = invoiceRelations.customers
+      .filter((relation) => !!relation.id)
+      .map((relation) => relation.id);
+
+    const agentRelationIds = invoiceRelations.agents
+      .filter((relation) => !!relation.id)
+      .map((relation) => relation.id);
+
+    return {
+      ...values,
+      invoiceItems: items,
+      agentRelationIds,
+      customerRelationIds,
+      discount: parseFloat(String(discount)),
+      payment: parseFloat(String(payment)),
+    };
+  };
 
   const formWrapperProps: IFormWrapperProps<IInvoice, IFormInvoice> = {
     createTitle: 'Create New Invoice',
     updateTitle: 'Update Invoice',
     heading: 'Invoice Details',
     fallbackPrevRoute: AppRoute('INVOICES_LIST'),
+    isSubmitDisabled: !hasErrors,
     defaultValues: (invoice) => ({
-      invoiceCategoryId: invoice?.invoiceCategoryId ?? 0,
-      customerId: invoice?.customerId ?? 0,
+      invoiceCategoryId: invoice?.invoiceCategoryId ?? null,
+      customerId: invoice?.customerId ?? null,
       date: invoice?.date ?? dayjs().format(defaultDateVisibleFormat),
-      invoiceNumber: invoice?.invoiceNumber ?? '',
+      invoiceNumber: invoice?.invoiceNumber ?? null,
       amount: invoice?.amount ?? 0,
       dueDate: invoice?.dueDate ?? '',
       remarks: invoice?.remarks ?? '',
@@ -70,6 +103,7 @@ export default function InvoiceForm() {
       return `Invoice ${action.charAt(0).toUpperCase() + action.slice(1)}d successfully`;
     },
     successQueryInvalidateKeys: [QueryKeys.INVOICES_LISTING],
+    transformValues,
   };
 
   const invoiceCategoriesQuery = useQuery({
@@ -140,7 +174,7 @@ export default function InvoiceForm() {
           <Grid2 size={{ xs: 12, md: 6 }}>
             <form.Field
               name="invoiceCategoryId"
-              validators={{ onChange: z.number() }}
+              validators={{ onChange: z.number({ message: 'Invoice category is required' }) }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <FormControl fullWidth>
@@ -159,6 +193,8 @@ export default function InvoiceForm() {
                           autoFocus
                           placeholder="Select invoice category"
                           label={<FormLabel label="Invoice Category" required />}
+                          helperText={state.meta.errors.join(', ')}
+                          error={Boolean(state.meta.errors.length)}
                         />
                       )}
                     />
@@ -172,7 +208,7 @@ export default function InvoiceForm() {
           <Grid2 size={{ xs: 12, md: 3 }}>
             <form.Field
               name="invoiceNumber"
-              validators={{ onChange: z.string() }}
+              validators={{ onChange: z.string({ message: 'Invoice number is required' }) }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <FormControl fullWidth>
@@ -180,7 +216,7 @@ export default function InvoiceForm() {
                       id="invoiceNumber"
                       label={<FormLabel label="Invoice number" required />}
                       variant="outlined"
-                      value={state.value}
+                      value={state.value ?? ''}
                       onChange={(e) => handleChange(e.target.value.toUpperCase())}
                       onBlur={handleBlur}
                       placeholder="Enter invoice number"
@@ -227,7 +263,7 @@ export default function InvoiceForm() {
           <Grid2 size={12}>
             <form.Field
               name="customerId"
-              validators={{ onChange: z.number() }}
+              validators={{ onChange: z.number({ message: 'Customer is required' }) }}
               children={({ state, handleChange, handleBlur }) => {
                 return (
                   <FormControl fullWidth>
@@ -243,6 +279,8 @@ export default function InvoiceForm() {
                           {...params}
                           placeholder="Select customer"
                           label={<FormLabel label="Customer" required />}
+                          helperText={state.meta.errors.join(', ')}
+                          error={Boolean(state.meta.errors.length)}
                         />
                       )}
                     />
@@ -255,7 +293,7 @@ export default function InvoiceForm() {
           {/* Invoice Items with Gross Total */}
           <Grid2 size={12}>
             <Typography textTransform="uppercase" gutterBottom marginBottom={2} mt={2}>
-              Invoice Items
+              Items
             </Typography>
 
             <form.Subscribe
@@ -289,7 +327,7 @@ export default function InvoiceForm() {
                     addTooltip="Add customer relation to invoice"
                     removeTooltip="Remove customer relation from invoice"
                     placeholder="Select customer"
-                    invoiceCustomerId={customerId}
+                    invoiceCustomerId={customerId ?? 0}
                   />
 
                   {/* Agent */}
@@ -325,7 +363,6 @@ export default function InvoiceForm() {
                       variant="outlined"
                       multiline
                       rows={3}
-                      maxRows={3}
                       value={state.value}
                       onChange={(e) => handleChange(e.target.value)}
                       onBlur={handleBlur}

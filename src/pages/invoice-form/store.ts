@@ -4,7 +4,6 @@ import { immer } from 'zustand/middleware/immer';
 import {
   EInvoiceRelation,
   IInvoiceFormItem,
-  IInvoicePayment,
   IInvoiceRelations,
   IInvoiceRelationValue,
   TInvoiceAgentOption,
@@ -12,6 +11,7 @@ import {
 } from './types';
 
 type State = {
+  errorMap: Record<string, string>;
   customerOptions: TInvoiceCustomerOption[];
   agentOptions: TInvoiceAgentOption[];
   invoiceRelations: IInvoiceRelations;
@@ -21,6 +21,8 @@ type State = {
 };
 
 type Actions = {
+  setError: (key: string, value: string) => void;
+  removeError: (key: string) => void;
   setCustomerOptions: (options: TInvoiceCustomerOption[]) => void;
   setAgentOptions: (options: TInvoiceAgentOption[]) => void;
   updateRelation: (type: EInvoiceRelation, index: number, id: number) => void;
@@ -31,6 +33,7 @@ type Actions = {
   addEmptyInvoiceItem: () => void;
   setDiscount: (amount: string) => void;
   setPayment: (amount: string) => void;
+  resetState: () => void;
 };
 
 const emptyCustomerRelation: IInvoiceRelationValue = {
@@ -53,26 +56,36 @@ const emptyInvoiceItem: IInvoiceFormItem = {
   amount: 0,
 };
 
-const emptyInvoicePayment: IInvoicePayment = {
-  uid: nanoid(),
-  remarks: '',
-  amount: 0,
+const defaultState: State = {
+  errorMap: {},
+  customerOptions: [],
+  agentOptions: [],
+  invoiceRelations: {
+    customers: [emptyCustomerRelation],
+    agents: [emptyAgentRelation],
+  },
+  invoiceItems: [emptyInvoiceItem],
+  discount: '',
+  payment: '',
 };
 
 export const useInvoiceFormStore = create<State & Actions>()(
   immer((set) => ({
-    customerOptions: [],
+    ...defaultState,
+
+    setError: (key: string, value: string) =>
+      set((state) => {
+        state.errorMap[key] = value;
+      }),
+
+    removeError: (key: string) =>
+      set((state) => {
+        state.errorMap[key] = '';
+      }),
 
     setCustomerOptions: (options: TInvoiceCustomerOption[]) => set({ customerOptions: options }),
 
-    agentOptions: [],
-
     setAgentOptions: (options: TInvoiceAgentOption[]) => set({ agentOptions: options }),
-
-    invoiceRelations: {
-      customers: [emptyCustomerRelation],
-      agents: [emptyAgentRelation],
-    },
 
     updateRelation: (type: EInvoiceRelation, index: number, id: number) =>
       set(({ invoiceRelations }) => {
@@ -101,8 +114,6 @@ export const useInvoiceFormStore = create<State & Actions>()(
         }
       }),
 
-    invoiceItems: [emptyInvoiceItem],
-
     updateInvoiceItem: (index: number, field: keyof IInvoiceFormItem, value: string) =>
       set(({ invoiceItems }) => {
         (invoiceItems[index][field] as any) = String(value);
@@ -122,20 +133,16 @@ export const useInvoiceFormStore = create<State & Actions>()(
         state.invoiceItems.push({ ...emptyInvoiceItem, uid: nanoid() });
       }),
 
-    invoicePayments: [emptyInvoicePayment],
-
-    discount: '',
-
     setDiscount: (amount: string) =>
       set((state) => {
         state.discount = amount;
       }),
 
-    payment: '',
-
     setPayment: (amount: string) =>
       set((state) => {
         state.payment = amount;
       }),
+
+    resetState: () => set(defaultState),
   })),
 );

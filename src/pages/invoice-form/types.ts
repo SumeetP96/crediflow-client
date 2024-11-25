@@ -3,10 +3,10 @@ import { ICustomer } from '../customers-listing/types';
 import { IInvoiceItem } from '../invoices-listing/types';
 
 export interface IFormInvoice {
-  invoiceCategoryId: number;
-  customerId: number;
+  invoiceCategoryId: number | null;
+  customerId: number | null;
   date: string;
-  invoiceNumber: string;
+  invoiceNumber: string | null;
   amount: number;
   dueDate: string;
   remarks: string;
@@ -39,10 +39,4 @@ export interface IInvoiceRelations {
 
 export interface IInvoiceFormItem extends IInvoiceItem {
   uid: string;
-}
-
-export interface IInvoicePayment {
-  uid: string;
-  remarks: string;
-  amount: number;
 }

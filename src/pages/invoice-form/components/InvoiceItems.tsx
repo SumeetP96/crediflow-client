@@ -10,7 +10,9 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactNode, useMemo } from 'react';
+import { z, ZodSchema } from 'zod';
 import FormLabel from '../../../components/form-label/FormLabel';
+import { IInvoiceItem } from '../../invoices-listing/types';
 import { useInvoiceFormStore } from '../store';
 
 function TotalGridContainer({
@@ -90,15 +92,24 @@ function DeductionLabel({ label }: { label: string }) {
   );
 }
 
+const nameSchema = z.string().min(2, 'Min 2 characters').max(50, 'Max 50 characters');
+const numberSchema = z.number().positive('Should be greater than 0').safe();
+const numberOptionalSchema = z.number().positive('Should be greater than 0').safe().optional();
+
 export default function InvoiceItems({ disabled = false }: { disabled?: boolean }) {
-  const invoiceItems = useInvoiceFormStore((state) => state.invoiceItems);
-  const updateInvoiceItem = useInvoiceFormStore((state) => state.updateInvoiceItem);
-  const addEmptyInvoiceItem = useInvoiceFormStore((state) => state.addEmptyInvoiceItem);
-  const removeInvoiceItem = useInvoiceFormStore((state) => state.removeInvoiceItem);
-  const discount = useInvoiceFormStore((state) => state.discount);
-  const setDiscount = useInvoiceFormStore((state) => state.setDiscount);
-  const payment = useInvoiceFormStore((state) => state.payment);
-  const setPayment = useInvoiceFormStore((state) => state.setPayment);
+  const {
+    errorMap,
+    setError,
+    removeError,
+    invoiceItems,
+    updateInvoiceItem,
+    addEmptyInvoiceItem,
+    removeInvoiceItem,
+    discount,
+    setDiscount,
+    payment,
+    setPayment,
+  } = useInvoiceFormStore();
 
   const calculateAmount = (price: number | undefined, quantity: number | undefined) => {
     const safePrice = price ? Number(price) : undefined;
@@ -112,7 +123,7 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
   };
 
   const grossTotal = useMemo(() => {
-    return invoiceItems.reduce((acc, cur) => acc + cur.amount, 0);
+    return invoiceItems.reduce((acc, cur) => acc + parseFloat(String(cur.amount)), 0);
   }, [invoiceItems]);
 
   const netTotal = useMemo(() => {
@@ -124,6 +135,29 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
   const isDeductionEnabled = useMemo(() => {
     return invoiceItems.find((i) => !!i.name);
   }, [invoiceItems]);
+
+  const validateInvoiceItemInput = (
+    field: keyof IInvoiceItem | 'discount' | 'payment',
+    value: string | number,
+    schema: ZodSchema,
+  ) => {
+    const validated = schema.safeParse(value);
+    if (validated.success === false) {
+      setError(field, validated.error.errors[0].message);
+    } else {
+      removeError(field);
+    }
+  };
+
+  const handleInvoiceItemChange = (
+    index: number,
+    field: keyof IInvoiceItem,
+    value: string | number,
+    schema: ZodSchema,
+  ) => {
+    validateInvoiceItemInput(field, value, schema);
+    updateInvoiceItem(index, field, String(value));
+  };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="flex-start" gap={{ xs: 3, md: 1 }}>
@@ -139,8 +173,11 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                   label={<FormLabel label="Item" required />}
                   variant="outlined"
                   value={item.name}
-                  onChange={(e) => updateInvoiceItem(i, 'name', e.target.value)}
                   placeholder="Enter item name"
+                  onBlur={(e) => validateInvoiceItemInput('name', e.target.value, nameSchema)}
+                  onChange={(e) => handleInvoiceItemChange(i, 'name', e.target.value, nameSchema)}
+                  helperText={errorMap.name}
+                  error={Boolean(errorMap.name)}
                 />
               </FormControl>
             </Grid2>
@@ -152,18 +189,32 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                   id={`item-quantity-${item.uid}`}
                   type="number"
                   disabled={!item.name}
-                  label={<FormLabel label="Quantity" />}
+                  label={<FormLabel label="Quantity" required />}
                   variant="outlined"
-                  value={item.quantity ? Number(item.quantity) : ''}
-                  onChange={(e) => {
-                    const { value } = e.target;
-                    updateInvoiceItem(i, 'quantity', value);
-                    if (item.price) {
-                      updateInvoiceItem(i, 'amount', String(Number(value) * item.price));
-                    }
-                  }}
+                  value={item.quantity ? parseFloat(String(item.quantity)) : 0}
                   placeholder="0.00"
                   slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
+                  onBlur={(e) =>
+                    validateInvoiceItemInput(
+                      'quantity',
+                      parseFloat(e.target.value ?? 0),
+                      numberSchema,
+                    )
+                  }
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    handleInvoiceItemChange(i, 'quantity', parseFloat(value ?? 0), numberSchema);
+                    if (item.price) {
+                      handleInvoiceItemChange(
+                        i,
+                        'amount',
+                        String(parseFloat(value) * parseFloat(String(item.price))),
+                        numberSchema,
+                      );
+                    }
+                  }}
+                  helperText={errorMap.quantity}
+                  error={Boolean(errorMap.quantity)}
                 />
               </FormControl>
             </Grid2>
@@ -175,18 +226,28 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                   id={`item-price-${item.uid}`}
                   type="number"
                   disabled={!item.name}
-                  label={<FormLabel label="Price" />}
+                  label={<FormLabel label="Price" required />}
                   variant="outlined"
-                  value={item.price ? Number(item.price) : ''}
-                  onChange={(e) => {
-                    const { value } = e.target;
-                    updateInvoiceItem(i, 'price', value);
-                    if (item.quantity) {
-                      updateInvoiceItem(i, 'amount', String(Number(value) * item.quantity));
-                    }
-                  }}
+                  value={item.price ? parseFloat(String(item.price)) : 0}
                   placeholder="0.00"
                   slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
+                  onBlur={(e) =>
+                    validateInvoiceItemInput('price', parseFloat(e.target.value ?? 0), numberSchema)
+                  }
+                  onChange={(e) => {
+                    const { value } = e.target;
+                    handleInvoiceItemChange(i, 'price', parseFloat(value ?? 0), numberSchema);
+                    if (item.price) {
+                      handleInvoiceItemChange(
+                        i,
+                        'amount',
+                        String(parseFloat(value) * parseFloat(String(item.quantity))),
+                        numberSchema,
+                      );
+                    }
+                  }}
+                  helperText={errorMap.price}
+                  error={Boolean(errorMap.price)}
                 />
               </FormControl>
             </Grid2>
@@ -198,7 +259,7 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                   id={`item-amount-${item.uid}`}
                   type="number"
                   disabled
-                  label={<FormLabel label="Amount" required />}
+                  label={<FormLabel label="Amount" />}
                   variant="outlined"
                   value={calculateAmount(item.price, item.quantity)}
                   placeholder="0.00"
@@ -260,10 +321,26 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                 disabled={!isDeductionEnabled}
                 label={<FormLabel label="Discount" />}
                 variant="outlined"
-                value={discount ? parseFloat(discount) : ''}
-                onChange={(e) => setDiscount(String(e.target.value))}
+                value={discount ? parseFloat(discount) : 0}
                 placeholder="0.00"
                 slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
+                onBlur={(e) =>
+                  validateInvoiceItemInput(
+                    'discount',
+                    parseFloat(e.target.value ?? 0),
+                    numberOptionalSchema,
+                  )
+                }
+                onChange={(e) => {
+                  validateInvoiceItemInput(
+                    'discount',
+                    parseFloat(e.target.value ?? 0),
+                    numberOptionalSchema,
+                  );
+                  setDiscount(e.target.value);
+                }}
+                helperText={errorMap.discount}
+                error={Boolean(errorMap.discount)}
               />
             </FormControl>
           </Grid2>
@@ -281,10 +358,26 @@ export default function InvoiceItems({ disabled = false }: { disabled?: boolean 
                 disabled={!isDeductionEnabled}
                 label={<FormLabel label="Payment" />}
                 variant="outlined"
-                value={payment ? parseFloat(payment) : ''}
-                onChange={(e) => setPayment(String(e.target.value))}
+                value={payment ? parseFloat(payment) : 0}
                 placeholder="0.00"
                 slotProps={{ htmlInput: { style: { textAlign: 'right' } } }}
+                onBlur={(e) =>
+                  validateInvoiceItemInput(
+                    'payment',
+                    parseFloat(e.target.value ?? 0),
+                    numberOptionalSchema,
+                  )
+                }
+                onChange={(e) => {
+                  validateInvoiceItemInput(
+                    'payment',
+                    parseFloat(e.target.value ?? 0),
+                    numberOptionalSchema,
+                  );
+                  setPayment(e.target.value);
+                }}
+                helperText={errorMap.payment}
+                error={Boolean(errorMap.payment)}
               />
             </FormControl>
           </Grid2>
