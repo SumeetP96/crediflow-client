@@ -180,15 +180,11 @@ export default function FormWrapper<Model, FormModel>({
     defaultValues: defaultValues(record),
     onSubmit: async ({ value }) => {
       const transformedValues = transformValues ? transformValues(value) : value;
-      console.log(
-        '-- 🚀 ~ file: FormWrapper.tsx:181 ~ onSubmit: ~ transformedValues:',
-        transformedValues,
-      );
-      // if (isUpdateMode) {
-      //   await updateQuery.mutateAsync(transformedValues as FormModel);
-      // } else {
-      //   await createQuery.mutateAsync(transformedValues as FormModel);
-      // }
+      if (isUpdateMode) {
+        await updateQuery.mutateAsync(transformedValues as FormModel);
+      } else {
+        await createQuery.mutateAsync(transformedValues as FormModel);
+      }
     },
     validatorAdapter: zodValidator(),
   });

@@ -52,15 +52,22 @@ export default function InvoiceForm() {
   }, [errorMap]);
 
   const transformValues = (values: IFormInvoice) => {
-    const items = invoiceItems.filter((item) => !!item.name);
+    const items = invoiceItems
+      .filter((item) => !!item.name)
+      .map((item) => ({
+        name: item.name,
+        quantity: parseFloat(String(item.quantity)),
+        price: parseFloat(String(item.price)),
+        amount: parseFloat(String(item.amount)),
+      }));
 
     const customerRelationIds = invoiceRelations.customers
       .filter((relation) => !!relation.id)
-      .map((relation) => relation.id);
+      .map((relation) => parseInt(String(relation.id), 10));
 
     const agentRelationIds = invoiceRelations.agents
       .filter((relation) => !!relation.id)
-      .map((relation) => relation.id);
+      .map((relation) => parseInt(String(relation.id), 10));
 
     return {
       ...values,
